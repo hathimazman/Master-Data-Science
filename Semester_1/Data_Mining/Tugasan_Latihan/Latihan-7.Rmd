@@ -1,0 +1,79 @@
+---
+title: "Latihan Perlombongan Aturan Sekutuan / Mining Association Rule"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+# Dapatkan deskriptif statistik
+
+```{r, echo=T, include=F}
+library(arules)
+library(arulesViz)
+```
+
+```{r}
+load("E:/Master-Data-Science/Semester_1/Data_Mining/Data/titanic.raw.rdata")
+head(titanic.raw,10)
+```
+
+```{r}
+data = as(titanic.raw, 'transactions')
+data
+```
+
+```{r}
+itemFrequencyPlot(data, topN=10,
+                  main='10 Item paling kerap terjadi')
+```
+
+# Tentukan aturan sekutuan yang memenuhi nilai ambang minimum supp=0.1, conf=0.6.
+
+```{r, include=F}
+Aturan.S1 = apriori(data,
+                    parameter=list(supp=0.1,conf=0.6))
+```
+
+```{r}
+head(inspect(Aturan.S1),10)
+```
+
+# Plotkan aturan sekutuan yg diperoleh dalam ii) menggunakan plot-plot yang sesuai.
+
+```{r}
+plot(Aturan.S1, method='graph')
+```
+
+```{r}
+plot(Aturan.S1, method='paracoord',
+     control=list(reorder=T))
+```
+
+# Dapatkan aturan sekutuan yang menunjukkan ciri-ciri individu yang terselamat dari tragedi titanic (rhs: p/ubah survival).
+
+```{r, include=F}
+Aturan.S2 = apriori(data,
+                    parameter=list(supp=0.1, conf=0.6),
+                    appearance = list(default='lhs',rhs='Survived=Yes'))
+```
+
+```{r}
+inspect(Aturan.S2)
+```
+
+# Dapatkan aturan sekutuan bagi orang yang terselamat daripada kelas 1, 2 & 3 (rhs ialah “Survived=Yes” dan lhs mengandungi info Class=1st, 2nd & 3rd; Age=Child & Adult )
+
+```{r, include=F}
+Aturan.S3 = apriori(data,
+                    parameter=list(supp=0.1, conf=0.05),
+                    appearance = list(lhs=c('Class=1st', 'Class=2nd','Class=3rd','Age=Child','Age=Adult'),rhs='Survived=Yes'))
+```
+
+```{r}
+inspect(Aturan.S3)
+```

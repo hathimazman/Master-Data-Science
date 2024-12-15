@@ -64,7 +64,7 @@ head(monthly_index,10)
 ### Exercise
 
 ```{r}
-dates_df = read.csv("D:/MSc DSc/Sem 1/Data Mining/Data/dates_formats3.csv", header=T, sep = ';', stringsAsFactors = FALSE)
+dates_df = read.csv("E:/Master-Data-Science/Semester_1/Data_Mining/Data/dates_formats3.csv", header=T, sep = ';', stringsAsFactors = FALSE)
 head(dates_df,10)
 ```
 
@@ -191,7 +191,6 @@ ts.plot(usgas,
 ```
 
 ```{r}
-install.packages("TSstudio")
 library(TSstudio)
 data(USVSales)
 ts.plot(USVSales,
@@ -281,7 +280,7 @@ Cov(y_t,y_{t-k})~=~\gamma_k,~untuk~semua~t
 $$
 
 ```{r}
-data = read.csv("D:/MSc DSc/Sem 1/Data Mining/Data/towel.csv", header=T)
+data = read.csv("E:/Master-Data-Science/Semester_1/Data_Mining/Data/towel.csv", header=T)
 yt=ts(data)
 head(yt,10)
 ```
@@ -323,21 +322,22 @@ Berdasarkan plot ACF dan PACF, didapati ACF terpangkas pada tertib 1 dan PACF me
 Model yang mungkin sesuai ialah ARIMA(0,1,1)
 
 ```{r}
-model = arima(yt,order=C(0,1,1))
-summary(model)
+#model = arima(yt,order=C(0,1,1))
+#summary(model)
 ```
 
 ##### Dapatkan model ARIMA yang sesuai secara automatik
 
 ```{r}
 library(forecast)
-auto.arima(yt)
+model = auto.arima(yt)
+model
 ```
 
 ```{r}
 ts.plot(yt,
         main="Paper Towel Daily Sales",
-        ylab="yt",
+       ylab="yt",
         xlab='Day');lines(fitted(model), col='red', lty=2);legend("bottomleft", c("Observed Data","Model ARIMA (0,1,1)"), col=c(1,2), lty=c(1,2))
 ```
 
@@ -395,7 +395,7 @@ ts.plot(yt, fore$pred, U, L,
 ## 1. Import economic_data.csv.
 
 ```{r}
-econ = read.csv("D:/MSc DSc/Sem 1/Data Mining/Data/economic_data.csv", header = T, sep=';')
+econ = read.csv("E:/Master-Data-Science/Semester_1/Data_Mining/Data/economic_data.csv", header = T, sep=';')
 head(econ,10)
 ```
 
@@ -473,6 +473,7 @@ autoplot(econ_pred)
 # 3. Pengkelompokan siri masa
 
 ```{r}
+load("E:/Master-Data-Science/Semester_1/Data_Mining/Data/sample2.RData")
 ts.plot(sample2)
 ```
 
@@ -513,7 +514,7 @@ plot.ts(sample2[,17]);plot.ts(sample2[,19]);plot.ts(sample2[,11]);plot.ts(sample
 ## Klasifikasi Siri Masa
 
 ```{r}
-newdata = read.csv("D:/MSc DSc/Sem 1/Data Mining/Data/newdata.csv", header=T, sep=';')
+newdata = read.csv("E:/Master-Data-Science/Semester_1/Data_Mining/Data/newdata.csv", header=T, sep=';')
 head(newdata)
 ```
 
