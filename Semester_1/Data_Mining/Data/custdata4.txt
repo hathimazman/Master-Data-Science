@@ -1,0 +1,81 @@
+"state.of.res"	"custid"	"sex"	"is.employed"	"income"	"marital.stat"	"health.ins"	"housing.type"	"recent.move"	"num.vehicles"	"age"	"is.employed.fix1"	"Median.Income"	"gp"	"income.lt.30K"	"age.range"	"Income"
+"74"	"California"	90863	"M"	TRUE	285020	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	37	"employed"	39832	0.544029082171619	FALSE	"(25,65]"	285020
+"321"	"Indiana"	210427	"M"	NA	12600	"Married"	TRUE	"Homeowner free and clear"	FALSE	3	78	"missing"	55534	0.499618922593072	TRUE	"(65,Inf]"	NA
+"534"	"Nebraska"	1359790	"M"	NA	79950	"Married"	TRUE	"Homeowner free and clear"	FALSE	2	67	"missing"	43607	0.214643571060151	FALSE	"(65,Inf]"	6300
+"14"	"Alaska"	416144	"F"	TRUE	82000	"Divorced/Separated"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	44	"employed"	44191	0.306658288929611	FALSE	"(25,65]"	89200
+"995"	"Wisconsin"	155762	"M"	TRUE	60000	"Divorced/Separated"	FALSE	"Homeowner free and clear"	FALSE	2	49	"employed"	41073	0.090040773851797	FALSE	"(25,65]"	NA
+"66"	"California"	51723	"F"	NA	15700	"Widowed"	TRUE	"Homeowner free and clear"	FALSE	1	78	"missing"	39832	0.358784524258226	TRUE	"(65,Inf]"	NA
+"13"	"Alaska"	415575	"M"	NA	0	"Never Married"	TRUE	NA	NA	NA	63	"missing"	44191	0.956131165614352	TRUE	"(25,65]"	85000
+"631"	"New York"	499637	"F"	NA	12000	"Never Married"	TRUE	NA	NA	NA	93	"missing"	44819	0.242546504363418	TRUE	"(65,Inf]"	NA
+"267"	"Illinois"	42374	"M"	NA	7800	"Never Married"	TRUE	"Homeowner free and clear"	FALSE	1	65	"missing"	49293	0.522491398034617	TRUE	"(25,65]"	NA
+"215"	"Florida"	46791	"M"	NA	22700	"Married"	TRUE	"Homeowner free and clear"	FALSE	2	67	"missing"	56895	0.594983885297552	TRUE	"(65,Inf]"	45000
+"359"	"Louisiana"	33828	"F"	TRUE	24900	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	49	"employed"	43860	0.966769490856677	TRUE	"(25,65]"	48000
+"672"	"New York"	1115937	"F"	NA	12500	"Never Married"	TRUE	"Rented"	FALSE	0	58	"missing"	44819	0.398018376203254	TRUE	"(25,65]"	NA
+"237"	"Georgia"	638760	"M"	FALSE	20000	"Married"	FALSE	"Homeowner free and clear"	FALSE	1	33	"not employed"	47353	0.993764085927978	TRUE	"(25,65]"	NA
+"790"	"Pennsylvania"	1227678	"M"	TRUE	150000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	52	"employed"	52758	0.125010177027434	FALSE	"(25,65]"	45500
+"769"	"Ohio"	821682	"M"	TRUE	40000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	62	"employed"	52176	0.191922169411555	FALSE	"(25,65]"	NA
+"259"	"Illinois"	236067	"M"	TRUE	140000	"Never Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	1	46	"employed"	49293	0.735240730922669	FALSE	"(25,65]"	24000
+"742"	"Ohio"	886647	"F"	TRUE	10600	"Never Married"	FALSE	"Rented"	FALSE	4	19	"employed"	52176	0.792993067530915	TRUE	"[0,25]"	NA
+"604"	"New York"	499807	"M"	TRUE	125000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	43	"employed"	44819	0.795502841938287	FALSE	"(25,65]"	8400
+"93"	"California"	878882	"M"	TRUE	76000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	0	33	"employed"	39832	0.989806043915451	FALSE	"(25,65]"	26000
+"374"	"Maine"	1150024	"M"	TRUE	36000	"Married"	TRUE	"Rented"	FALSE	2	37	"employed"	44484	0.99412153987214	FALSE	"(25,65]"	NA
+"848"	"Pennsylvania"	1354211	"M"	TRUE	136800	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	60	"employed"	52758	0.375389898894355	FALSE	"(25,65]"	NA
+"761"	"Ohio"	1238518	"M"	NA	13200	"Married"	TRUE	"Homeowner free and clear"	FALSE	2	78	"missing"	52176	0.530807802453637	TRUE	"(65,Inf]"	NA
+"272"	"Illinois"	1064979	"F"	TRUE	45000	"Divorced/Separated"	TRUE	"Rented"	FALSE	2	43	"employed"	49293	0.756542035145685	FALSE	"(25,65]"	NA
+"251"	"Illinois"	151876	"F"	NA	18900	"Divorced/Separated"	TRUE	"Rented"	FALSE	1	86	"missing"	49293	0.773620499530807	TRUE	"(65,Inf]"	177000
+"462"	"Michigan"	79069	"M"	TRUE	30000	"Married"	FALSE	"Rented"	TRUE	1	40	"employed"	62634	0.59464597934857	FALSE	"(25,65]"	5000
+"97"	"California"	1412971	"M"	NA	43400	"Married"	TRUE	"Homeowner free and clear"	FALSE	1	88	"missing"	39832	0.553328840993345	FALSE	"(65,Inf]"	NA
+"382"	"Maryland"	86711	"M"	NA	47950	"Never Married"	TRUE	"Homeowner free and clear"	FALSE	1	76	"missing"	49572	0.434375666780397	FALSE	"(65,Inf]"	49000
+"409"	"Massachusetts"	578596	"M"	TRUE	143100	"Married"	TRUE	"Homeowner free and clear"	FALSE	4	66	"employed"	66928	0.733494606800377	FALSE	"(65,Inf]"	NA
+"309"	"Indiana"	926808	"M"	TRUE	17000	"Married"	FALSE	"Rented"	FALSE	2	42	"employed"	55534	0.889064216054976	TRUE	"(25,65]"	40000
+"793"	"Pennsylvania"	14989	"M"	NA	9400	"Married"	TRUE	"Rented"	FALSE	2	44	"missing"	52758	0.123055104864761	TRUE	"(25,65]"	3400
+"37"	"Arkansas"	1079462	"F"	TRUE	9500	"Never Married"	TRUE	"Rented"	FALSE	2	36	"employed"	48484	0.675680170767009	TRUE	"(25,65]"	90000
+"553"	"New Jersey"	478228	"M"	NA	98900	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	4	64	"missing"	68187	0.549692630534992	FALSE	"(25,65]"	110000
+"427"	"Michigan"	456859	"M"	TRUE	80	"Never Married"	TRUE	NA	NA	NA	18	"employed"	62634	0.0572959000710398	TRUE	"[0,25]"	22000
+"402"	"Massachusetts"	40132	"M"	TRUE	22000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	66	"employed"	66928	0.861990363104269	TRUE	"(65,Inf]"	75100
+"452"	"Michigan"	150721	"M"	TRUE	402000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	44	"employed"	62634	0.645078710047528	FALSE	"(25,65]"	6000
+"316"	"Indiana"	583093	"M"	TRUE	16000	"Never Married"	TRUE	"Rented"	FALSE	2	48	"employed"	55534	0.423115214565769	TRUE	"(25,65]"	1100
+"495"	"Mississippi"	782988	"M"	TRUE	110000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	53	"employed"	58094	0.887510632397607	FALSE	"(25,65]"	16000
+"15"	"Arizona"	1096606	"M"	TRUE	52500	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	50	"employed"	65720	0.421101192943752	FALSE	"(25,65]"	170000
+"831"	"Pennsylvania"	646808	"M"	TRUE	36000	"Married"	TRUE	"Rented"	FALSE	0	40	"employed"	52758	0.0287545416504145	FALSE	"(25,65]"	NA
+"560"	"New Jersey"	104506	"M"	NA	30800	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	83	"missing"	68187	0.617738915840164	FALSE	"(65,Inf]"	NA
+"250"	"Illinois"	1024624	"F"	TRUE	31900	"Divorced/Separated"	TRUE	"Homeowner free and clear"	FALSE	1	62	"employed"	49293	0.360588794341311	FALSE	"(25,65]"	NA
+"539"	"Nevada"	867842	"F"	NA	27400	"Widowed"	TRUE	"Homeowner free and clear"	FALSE	1	75	"missing"	52498	0.57046754960902	TRUE	"(65,Inf]"	71800
+"340"	"Kansas"	1364327	"M"	TRUE	30000	"Married"	TRUE	"Rented"	FALSE	2	40	"employed"	52781	0.396057487465441	FALSE	"(25,65]"	0
+"282"	"Illinois"	968830	"M"	TRUE	4230	"Never Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	67	"employed"	49293	0.433997294865549	TRUE	"(65,Inf]"	NA
+"334"	"Iowa"	1236675	"M"	TRUE	40200	"Divorced/Separated"	TRUE	"Homeowner with mortgage/loan"	FALSE	1	39	"employed"	47526	0.489365199580789	FALSE	"(25,65]"	NA
+"149"	"California"	835830	"F"	TRUE	51000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	41	"employed"	39832	0.6962331966497	FALSE	"(25,65]"	NA
+"743"	"Ohio"	1031473	"M"	TRUE	259300	"Widowed"	TRUE	"Homeowner with mortgage/loan"	FALSE	4	65	"employed"	52176	0.836640226421878	FALSE	"(25,65]"	22800
+"568"	"New Jersey"	565628	"F"	TRUE	15000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	58	"employed"	68187	0.0102407187223434	TRUE	"(25,65]"	2e+05
+"605"	"New York"	761350	"M"	TRUE	79100	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	50	"employed"	44819	0.308854548959062	FALSE	"(25,65]"	70200
+"177"	"Connecticut"	975187	"F"	TRUE	46000	"Divorced/Separated"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	48	"employed"	61154	0.579693423118442	FALSE	"(25,65]"	75000
+"310"	"Indiana"	318348	"F"	TRUE	40000	"Divorced/Separated"	FALSE	"Homeowner with mortgage/loan"	FALSE	4	55	"employed"	55534	0.784470293438062	FALSE	"(25,65]"	NA
+"919"	"Texas"	927129	"F"	FALSE	16500	"Never Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	6	32	"not employed"	41979	0.588354306528345	TRUE	"(25,65]"	191500
+"127"	"California"	628305	"M"	NA	24400	"Married"	TRUE	NA	NA	NA	93	"missing"	39832	0.524707956938073	TRUE	"(65,Inf]"	60000
+"608"	"New York"	113390	"M"	TRUE	25000	"Never Married"	FALSE	"Rented"	FALSE	3	43	"employed"	44819	0.00761647010222077	TRUE	"(25,65]"	66000
+"245"	"Idaho"	17946	"F"	TRUE	85000	"Divorced/Separated"	TRUE	"Rented"	FALSE	1	51	"employed"	61308	0.537527662236243	FALSE	"(25,65]"	23100
+"874"	"Tennessee"	1032120	"F"	TRUE	184000	"Married"	FALSE	"Homeowner with mortgage/loan"	FALSE	2	41	"employed"	50977	0.682316863676533	FALSE	"(25,65]"	40200
+"915"	"Texas"	1297652	"M"	TRUE	165200	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	62	"employed"	41979	0.721920888405293	FALSE	"(25,65]"	NA
+"956"	"Virginia"	965618	"M"	TRUE	113500	"Never Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	48	"employed"	53914	0.931115798186511	FALSE	"(25,65]"	NA
+"890"	"Texas"	1003135	"M"	NA	15400	"Married"	TRUE	NA	NA	NA	88	"missing"	41979	0.929422443266958	TRUE	"(65,Inf]"	2400
+"567"	"New Jersey"	118561	"F"	NA	9600	"Widowed"	TRUE	"Rented"	FALSE	1	60	"missing"	68187	0.450070938328281	TRUE	"(25,65]"	38000
+"563"	"New Jersey"	250108	"F"	TRUE	90000	"Divorced/Separated"	TRUE	"Rented"	FALSE	2	31	"employed"	68187	0.300835078582168	FALSE	"(25,65]"	1e+05
+"599"	"New York"	20383	"M"	TRUE	170000	"Never Married"	TRUE	"Homeowner with mortgage/loan"	TRUE	1	35	"employed"	44819	0.584170060930774	FALSE	"(25,65]"	26300
+"441"	"Michigan"	411385	"M"	TRUE	45000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	3	45	"employed"	62634	0.662146661896259	FALSE	"(25,65]"	382000
+"518"	"Missouri"	532940	"M"	TRUE	62000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	33	"employed"	37427	0.340968672651798	FALSE	"(25,65]"	53000
+"901"	"Texas"	139771	"M"	TRUE	9600	"Married"	TRUE	"Rented"	FALSE	2	42	"employed"	41979	0.534722834127024	TRUE	"(25,65]"	NA
+"822"	"Pennsylvania"	761380	"M"	TRUE	71800	"Married"	TRUE	"Rented"	TRUE	2	34	"employed"	52758	0.345844328403473	FALSE	"(25,65]"	1e+05
+"670"	"New York"	1032402	"M"	TRUE	22800	"Married"	TRUE	"Rented"	TRUE	2	72	"employed"	44819	0.271446883911267	TRUE	"(65,Inf]"	NA
+"781"	"Oregon"	269836	"F"	NA	22400	"Widowed"	TRUE	"Homeowner with mortgage/loan"	FALSE	1	77	"missing"	48137	0.528189464239404	TRUE	"(65,Inf]"	180000
+"103"	"California"	146457	"M"	TRUE	49000	"Never Married"	TRUE	"Rented"	FALSE	2	35	"employed"	39832	0.819738687947392	FALSE	"(25,65]"	NA
+"347"	"Kentucky"	136206	"F"	NA	3700	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	56	"missing"	48451	0.727316533215344	TRUE	"(25,65]"	6400
+"446"	"Michigan"	739344	"M"	NA	127500	"Widowed"	TRUE	"Homeowner free and clear"	FALSE	5	75	"missing"	62634	0.405588538618758	FALSE	"(65,Inf]"	120000
+"889"	"Texas"	1278230	"F"	TRUE	110000	"Married"	TRUE	"Homeowner with mortgage/loan"	TRUE	2	33	"employed"	41979	0.58747756620869	FALSE	"(25,65]"	NA
+"332"	"Iowa"	1083939	"M"	NA	0	"Married"	TRUE	"Homeowner free and clear"	FALSE	1	73	"missing"	47526	0.340087236836553	TRUE	"(65,Inf]"	NA
+"892"	"Texas"	1386763	"F"	TRUE	43600	"Never Married"	TRUE	"Rented"	TRUE	1	29	"employed"	41979	0.830942516913638	FALSE	"(25,65]"	10000
+"979"	"West Virginia"	743329	"M"	TRUE	100600	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	39	"employed"	61241	0.461391664575785	FALSE	"(25,65]"	70000
+"302"	"Indiana"	211424	"M"	TRUE	110000	"Divorced/Separated"	TRUE	"Rented"	FALSE	1	50	"employed"	55534	0.913873952813447	FALSE	"(25,65]"	12000
+"752"	"Ohio"	167498	"M"	FALSE	45000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	1	32	"not employed"	52176	0.268322055926546	FALSE	"(25,65]"	24800
+"460"	"Michigan"	1084583	"F"	TRUE	12000	"Married"	TRUE	"Homeowner with mortgage/loan"	FALSE	2	41	"employed"	62634	0.871542788110673	TRUE	"(25,65]"	285000
+"638"	"New York"	506042	"M"	TRUE	130100	"Divorced/Separated"	TRUE	"Homeowner with mortgage/loan"	FALSE	1	51	"employed"	44819	0.186964627122506	FALSE	"(25,65]"	43000
+"736"	"Ohio"	1362854	"F"	NA	35700	"Married"	FALSE	"Homeowner with mortgage/loan"	FALSE	1	28	"missing"	52176	0.58879421511665	FALSE	"(25,65]"	22800

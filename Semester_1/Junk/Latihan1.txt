@@ -1,0 +1,72 @@
+#1. Create List
+NamaSyarikat = c("ABC", "Bookstore Timah", "Prasa", "Delta", "Alfa", "Gama", "Bakeri Hasan", "Shel","DV","Viva","Kedai Sate Ali","Kedai Runcit Abu","Kilang Apel","DM")
+PendapatanBulanan = c(15214.32,3126.60, 5211.10, 3000.00,12431.11,290000.00,16321.00,176342.11,6251.99,6011.23,4321.67,6743.28,167223.90,26590.12)
+BilanganPekerja = c(4,3,1,1,2,1974,5,100,4,4,2,2,200,7)
+KategoriPerniagaan = c("P","P","S","P","P","P","S","B","S","S","S","S","B","P")
+KategoriPerniagaan_editted = ifelse(KategoriPerniagaan == "P", "Company", ifelse(KategoriPerniagaan == "B", "Limited","Private"))
+KategoriPerniagaan_final = as.factor(KategoriPerniagaan_editted)
+ModalBulanan = c(5000.00, 1530.00, 3211.00, 1444.00, 4372.11, 100000.00, 6421.66, 54320.00, 4421.00,5432.31,1500.00,2000.00,48761.00,6000.00)
+StatusSyarikat = c(0,0,0,0,0,1,0,1,0,0,0,0,1,0)
+StatusSyarikat_editted = ifelse(StatusSyarikat == 1, "Large", "Small")
+StatusSyarikat_final = as.factor(StatusSyarikat_editted)
+StatusPenarafan = c("A", "B", "B-", "B", "A+", "A+", "A", "A+","C","C-","B-","B","A+","A")
+StatusPenarafan = as.factor(StatusPenarafan)
+
+#2. Create Dataframe
+data2 = data.frame(NamaSyarikat, PendapatanBulanan,BilanganPekerja,KategoriPerniagaan_final,ModalBulanan,StatusSyarikat_final,StatusPenarafan)
+data = read.table(header=T, text ='
+			"Nama Syarikat" "Pendapatan Bulanan(RM)" "Bilangan Pekerja" "Kategori Perniagaan (1. Company = P, 2. Limited = B, 3. Private = S)" "Modal Bulanan (RM)" "Status Syarikat (1= Large, 0=Small)" "Status Penarafan"
+			"ABC" 15214.32 4 P 5000.00 0 A
+			"Bookstore Timah" 3126.60 3 P 1530.00 0 B
+			"Prasa" 5211.10 1 S 3211.00 0 B-
+			"Delta" 3000.00 1 P 1444.00 0 B
+			"Alfa" 12431.11 2 P 4372.11 0 A+
+			"Gama" 29000000 1974 P 100000.00 1 A+
+			"Bakeri Hasan" 16321.00 5 S 6421.66 0 A
+			"Shel" 176342.11 100 B 54320.00 1 A+
+			"DV" 6251.99 4 S 4421.00 0 C
+			"Viva" 6011.23 4 S 5432.31 0 C-
+			"Kedai Sate Ali" 4321.67 2 S 1500.00 0 B-
+			"Kedai Runcit Abu" 6743.28 2 S 2000.00 0 B
+			"Kilang Apel" 167223.90 200 B 48761.00 1 A+
+			"DM" 26590.12 7 P 6000.00 0 A')
+
+#3. Susun mengikut Pendapatan
+data_sorted = data2[order(data$Pendapatan.Bulanan, decreasing = FALSE),]
+
+#4. Tunjuk syarikat pendapatan >RM10000.00
+pendapatan1000 = data2$PendapatanBulanan>10000.00
+data2[pendapatan1000,]
+
+#5.  Hurainan ringkasan
+summary(data2)
+
+#6. Plot visualization
+par(mfrow=c(2,2))
+windows(10,10)
+
+#i. Hisotgram
+hist(PendapatanBulanan, main="Pendapatan Bulanan")
+
+#ii. Plot Kotak
+boxplot(PendapatanBulanan~KategoriPerniagaan_final, main = "Pendapatan Bulanan mengikuti Kategori Perniagaan")
+boxplot(PendapatanBulanan~StatusPenarafan, main = "Pendapatan Bulanan mengikuti Status Penarafan")
+
+#iii. Plot Serakan
+plot(ModalBulanan,PendapatanBulanan, main = "Modal Bulanan vs Pendapatan Bulanan")
+plot(BilanganPekerja,PendapatanBulanan, main = main = "Bilangan Pekerja vs Pendapatan Bulanan")
+
+#iv. Carta Pai
+count = c(6/14*100, 2/14*100, 6/14*100)
+count
+pie(count,main="Kategori Perniagaan", 
+	col="rainbow"(length(count)),
+	labels=c("Company","Limited","Private")
+)
+
+count2 = c(3/14*100,4/14*100,3/14*100,2/14*100,1/14*100,1/14*100)
+count2
+pie(count2,main="Status Penarafan", 
+	col="rainbow"(length(count2)),
+	labels=c("A", "A+", "B", "B-","C","C-")
+)

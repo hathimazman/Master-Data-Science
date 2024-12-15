@@ -1,0 +1,109 @@
+---
+title: "Pembersihan Data"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(mice)
+```
+
+# Pembersihan Data
+
+# 1. Kenalpasti corak data-data lenyap library(mice)
+```{r echo=TRUE}
+MData = read.csv(file.choose(), sep = ";") 
+head(MData, 10)
+
+md.pattern(MData)
+summary(MData)
+
+```
+
+# 2. Keluarkan cerapan yang mengandungi data lenyap MData2
+```{r echo=TRUE}
+MData2 = MData[complete.cases(MData),]
+MData2
+```
+
+## 2.1 Lihat cerapan yang mempunyai data lenyap
+
+```{r echo=TRUE}
+MData[!complete.cases(MData),]
+```
+
+# 3. Lengkapkan data lenyap secara manual
+```{r echo=TRUE}
+MData$crim
+MData$indus 
+indus.fix = edit(MData$indus) # Tak tukar ori data
+indus.fix
+```
+# 4. Gunakan sukatan memusat sebagai anggaran terhadap data lenyap
+```{r echo=TRUE}
+attach(MData)
+
+par(mfrow =c(1,3)) 
+hist(crim) #tak simetri 
+hist(indus) #tak simteri
+hist(medv) # tak simetri 
+hist(rm) # simetri
+```
+## 4.2 Untuk data taburan bersifat pincang/bukan simetri: median boleh digunakan.
+### Kenal pasti median data
+#### crim 
+```{r echo=TRUE}
+median.crim = median(crim, na.rm=T) 
+median.crim 
+crim.fix = ifelse(is.na(crim), median.crim, crim)
+
+par(mfrow = c(1,2)) 
+hist(crim, main="Bentuk taburan data asal")
+hist(crim.fix, main="Bentuk taburan data dengan anggaran median")
+```
+#### indus 
+```{r echo=TRUE}
+median.indus = median(indus, na.rm=T) 
+median.crim 
+indus.fix = ifelse(is.na(indus), median.indus, indus)
+
+par(mfrow = c(1,2)) 
+hist(indus, main="Bentuk taburan data asal")
+hist(indus.fix, main="Bentuk taburan data dengan anggaran median")
+```
+#### medv 
+```{r echo=TRUE}
+median.medv = median(medv, na.rm=T) 
+median.medv 
+medv.fix = ifelse(is.na(medv), median.medv, medv)
+
+par(mfrow = c(1,2)) 
+hist(medv, main="Bentuk taburan data asal")
+hist(medv.fix, main="Bentuk taburan data dengan anggaran median")
+```
+## 4.3 Untuk data taburan normal/simetri dengan nilai berangka: nilai minboleh digunakan.
+#### rm 
+
+```{r echo=TRUE}
+mean.rm = mean(rm, na.rm=T) 
+mean.rm 
+rm.fix = ifelse(is.na(rm),mean.rm, rm)
+
+par(mfrow = c(1,2)) 
+hist(rm, main="Bentuk taburan data asal")
+hist(rm.fix, main="Bentuk taburan data dengan anggaran median")
+```
+
+
+
+
+
+
+
+
+
+
+
+

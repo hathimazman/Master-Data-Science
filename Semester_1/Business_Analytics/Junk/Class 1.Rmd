@@ -1,0 +1,173 @@
+---
+title: "Class 1"
+output:
+  pdf_document: default
+  html_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## Libraries Used
+
+```{r echo=T, include=T}
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(DataCombine)
+```
+
+# Upload data into R Studio
+
+```{r echo=TRUE}
+knitr::opts_chunk$set(echo=T)
+# getwd()
+# setwd(dir = "E:/MSc DSc/Sem 1/Business Analytics/Ch1_bike_sharing_data.csv")
+datch1= read.csv("E:/MSc DSc/Sem 1/Business Analytics/Ch1_bike_sharing_data.csv")
+head(datch1,10)
+str(datch1)
+```
+
+# Transforming data
+
+## Using logical expression
+
+extracted_rows gives info on no of rows and cols
+
+```{r echo=T}
+extracted_rows = filter(datch1, registered == 0, season == 1 | season == 2) 
+dim(extracted_rows)
+```
+
+```{r}
+using_membership = filter(datch1, registered == 0, season %in% c(1,2)) 
+identical(extracted_rows, using_membership)
+```
+
+## Adding calculated column
+
+```{r echo=T}
+add_revenue = mutate(extracted_rows, revenue = casual*5)
+
+head(add_revenue,10) 
+```
+
+## Aggregate Data
+
+```{r}
+grouped = group_by(add_revenue,season) 
+head(grouped,10)
+```
+
+## Export Data
+
+```{r eval=FALSE}
+report = summarise(grouped, Casual = sum(casual), Revenue = sum(revenue)) 
+report
+write.csv(report, "revenue_report.csv", row.names = FALSE) 
+write.table(report, "revenue_report.txt", row.names = FALSE)
+```
+
+# Exercise Chapter 1 Bike
+
+## Load the dataset
+
+```{r}
+bike = read.csv("E:/MSc DSc/Sem 1/Business Analytics/Ch2_raw_bikeshare_data.csv") 
+head(bike,10) 
+```
+
+```{r}
+str(bike)
+```
+
+## Tabulate the null values
+
+```{r}
+table(is.na(bike))
+```
+
+## Finding and fixing flawed data
+
+```{r}
+bad_data = str_subset(bike$humidity, '[a-z A-Z]')
+bad_data
+location = str_detect(bike$humidity, bad_data) 
+bike[location,]
+```
+
+```{r}
+bike$humidity = str_replace_all(bike$humidity, bad_data, "61") 
+table(is.na(bike)) 
+```
+
+```{r}
+str(bike) 
+```
+
+```{r}
+
+bike$humidity = as.numeric(bike$humidity) 
+```
+
+## Transform and converting datatypes
+
+```{r}
+bike$holiday = factor(bike$holiday, levels = c(0,1),
+                        labels = c("no","yes"))
+bike$workingday = factor(bike$workingday, levels = c(0,1),
+                        labels = c("no","yes"))
+bike$weather = factor(bike$weather, levels = c(1,2,3,4),
+                        labels = c("clr_part_cloud",
+                                    "mist_cloudy",
+                                    "lt_rain_snow",
+                                    "hcy_rain_snow"),
+                        ordered = TRUE)
+bike$season = factor(bike$season, levels = c(1,2,3,4),
+                        labels = c("spring","summer",
+                                    "fall","winter"),
+                        ordered = TRUE)
+bike$datetime = mdy_hm(bike$datetime)
+```
+
+## Adapting data to standard
+
+```{r}
+unique(bike$sources)
+```
+
+```{r}
+bike$sources = tolower(bike$sources)
+bike$sources = str_trim(bike$sources)
+na_loc = is.na(bike$sources)
+bike$sources[na_loc] = "unknown"
+```
+
+## Combining data to new categories
+
+```{r}
+web_sites = "(www.[a-z]*.[a-z]*)"
+current = unique(str_subset(bike$sources, web_sites))
+current
+
+```
+
+```{r}
+replace = rep("web", length(current))
+replace
+```
+
+```{r}
+replacements = data.frame(from = current, to = replace)
+replacements
+```
+
+```{r}
+bike = FindReplace(data = bike, Var = "sources", replacements, from = "from", to = "to", exact = FALSE)
+unique(bike$sources)
+```
+
+```{r}
+bike$sources = as.factor(bike$sources)
+str(bike$sources)
+```

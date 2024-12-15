@@ -1,0 +1,41 @@
+state.of.res,custid,sex,is.employed,marital.stat,health.ins,housing.type,recent.move,num.vehicles,age,is.employed.fix1,age.range,Yearly.Income
+Louisiana,33828,F,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,2,49,employed,(25:65],48000
+Connecticut,150055,F,TRUE,Married,TRUE,Rented,FALSE,2,24,employed,[0:25],63000
+Minnesota,204591,F,TRUE,Divorced/Separated,TRUE,Rented,FALSE,3,49,employed,(25:65],20000
+New York,1327830,M,NA,Divorced/Separated,TRUE,Homeowner with mortgage/loan,FALSE,1,67,missing,(65:Inf],NA
+Montana,950326,M,TRUE,Never Married,FALSE,Rented,FALSE,1,26,employed,(25:65],34200
+North Carolina,1405584,F,NA,Married,TRUE,Homeowner with mortgage/loan,FALSE,2,55,missing,(25:65],80000
+Maryland,1364927,M,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,NA,59,employed,(25:65],90000
+Ohio,1031473,M,TRUE,Widowed,TRUE,Homeowner with mortgage/loan,FALSE,4,65,employed,(25:65],22800
+Pennsylvania,1342272,F,FALSE,Married,FALSE,Rented,FALSE,2,27,not employed,(25:65],33500
+Montana,699499,M,TRUE,Never Married,TRUE,Rented,FALSE,2,29,employed,(25:65],100600
+Pennsylvania,84879,F,TRUE,Married,TRUE,Homeowner free and clear,FALSE,2,42,employed,(25:65],25000
+Minnesota,938913,M,TRUE,Married,TRUE,Homeowner free and clear,FALSE,1,61,missing,(25:65],63000
+Florida,220135,M,TRUE,Divorced/Separated,TRUE,Rented,TRUE,2,64,employed,(25:65],NA
+California,1239370,F,TRUE,Married,TRUE,Homeowner with mortgage/loan,TRUE,2,50,employed,(25:65],75000
+Illinois,589826,F,TRUE,Never Married,TRUE,Rented,FALSE,1,NA,employed,(25:65],44600
+Ohio,1037857,M,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,3,22,employed,[0:25],20000
+North Carolina,1263543,M,NA,Married,TRUE,Homeowner free and clear,FALSE,3,77,missing,(65:Inf],32000
+Washington,1058755,F,TRUE,Divorced/Separated,TRUE,Homeowner free and clear,FALSE,1,59,employed,(25:65],24800
+Michigan,120705,M,TRUE,Never Married,TRUE,Rented,TRUE,0,30,employed,(25:65],120000
+California,431729,M,FALSE,Married,TRUE,Homeowner with mortgage/loan,FALSE,2,75,missing,(65:Inf],63000
+Minnesota,1160167,M,FALSE,Married,TRUE,Homeowner with mortgage/loan,FALSE,2,74,missing,(65:Inf],61000
+Louisiana,863276,F,FALSE,Married,TRUE,Rented,FALSE,1,46,not employed,(25:65],80000
+Texas,445937,F,NA,Widowed,TRUE,Rented,FALSE,1,86,missing,(65:Inf],165200
+New York,1185185,M,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,NA,71,missing,(65:Inf],NA
+Ohio,1024809,M,TRUE,Married,TRUE,Homeowner with mortgage/loan,TRUE,1,24,employed,[0:25],90000
+Texas,1359848,F,FALSE,Married,FALSE,Homeowner free and clear,FALSE,4,59,not employed,(25:65],55000
+Maryland,1114096,M,TRUE,Married,TRUE,Rented,FALSE,1,NA,employed,(25:65],71800
+Illinois,532971,M,TRUE,Married,TRUE,Rented,FALSE,2,33,employed,(25:65],NA
+West Virginia,952729,F,TRUE,Never Married,TRUE,Rented,FALSE,1,28,employed,(25:65],402000
+Iowa,1236675,M,TRUE,Divorced/Separated,TRUE,Homeowner with mortgage/loan,FALSE,1,39,employed,(25:65],14000
+Pennsylvania,518899,M,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,3,49,employed,(25:65],22800
+Indiana,1283783,F,TRUE,Never Married,TRUE,Homeowner with mortgage/loan,FALSE,1,63,employed,(25:65],93500
+Ohio,1038537,F,TRUE,Never Married,FALSE,Homeowner free and clear,FALSE,1,42,employed,(25:65],NA
+Georgia,774920,M,TRUE,Never Married,TRUE,Homeowner with mortgage/loan,FALSE,4,43,employed,(25:65],110000
+Nevada,867842,F,FALSE,Widowed,TRUE,Homeowner free and clear,FALSE,1,75,missing,(65:Inf],71800
+Nebraska,474507,F,TRUE,Married,TRUE,Homeowner with mortgage/loan,FALSE,3,52,employed,(25:65],38080
+New York,1361012,F,FALSE,Widowed,TRUE,Homeowner free and clear,FALSE,1,NA,missing,(65:Inf],40000
+Illinois,863424,F,TRUE,Never Married,TRUE,Rented,FALSE,NA,42,employed,(25:65],NA
+Georgia,679364,F,FALSE,Married,TRUE,Homeowner free and clear,FALSE,2,55,not employed,(25:65],42000
+Tennessee,1370515,F,NA,Married,TRUE,Homeowner with mortgage/loan,FALSE,2,62,missing,(25:65],104000

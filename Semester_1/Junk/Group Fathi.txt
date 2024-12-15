@@ -1,0 +1,27 @@
+company<- c("ABC","Bookstore Timah","Prasa","Delta","Alfa","Gama","Bakeri Hasan","Shel","DV","Viva","Kedai Sate Ali","Kedai Runcit Abu","Kilang Apel","DM")
+PendapatanBulanan<- c(15214.32,3126.6,5211.1,3000,12431.11,290000,16321,176342.11,6251.99,6011.23,4321.67,6743.28,167223.9,26590.12)
+BilPekerja<- c(4,3,1,1,2,1974,5,100,4,4,2,2,200,7)
+Category<- c("P","P","S","P","P","P","S","B","S","S","S","S","B","P")
+Modal<- c(5000,1530,3211,1444,4372.11,100000,6421.66,54320,4421,5432.31,1500,2000,48761,6000)
+Status<- c(0,0,0,0,0,1,0,1,0,0,0,0,1,0)
+Penarafan<- c("A","B","B-","B","A+","A+","A","A+","C","C-","B-","B","A+","A")
+
+table1<- data.frame(company,PendapatanBulanan,BilPekerja,Category,Modal,Status,Penarafan)
+print(table1)
+
+table1<- table1[order(table1$PendapatanBulanan),]
+print(table1)
+
+filter1<- table1[(table1$PendapatanBulanan>=10000),]
+print(filter1)
+
+summary(filter1)
+
+#piechart
+pie(table1$PendapatanBulanan, labels=table1$company, main="Pie Chart of Company")
+
+#histogram
+hist(table1$PendapatanBulanan)
+
+#boxplot
+boxplot(table1$PendapatanBulanan~table1$BilPekerja)

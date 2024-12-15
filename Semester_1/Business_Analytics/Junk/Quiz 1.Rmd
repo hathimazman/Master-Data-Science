@@ -1,0 +1,115 @@
+---
+title: 'Quiz - Ahmad Hathim bin Ahmad Azman (P153146)'
+output:
+    pdf_document: default
+    html_document: default
+---
+
+```{r, echo=T, include=F}
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(DataCombine)
+library(psych)
+library(MASS)
+library(corrgram)
+```
+
+# Load Data and statistical summary
+
+```{r, echo=T, include=T}
+campaign_data <- read.table(file = "E:/MSc DSc/Sem 1/Business Analytics/Data Part B.csv",sep = ",", header = TRUE)
+head(campaign_data, 5)
+```
+
+```{r, echo=T, include=T}
+str(campaign_data)
+```
+
+```{r, echo=T, include=T}
+summary(campaign_data)
+```
+
+# Question (A) Linear Regression Model
+
+```{r, echo=T, include=T}
+model <- lm(website_visits ~ price + units_sold + advertising_budget, data = campaign_data)
+model
+```
+
+The coefficients of the model are as follows:
+
+-   *price*: 139.681
+
+-   *units_sold* : 34.025
+
+-   *advertising_budget* : 1.411
+
+-   *y-intercept* ($B_0$): -1199.118
+
+$$website\_visits = -1199.118 + 139.681(price) + 34.025(units\_sold) + 1.411(advertising\_budget)$$
+
+This shows that if the price of the product increases by 1 unit, the website visits will increase by 139.681 visits. Similarly, if the units sold increase by 1 unit, the website visits will increase by 34.025 visits. If the advertising budget increases by 1 unit, the website visits will increase by 1.411 visits. Otherwise, if the variables are held constant, the company will lose website visits by -1199.118 visits.
+
+# Question (B) Is the model considered a good fit? Justify the answer.
+
+```{r, echo=T, include=T}
+summary(model)
+```
+
+Looking at the summary of the model, the p-value of the multiple linear regression is significant at \<2.2e-16, and each variable itself has a significant p-value. Thus all variables; *price*, *units_sold*, and *advertising_budget* are significant in predicting website visits. The adjusted R-squared is also 0.9945, meaning that the model explains 99.45% of the variance in website visits by its independent variables; *price*, *units_sold*, and *advertising_budget*.
+
+# Question (C), Check the assumptions of Linear Regression
+
+## 1) Check for Linearity
+
+```{r echo=T, fig.height=6, fig.width=6, include=T}
+pairs(campaign_data)
+```
+
+From the pair plots above, it can be seen that the relationship between website visits and price, units sold, and advertising budget is linear.
+
+## 2) Check for Independence
+
+It is often difficult to check for independence between variables. It if often understood during the process of data collection and identifying variables. Thus, it will be on the assumption that the data is independent.
+
+## 3) Check for Normality and Equal Variance
+
+To test for Normality and Equal Variance, there are 3 plots that can be used; histogram, qq-plot, and residuals vs fitted plot.
+
+```{r echo=T, fig.height=8, fig.width=8, include=T}
+par(mfrow=c(2,2))
+plot(model)
+par(mfrow=c(1,1))
+```
+
+From the 3 plots above it can be seen that;
+
+1.  The **QQ-Plot** shows that the residuals are relatively normally distributed
+
+2.  The **residuals vs fitted plot** shows that the residuals are randomly scattered around the 0 line, but there is a slight irregularity, which indicates that the variance of the residuals is not constant.
+
+3.  The **Residuals vs Leverage** plot shows that there is presence of outlier in the data that may affect the model.
+
+# Question (D) Does any of the variables require transformation? Justify the answer.
+
+The variables that require transformation for this model is the *websites_visits*. This is because the equal variance does not appear homogenous, thus to adjust for equal variance, the *website_visits* variable should be transformed.
+
+# Question (E), perform multicollienarity test
+
+```{r, echo=T, include=T}
+corr.test(campaign_data[2:4])
+
+```
+
+```{r echo=T, fig.height=6, fig.width=6, include=T}
+corrgram(campaign_data[2:4], 
+         main = 'Correlogram of Marketing Data Ordered',
+         order=FALSE, 
+         lower.panel=panel.ellipse, 
+         upper.panel=panel.conf, 
+         text.panel=panel.txt,
+         diag.panel = panel.minmax)
+```
+
+From the correlation matrix above, it can be seen that the correlation between the independent variables is high, thus there is evidence of multicollinearity in the model. Thus, to reduce multicollinearity, the variables should be transformed. There are multiple ways to transform data to avoid multicollinearity, such as using dimension reduction such as Principle Component Analysis (PCA), or to remove one of highly correlated variables. Another method of reducing multicollinearity is to use transformation such as log transformation of the independent variables.

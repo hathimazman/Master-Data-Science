@@ -1,0 +1,49 @@
+
+# define the variables
+nama_syarikat = c("ABC", "Bookstore Timah","Prasa","Delta","Alfa","Gama","Bakeri Hasan","Shel","DV","Viva","Kedai Sate Ali","Kedai Runcit Abu","Kilang Apel","DM")
+income= c(15214.32,3126.60,5211.10,3000,12431.11,290000,16321,176342.11,6251.99,6011.23,4321.67,6743.28,167223.90,26590.12
+bil_pekerja = c(4,3,1,1,2,1974,5,100,4,4,2,2,200,7)
+category = c("P","P","S","P","P","P","S","B","S","S","S","S","B","P")
+category = if(category == "P","Company",if(category == "B", "Limited")else("Private"))
+category = as.factor(category)
+Modal = c(5000,1530,3211,1444,4372.11,100000,6421.66,54320,4421,5432.31,1500,2000,48761,6000)
+status = c(0,0,0,0,0,1,0,1,0,0,0,0,1,0)
+status = ifelse( status == 1, "Large","Small")
+status_taraf = c("A","B","B-","B","A+","A+","A","A+","C","C-","B-","B","A+","A")
+status_taraf = as.factor(status_taraf)
+
+#check if it is equal
+length(bil_pekerja)
+length(income)
+length(nama_syarikat)
+length(category)
+length(Modal)
+length(status)
+length(status_taraf)
+
+#define the dataframe
+data = data.frame(nama_syarikat,income,bil_pekerja,category,Modal,status,status_taraf)
+
+#order income first, then retrive data
+data2 = data[order(data$income),]
+data2
+
+#4. sort by 10000
+
+data2$high_income = with(data2, ifelse(income > 10000, "HIGH","")
+data2
+
+#5
+summary(data2)
+
+#6 - bina plot in serentak
+
+
+plot(x= data2$category, y = data2$income, xlab = "Kategori Perniagaan", ylab= "Pendapatan", main = "Kategori vs Pendapatan")
+
+
+#plot(x = data2$bil_pekerja, y = data2$income)
+#hist(data2$Modal, main= "histogram")
+#plot(x = data2$Modal,y=data2$income)
+#bart(x = data2$status, y=data2$income)
+

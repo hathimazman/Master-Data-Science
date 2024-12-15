@@ -1,0 +1,98 @@
+---
+title: "Tugasan 4 "
+output:
+  pdf_document: default
+---
+
+1\. Janakan data mtcars dalam R
+
+```{r, echo=T, include=TRUE}
+data = mtcars
+head(mtcars,10)
+```
+
+2. Skalakan data tersebut.
+
+```{r}
+mtcars_scaled = scale(mtcars)
+head(mtcars_scaled,10)
+```
+
+3. Jalankan analisis faktor untuk menurunkan dimensi data mtcars.
+
+```{r, echo=T, include=T}
+library(corrplot)
+corrplot(cor(mtcars_scaled), order='hclust')
+```
+
+```{r, echo=T, include=T}
+library(psych)
+scree(mtcars_scaled)
+```
+
+4. Kenalpasti faktor pendam yang sesuai yang boleh menerangkan data asal.
+
+```{r, echo=T, include=T}
+F.A = factanal(mtcars_scaled, factors=3, scores = 'regression',rotation='varimax')
+F.A
+```
+
+```{r, echo=T, include=T}
+head(F.A$scores,20)
+```
+
+5. Berikan tafsiran yang bersesuaian bagi setiap faktor pendam terhadap data asal.
+
+### **Factor 1:** seems to be related to **performance** vehicle
+
+-   High positive loadings:
+
+    -   Rear axle ratio (0.804)
+
+    -   Transmission (0.880)
+
+    -   Number of forward gears (0.908)
+
+-   Moderate negative loadings:
+
+    -   Miles/(US) gallon (-0.643)
+
+    -   Displacement (-0.719)
+
+    -   Weight (-0.778)
+
+### **Factor 2:** reflects **engine characteristics and power**
+
+-   High positive loadings:
+
+    -   Number of cylinders (0.703)
+
+    -   Gross horsepower (0.725)
+
+    -   1/4 mile time (-0.946)
+
+-   Moderate negative loadings:
+
+    -   Engine Shape (-0.805)
+
+### **Factor 3:** seems to reflect **heavier, less fuel-efficient vehicles**
+
+-   High positive loadings:
+
+    -   Weight (0.524)
+
+    -   Number of carburetors (0.719)
+
+-   Moderate negative loadings:
+
+    -   Miles (-0.473)
+
+    -   Gross horsepower (0.513)
+
+### **Summary of Factors:**
+
+1.  **Factor 1** seems to be related to **performance** vehicles, with manual transmissions, higher gear ratios, and larger engine sizes that are less fuel-efficient.
+
+2.  **Factor 2** reflects **engine characteristics and power**, including high horsepower and large engine displacement, likely representing powerful vehicles with a focus on engine strength rather than fuel efficiency or acceleration speed.
+
+3.  **Factor 3** seems to reflect **heavier, less fuel-efficient vehicles** with potentially more complex carburetor systems and greater emphasis on weight and engine characteristics rather than speed or fuel economy.

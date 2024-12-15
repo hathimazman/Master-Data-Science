@@ -1,0 +1,101 @@
+"","state.of.res","custid","sex","is.employed","income","marital.stat","health.ins","housing.type","recent.move","num.vehicles","age","is.employed.fix1","Median.Income","gp","income.lt.30K","age.range","Income"
+"215","Florida",46791,"M",NA,22700,"Married",TRUE,"Homeowner free and clear",FALSE,2,67,"missing",56895,0.594983885297552,TRUE,"(65,Inf]",45000
+"444","Michigan",36825,"M",TRUE,17500,"Married",FALSE,"Rented",FALSE,2,35,"employed",62634,0.555028432281688,TRUE,"(25,65]",60000
+"949","Virginia",415060,"F",FALSE,16000,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,1,60,"not employed",53914,0.112282044254243,TRUE,"(25,65]",NA
+"122","California",1159665,"M",TRUE,37000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,4,46,"employed",39832,0.277308323420584,FALSE,"(25,65]",402000
+"994","Wisconsin",1131536,"M",TRUE,80000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,4,57,"employed",41073,0.144478643545881,FALSE,"(25,65]",NA
+"58","California",819436,"F",NA,56800,"Widowed",TRUE,"Homeowner with mortgage/loan",FALSE,1,81,"missing",39832,0.301192527636886,FALSE,"(65,Inf]",120300
+"536","Nevada",1082333,"M",TRUE,45000,"Divorced/Separated",TRUE,"Homeowner free and clear",FALSE,2,50,"employed",52498,0.505580645054579,FALSE,"(25,65]",NA
+"557","New Jersey",968478,"F",TRUE,46800,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,3,48,"employed",68187,0.124990240903571,FALSE,"(25,65]",23800
+"639","New York",1185185,"M",NA,19000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,1,71,"missing",44819,0.112095572054386,TRUE,"(65,Inf]",NA
+"590","New Mexico",864947,"F",NA,22700,"Divorced/Separated",TRUE,"Homeowner free and clear",FALSE,1,67,"missing",68071,0.33097833651118,TRUE,"(65,Inf]",30900
+"568","New Jersey",565628,"F",TRUE,15000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,58,"employed",68187,0.0102407187223434,TRUE,"(25,65]",2e+05
+"157","Colorado",648220,"M",TRUE,20000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,3,51,"employed",59209,0.49776848917827,TRUE,"(25,65]",NA
+"21","Arizona",1372296,"F",NA,62000,"Widowed",TRUE,"Homeowner free and clear",TRUE,1,62,"missing",65720,0.369414650602266,FALSE,"(25,65]",35000
+"480","Minnesota",33651,"F",TRUE,45000,"Never Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,44,"employed",50118,0.684677336597815,FALSE,"(25,65]",40000
+"151","California",487124,"M",TRUE,2000,"Married",FALSE,"Rented",FALSE,2,54,"employed",39832,0.998247954528779,TRUE,"(25,65]",32000
+"15","Arizona",1096606,"M",TRUE,52500,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,3,50,"employed",65720,0.421101192943752,FALSE,"(25,65]",170000
+"311","Indiana",124968,"F",TRUE,100000,"Never Married",TRUE,"Homeowner free and clear",FALSE,1,56,"employed",55534,0.753998699132353,FALSE,"(25,65]",NA
+"573","New Jersey",778821,"M",NA,23500,"Widowed",TRUE,"Homeowner free and clear",FALSE,2,79,"missing",68187,0.896337155951187,TRUE,"(65,Inf]",165050
+"143","California",199788,"M",FALSE,43500,"Never Married",FALSE,"Homeowner free and clear",TRUE,2,37,"not employed",39832,0.636425565928221,FALSE,"(25,65]",54000
+"335","Iowa",345994,"M",TRUE,177000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,5,48,"employed",47526,0.136544342385605,FALSE,"(25,65]",9600
+"398","Massachusetts",1097109,"M",TRUE,44000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,4,50,"employed",66928,0.0516261290758848,FALSE,"(25,65]",NA
+"801","Pennsylvania",1241975,"M",TRUE,35400,"Married",FALSE,"Homeowner with mortgage/loan",FALSE,2,51,"employed",52758,0.0725317536853254,FALSE,"(25,65]",116000
+"792","Pennsylvania",351129,"F",NA,0,"Never Married",TRUE,"Rented",FALSE,2,51,"missing",52758,0.104723465861753,TRUE,"(25,65]",12000
+"100","California",829722,"F",NA,29000,"Widowed",TRUE,"Homeowner free and clear",FALSE,0,78,"missing",39832,0.238271063892171,TRUE,"(65,Inf]",110000
+"723","Ohio",122231,"M",TRUE,100000,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,2,48,"employed",52176,0.397499560378492,FALSE,"(25,65]",NA
+"674","New York",1400440,"M",NA,0,"Married",TRUE,NA,NA,NA,37,"missing",44819,0.622958352556452,TRUE,"(25,65]",385000
+"731","Ohio",496465,"M",NA,0,"Divorced/Separated",FALSE,NA,NA,NA,45,"missing",52176,0.147300403099507,TRUE,"(25,65]",11200
+"387","Maryland",175033,"M",NA,269000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,47,"missing",49572,0.104691549669951,FALSE,"(25,65]",93300
+"974","Washington",702348,"F",NA,3000,"Married",TRUE,"Rented",TRUE,4,20,"missing",64095,0.742260459344834,TRUE,"[0,25]",43600
+"396","Maryland",440475,"M",TRUE,35000,"Married",TRUE,"Homeowner free and clear",FALSE,2,49,"employed",49572,0.322526689153165,FALSE,"(25,65]",NA
+"280","Illinois",1321154,"F",NA,8000,"Widowed",TRUE,NA,NA,NA,83,"missing",49293,0.520752758253366,TRUE,"(65,Inf]",NA
+"966","Washington",478502,"M",TRUE,90000,"Married",FALSE,"Rented",FALSE,1,62,"employed",64095,0.607271722285077,FALSE,"(25,65]",113950
+"14","Alaska",416144,"F",TRUE,82000,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,2,44,"employed",44191,0.306658288929611,FALSE,"(25,65]",89200
+"171","Connecticut",1282762,"M",NA,0,"Never Married",FALSE,NA,NA,NA,41,"missing",61154,0.420155006228015,TRUE,"(25,65]",110000
+"741","Ohio",308107,"F",TRUE,1800,"Never Married",FALSE,"Rented",FALSE,1,54,"employed",52176,0.595350703690201,TRUE,"(25,65]",44500
+"165","Connecticut",102269,"M",NA,14400,"Married",TRUE,"Rented",TRUE,1,84,"missing",61154,0.955143906874582,TRUE,"(65,Inf]",47500
+"863","South Carolina",103389,"F",TRUE,130000,"Never Married",TRUE,"Rented",TRUE,1,41,"employed",54879,0.555946600856259,FALSE,"(25,65]",78000
+"505","Missouri",861489,"F",FALSE,17000,"Divorced/Separated",FALSE,"Homeowner with mortgage/loan",FALSE,1,56,"not employed",37427,0.853613878134638,TRUE,"(25,65]",104000
+"900","Texas",156520,"M",TRUE,75000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,40,"employed",41979,0.801054719369859,FALSE,"(25,65]",NA
+"59","California",1225838,"M",TRUE,75000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,62,"employed",39832,0.707371695199981,FALSE,"(25,65]",NA
+"160","Colorado",53759,"F",NA,0,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,34,"missing",59209,0.00325942365452647,TRUE,"(25,65]",NA
+"663","New York",298205,"M",TRUE,110450,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,38,"employed",44819,0.609248765744269,FALSE,"(25,65]",16500
+"138","California",348319,"F",NA,0,"Married",TRUE,"Rented",FALSE,3,26,"missing",39832,0.0188914467580616,TRUE,"(25,65]",NA
+"694","North Carolina",608789,"M",NA,15000,"Divorced/Separated",TRUE,NA,NA,NA,58,"missing",52683,0.980155188590288,TRUE,"(25,65]",45800
+"281","Illinois",523990,"F",TRUE,90000,"Never Married",TRUE,"Rented",FALSE,1,31,"employed",49293,0.647604183992371,FALSE,"(25,65]",NA
+"888","Texas",279538,"F",TRUE,62400,"Never Married",TRUE,"Rented",TRUE,1,42,"employed",41979,0.667357440805063,FALSE,"(25,65]",1e+05
+"191","Florida",1262812,"M",TRUE,60000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,70,"employed",56895,0.178184511838481,FALSE,"(65,Inf]",58000
+"592","New York",26057,"M",TRUE,30000,"Married",TRUE,NA,NA,NA,28,"employed",44819,0.937899022595957,FALSE,"(25,65]",10800
+"922","Texas",97247,"F",NA,70500,"Widowed",TRUE,"Homeowner with mortgage/loan",FALSE,1,78,"missing",41979,0.757571021327749,FALSE,"(65,Inf]",NA
+"394","Maryland",971768,"M",TRUE,8000,"Never Married",FALSE,NA,NA,NA,45,"employed",49572,0.257807880407199,TRUE,"(25,65]",28000
+"893","Texas",439284,"F",TRUE,1100,"Never Married",TRUE,"Rented",FALSE,1,32,"employed",41979,0.152512300293893,TRUE,"(25,65]",0
+"957","Virginia",27761,"M",TRUE,24000,"Never Married",FALSE,"Rented",FALSE,2,33,"employed",53914,0.557695565745234,TRUE,"(25,65]",30000
+"491","Mississippi",1213522,"M",TRUE,15400,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,58,"employed",58094,0.563656993443146,TRUE,"(25,65]",70200
+"803","Pennsylvania",1108230,"F",TRUE,30400,"Widowed",TRUE,"Rented",FALSE,1,64,"employed",52758,0.815306109841913,FALSE,"(25,65]",64270
+"508","Missouri",1037495,"F",TRUE,22800,"Never Married",FALSE,"Rented",TRUE,1,30,"employed",37427,0.351980248466134,TRUE,"(25,65]",103500
+"98","California",116171,"F",NA,51500,"Widowed",TRUE,"Homeowner free and clear",FALSE,1,81,"missing",39832,0.00570856756530702,FALSE,"(65,Inf]",NA
+"259","Illinois",236067,"M",TRUE,140000,"Never Married",TRUE,"Homeowner with mortgage/loan",FALSE,1,46,"employed",49293,0.735240730922669,FALSE,"(25,65]",24000
+"400","Massachusetts",609449,"F",NA,53010,"Widowed",TRUE,"Homeowner free and clear",FALSE,2,83,"missing",66928,0.0347844331990927,FALSE,"(65,Inf]",0
+"170","Connecticut",150055,"F",TRUE,78000,"Married",TRUE,"Rented",FALSE,2,24,"employed",61154,0.0421378156170249,FALSE,"[0,25]",NA
+"263","Illinois",620452,"M",FALSE,17000,"Married",FALSE,"Homeowner with mortgage/loan",FALSE,1,46,"not employed",49293,0.82221990195103,TRUE,"(25,65]",90600
+"855","South Carolina",441221,"M",TRUE,93500,"Never Married",TRUE,"Rented",TRUE,0,25,"employed",54879,0.992223818553612,FALSE,"[0,25]",NA
+"587","New Mexico",72741,"F",NA,42500,"Widowed",TRUE,"Homeowner free and clear",FALSE,0,88,"missing",68071,0.856968087842688,FALSE,"(65,Inf]",55001
+"948","Virginia",117491,"M",TRUE,110000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,4,58,"employed",53914,0.805382939754054,FALSE,"(25,65]",136800
+"90","California",1231777,"F",TRUE,91010,"Never Married",TRUE,"Rented",FALSE,1,52,"employed",39832,0.401789418887347,FALSE,"(25,65]",6200
+"63","California",442608,"M",TRUE,34000,"Never Married",TRUE,"Homeowner with mortgage/loan",TRUE,4,23,"employed",39832,0.956384393386543,FALSE,"[0,25]",76000
+"226","Georgia",1185382,"F",NA,7200,"Never Married",TRUE,NA,NA,NA,26,"missing",47353,0.123204096918926,TRUE,"(25,65]",NA
+"533","Nebraska",1222380,"M",TRUE,85000,"Married",FALSE,"Homeowner with mortgage/loan",FALSE,2,33,"employed",43607,0.846848407993093,FALSE,"(25,65]",70504
+"879","Tennessee",363008,"F",NA,5400,"Married",TRUE,"Rented",FALSE,1,84,"missing",50977,0.817505396669731,TRUE,"(65,Inf]",45000
+"54","California",218283,"F",NA,20000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,37,"missing",39832,0.722357812803239,TRUE,"(25,65]",19000
+"869","Tennessee",1072259,"M",NA,10500,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,1,60,"missing",50977,0.845180949661881,TRUE,"(25,65]",48000
+"920","Texas",22295,"M",TRUE,14400,"Married",TRUE,"Homeowner free and clear",FALSE,3,54,"employed",41979,0.820166015066206,TRUE,"(25,65]",24000
+"351","Kentucky",618500,"F",TRUE,8450,"Married",TRUE,"Rented",TRUE,3,64,"employed",48451,0.121073844144121,TRUE,"(25,65]",94700
+"258","Illinois",876972,"F",TRUE,10000,"Married",FALSE,"Rented",TRUE,3,28,"employed",49293,0.359530813060701,TRUE,"(25,65]",27000
+"667","New York",683867,"M",TRUE,82000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,62,"employed",44819,0.94639247842133,FALSE,"(25,65]",NA
+"702","North Carolina",1405584,"F",NA,4000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,55,"missing",52683,0.328567893011495,TRUE,"(25,65]",NA
+"239","Georgia",592496,"M",TRUE,10700,"Divorced/Separated",TRUE,"Rented",FALSE,1,60,"employed",47353,0.553131454624236,TRUE,"(25,65]",61000
+"262","Illinois",1088407,"M",TRUE,180000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,36,"employed",49293,0.448829790577292,FALSE,"(25,65]",NA
+"825","Pennsylvania",792130,"F",NA,30000,"Never Married",TRUE,"Homeowner free and clear",FALSE,1,72,"missing",52758,0.797392436070368,FALSE,"(65,Inf]",41000
+"205","Florida",801018,"F",NA,45000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,64,"missing",56895,0.637124835746363,FALSE,"(25,65]",31200
+"57","California",1175925,"M",NA,0,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,5,59,"missing",39832,0.0843284474685788,TRUE,"(25,65]",78000
+"16","Arizona",692445,"M",TRUE,140000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,5,48,"employed",65720,0.541752646910027,FALSE,"(25,65]",14400
+"477","Minnesota",1171408,"M",TRUE,9000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,3,33,"employed",50118,0.242689032107592,TRUE,"(25,65]",35780
+"376","Maine",542384,"F",NA,0,"Married",FALSE,"Rented",FALSE,2,57,"missing",44484,0.405964106554165,TRUE,"(25,65]",48000
+"988","Wisconsin",1105503,"M",TRUE,52200,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,4,62,"employed",41073,0.479849777184427,FALSE,"(25,65]",NA
+"195","Florida",220135,"M",TRUE,75000,"Divorced/Separated",TRUE,"Rented",TRUE,2,64,"employed",56895,0.567906091921031,FALSE,"(25,65]",NA
+"898","Texas",110699,"M",TRUE,60000,"Never Married",TRUE,"Homeowner free and clear",FALSE,1,53,"employed",41979,0.284656696487218,FALSE,"(25,65]",64000
+"182","Delaware",450776,"F",TRUE,14900,"Divorced/Separated",FALSE,"Rented",FALSE,1,33,"employed",67784,0.324177963891998,TRUE,"(25,65]",60000
+"35","Arkansas",1358975,"F",TRUE,92000,"Divorced/Separated",TRUE,"Homeowner with mortgage/loan",FALSE,1,46,"employed",48484,0.821449507260695,FALSE,"(25,65]",NA
+"950","Virginia",527928,"F",TRUE,93300,"Never Married",TRUE,"Homeowner with mortgage/loan",FALSE,1,43,"employed",53914,0.881891094846651,FALSE,"(25,65]",50000
+"521","Missouri",499492,"M",NA,15400,"Never Married",TRUE,"Homeowner free and clear",FALSE,1,54,"missing",37427,0.57128981128335,TRUE,"(25,65]",9600
+"320","Indiana",1046317,"F",NA,19000,"Widowed",TRUE,"Homeowner with mortgage/loan",FALSE,1,89,"missing",55534,0.614493690198287,TRUE,"(65,Inf]",NA
+"132","California",851013,"M",TRUE,85200,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,63,"employed",39832,0.355856651207432,FALSE,"(25,65]",NA
+"457","Michigan",315265,"M",NA,34900,"Married",TRUE,"Homeowner free and clear",FALSE,3,82,"missing",62634,0.0455716045107692,FALSE,"(65,Inf]",28000
+"77","California",497970,"F",TRUE,48000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,30,"employed",39832,0.522834691219032,FALSE,"(25,65]",266200
+"507","Missouri",77312,"M",TRUE,37200,"Married",FALSE,"Homeowner free and clear",FALSE,2,35,"employed",37427,0.447069507790729,FALSE,"(25,65]",120000
+"785","Oregon",1048836,"M",TRUE,40000,"Married",TRUE,"Rented",FALSE,3,55,"employed",48137,0.262207013787702,FALSE,"(25,65]",52500
+"374","Maine",1150024,"M",TRUE,36000,"Married",TRUE,"Rented",FALSE,2,37,"employed",44484,0.99412153987214,FALSE,"(25,65]",NA
+"965","Washington",356763,"M",TRUE,24000,"Married",FALSE,"Rented",FALSE,3,48,"employed",64095,0.0458685185294598,TRUE,"(25,65]",NA
+"362","Louisiana",1293509,"M",NA,10400,"Never Married",TRUE,"Rented",TRUE,0,34,"missing",43860,0.631102889310569,TRUE,"(25,65]",NA
+"357","Louisiana",598008,"M",TRUE,388000,"Married",TRUE,"Homeowner with mortgage/loan",FALSE,2,51,"employed",43860,0.628550098510459,FALSE,"(25,65]",NA

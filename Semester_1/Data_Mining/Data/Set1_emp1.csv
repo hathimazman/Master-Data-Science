@@ -1,0 +1,11 @@
+﻿#salary in MYR,,,,,,
+id,grade,status,type,first name,last name,salary
+10212,41,active,permanent,ali,smith,2200
+10213,41,active,permanent,john,doe,2300
+10214,44,active,permanent,sheryl,armstrong,3600
+10215,42,active,permanent,haily,bailey,2500
+10216,48,active, contract,jackson,green,5200
+10217,54,active,permanent,martin,parker,5200
+10218,41,inactive,contract ,rose,taylor,2600
+10219,52,active,contract,wilson,wood,6600
+10220,42,active, permanent,mitchell,lee,2500

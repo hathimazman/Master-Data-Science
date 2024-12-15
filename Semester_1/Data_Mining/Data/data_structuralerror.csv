@@ -1,0 +1,16 @@
+#Cleaning schedule. Start 7/8/2023.,,,,,
+#sink_table: whether they wiped the sink or table,,,,,
+#diswasher: whether the dishwasher was full at the time,,,,,
+#no_of mugs/plates: the number of mugs or plates they found in the sink,,,,,
+date,Name,sink Table,dishwasher,no Of mugs/plates,Note
+7/8/23,Ali,sink only,no,9,-
+8-8-23,Johan,sink and table,YES!,2-3,all looking GOOD!
+9-8-2023,Daus,"sink,table",Yes,8,N/A
+10/8/2023,George,,,0,All of us at workshop
+11/08/2023,Amelia ,just the table, yes,around 10,NA
+14/8/23 ,Ahmad,both,NO,6,-
+14/8/23,Ahmad,both,NO,6,-
+15 Aug 23, Ava,didn't need doing,no.,4,not messy
+16/8/2023,Harry, just the sink,no,3,
+17 August 2023,Cindy,sink & table,YES,6-9,can't remember them
+18-08-23,Ariel,table only,no,2,-
