@@ -1,0 +1,204 @@
+---
+title: "Integrasi Data"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+# 1. Import data ke dalam R
+
+```{r}
+data(iris)
+data("precip")
+```
+
+```{r}
+rm(iris)
+rm(precip) #remove data
+```
+
+## 1.2 Excel Data
+
+jenis .xlsx
+
+```{r}
+library(openxlsx)
+data.ex = read.xlsx(xlsxFile = "G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/Big Mart Dataset.xlsx", 
+                    sheet =1, 
+                    startRow = 1) 
+head(data.ex,10)
+```
+
+## 1.3 jenis .csv
+
+```{r}
+Data3 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/custdata3.csv", header = TRUE) 
+head(Data3,10)
+```
+
+## 1.4 jenis .txt
+
+```{r}
+Data4 = read.table("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/car_prices.txt", header=TRUE) 
+head(Data4,10)
+```
+
+# 2. Teknik integrasi Data dari sumber/format berbeza
+
+## 2.1 Integrasi data yang berlainan attribut 
+
+```{r}
+mydata1 = read.table("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata1.txt", header=TRUE) 
+mydata2 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata2.csv", header=TRUE)
+
+mydata3 = cbind(mydata1, mydata2) 
+mydata3new = mydata3[, -c(7,8)] 
+
+```
+
+## 2.2 Integrasi data nama attribut yang tak konsisten 
+
+```{r}
+mydata5 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata5.csv", header=T) 
+load("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata4.RData")
+
+mydata6 = merge(mydata4,mydata5, by.x="ID", by.y="IDPerson") 
+
+```
+
+## 2.3 Integrasi data nama saiz tak sama (INNER_JOIN) 
+
+```{r}
+mydata7 = mydata5[1:10,] 
+mydata8 = merge(mydata4, mydata7, by.x="ID", by.y="IDPerson") 
+```
+
+semua data yang tak sepadan akan dikeluarkan
+
+# 3. jika nak kekalkan data yang tak sepadan
+
+data yang tak sepadan akan ditaarof sebagai NA (FULL_JOIN)
+
+```{r}
+mydata9 = merge(mydata4, mydata7, by.x="ID", by.y="IDPerson", all=T) 
+
+```
+
+## 3.1 menamakan semula atribut
+
+```{r, include=F}
+library(plyr) 
+# mydata10 <- rename(mydata9,c("ID"="Nombor ID","house"="Number of House"))
+
+# mydata10
+```
+
+# 4 ubah suai nilai data yang tak konsisten 
+
+## 4.1 ubah suai secara manual 
+
+```{r}
+# mydata11 = edit(mydata10)
+```
+
+## 4.2 ubah suai data tak konsisten (huruf besar dan kecil) 
+
+```{r}
+dataM1 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM1.csv", header=T) 
+
+```
+
+```{r}
+library(dplyr)
+```
+
+Taarifkan nama atribut yang nak diubah suaikan
+
+```{r}
+city_name = function(city) { city = tolower(city) #tukarkan semua ayat ke huruf 
+city = trimws(city) #buang semua spacing 
+city = gsub("+", "", city) #ganti dengan hanya 1 spacing 
+city = tools::toTitleCase(city) #format ke Title case
+return(city) }
+```
+
+```{r}
+dataM1$City = sapply(dataM1$City, city_name) 
+
+```
+
+## 4.3 ubah suai data tak konsisten (ejaan singkat dan ejaan penuh)
+
+```{r}
+dataM2 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM2.csv", header=T) 
+
+```
+
+Petakan singkat ke ejaan penuh
+
+```{r}
+city_mapping = list('NY'='New York', 'LA'='Los Angeles', 'CHI'='Chicago')
+```
+
+bina fungsi untuk ubah suai nama singkat ke penuh
+
+```{r}
+standard_city_name = function(city){ if(city%in%names(city_mapping)){ return(city_mapping[[city]])} else{ return(city) } }
+```
+
+gunakan fungsi terhadap data
+
+```{r}
+dataM2$City = sapply(dataM2$City, standard_city_name) 
+
+```
+
+# 5. Buang data yang berulang (redundant) 
+
+```{r}
+dataM3 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM3.csv", header=T, sep = ';') 
+
+```
+
+```{r}
+dataM3_NoDup = dataM3%>%distinct(dataM3$id, .keep_all=T) 
+
+```
+
+# 6. eksport data (save data) 
+
+## 6.1 save file R
+
+```{r}
+getwd() 
+#save(dataM3_NoDup, file="dataM3_NoDup.RData")
+```
+
+## 6.2 save file.csv 
+
+```{r}
+#write.csv(mydata11, file='mydata11.csv')
+```
+
+## 6.3 save file txt 
+
+```{r}
+#write.table(Data4, file='mydata11.txt', sep='\t')
+```
+
+# 7. Kesan duplikasi data dengan id yang sama 
+
+```{r}
+dataM4 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM4.csv", header=T) 
+
+```
+
+```{r}
+duplikasi_ID = dataM4[duplicated(dataM4$id) | duplicated(dataM4$id, fromLast=T),] 
+head(duplikasi_ID,10)
+```
