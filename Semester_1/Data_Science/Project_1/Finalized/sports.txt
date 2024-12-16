@@ -3,7 +3,8 @@ Baseball
 Volleyball
 Silat
 Football
-RugbySwimming
+Rugby
+Swimming
 Cricket
 Basketball
 Tennis
