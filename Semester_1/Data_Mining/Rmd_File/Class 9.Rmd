@@ -117,3 +117,19 @@ seqiplot(mvad.seq, main='Plot indeks jujukan',
 ```
 
 ## Plot Jujukan kekerapan
+
+```{r}
+filtered.seq = mvad.seq[seqtransn(mvad.seq) > 8, ]
+```
+
+```{r}
+table(seqtransn(filtered.seq))
+```
+
+```{r}
+seqiplot(filtered.seq)
+```
+
+```{r}
+seqtrate(filtered.seq)
+```
