@@ -50,7 +50,7 @@ head(Data4,10)
 
 # 2. Teknik integrasi Data dari sumber/format berbeza
 
-## 2.1 Integrasi data yang berlainan attribut 
+## 2.1 Integrasi data yang berlainan attribut
 
 ```{r}
 mydata1 = read.table("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata1.txt", header=TRUE) 
@@ -61,7 +61,7 @@ mydata3new = mydata3[, -c(7,8)]
 
 ```
 
-## 2.2 Integrasi data nama attribut yang tak konsisten 
+## 2.2 Integrasi data nama attribut yang tak konsisten
 
 ```{r}
 mydata5 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/mydata5.csv", header=T) 
@@ -71,7 +71,7 @@ mydata6 = merge(mydata4,mydata5, by.x="ID", by.y="IDPerson")
 
 ```
 
-## 2.3 Integrasi data nama saiz tak sama (INNER_JOIN) 
+## 2.3 Integrasi data nama saiz tak sama (INNER_JOIN)
 
 ```{r}
 mydata7 = mydata5[1:10,] 
@@ -98,15 +98,15 @@ library(plyr)
 # mydata10
 ```
 
-# 4 ubah suai nilai data yang tak konsisten 
+# 4 ubah suai nilai data yang tak konsisten
 
-## 4.1 ubah suai secara manual 
+## 4.1 ubah suai secara manual
 
 ```{r}
 # mydata11 = edit(mydata10)
 ```
 
-## 4.2 ubah suai data tak konsisten (huruf besar dan kecil) 
+## 4.2 ubah suai data tak konsisten (huruf besar dan kecil)
 
 ```{r}
 dataM1 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM1.csv", header=T) 
@@ -158,7 +158,7 @@ dataM2$City = sapply(dataM2$City, standard_city_name)
 
 ```
 
-# 5. Buang data yang berulang (redundant) 
+# 5. Buang data yang berulang (redundant)
 
 ```{r}
 dataM3 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM3.csv", header=T, sep = ';') 
@@ -170,7 +170,7 @@ dataM3_NoDup = dataM3%>%distinct(dataM3$id, .keep_all=T)
 
 ```
 
-# 6. eksport data (save data) 
+# 6. eksport data (save data)
 
 ## 6.1 save file R
 
@@ -179,19 +179,19 @@ getwd()
 #save(dataM3_NoDup, file="dataM3_NoDup.RData")
 ```
 
-## 6.2 save file.csv 
+## 6.2 save file.csv
 
 ```{r}
 #write.csv(mydata11, file='mydata11.csv')
 ```
 
-## 6.3 save file txt 
+## 6.3 save file txt
 
 ```{r}
 #write.table(Data4, file='mydata11.txt', sep='\t')
 ```
 
-# 7. Kesan duplikasi data dengan id yang sama 
+# 7. Kesan duplikasi data dengan id yang sama
 
 ```{r}
 dataM4 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataM4.csv", header=T) 

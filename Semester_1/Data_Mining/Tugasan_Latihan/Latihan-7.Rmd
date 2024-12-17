@@ -34,7 +34,7 @@ itemFrequencyPlot(data, topN=10,
 
 # Tentukan aturan sekutuan yang memenuhi nilai ambang minimum supp=0.1, conf=0.6.
 
-```{r, include=F}
+```{r}
 Aturan.S1 = apriori(data,
                     parameter=list(supp=0.1,conf=0.6))
 ```
@@ -56,7 +56,7 @@ plot(Aturan.S1, method='paracoord',
 
 # Dapatkan aturan sekutuan yang menunjukkan ciri-ciri individu yang terselamat dari tragedi titanic (rhs: p/ubah survival).
 
-```{r, include=F}
+```{r}
 Aturan.S2 = apriori(data,
                     parameter=list(supp=0.1, conf=0.6),
                     appearance = list(default='lhs',rhs='Survived=Yes'))
@@ -68,7 +68,7 @@ inspect(Aturan.S2)
 
 # Dapatkan aturan sekutuan bagi orang yang terselamat daripada kelas 1, 2 & 3 (rhs ialah “Survived=Yes” dan lhs mengandungi info Class=1st, 2nd & 3rd; Age=Child & Adult )
 
-```{r, include=F}
+```{r}
 Aturan.S3 = apriori(data,
                     parameter=list(supp=0.1, conf=0.05),
                     appearance = list(lhs=c('Class=1st', 'Class=2nd','Class=3rd','Age=Child','Age=Adult'),rhs='Survived=Yes'))
