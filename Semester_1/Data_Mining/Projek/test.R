@@ -8,6 +8,8 @@ url = "C:/Users/Hathim/Downloads/Combined Data.xlsx"
 data = readxl::read_excel(url)
 str(data)
 
+md.pattern(data)
+
 Admission = data[, c(1,2)]
 
 Admission.ts = ts(data$Admission, start = c(2010, 1), end = c(2019,12), frequency = 12)
