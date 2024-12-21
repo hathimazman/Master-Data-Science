@@ -1,5 +1,20 @@
 ---
 title: "Projek"
-output: html_document
+output: 
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
 ---
 
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+data = 
+```

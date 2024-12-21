@@ -1,0 +1,30 @@
+---
+title: "Class 5 - Cluster Analysis"
+output:
+    pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+stations = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Business_Analytics/Data/Ch5_bike_station_locations.csv")
+```
+
+```{r}
+two = kmeans(stations, 2)
+two
+```
+
+```{r}
+three = kmeans(stations, 3)
+three
+```
+
+```{r}
+four = kmeans(stations, 4)
+four
+```
