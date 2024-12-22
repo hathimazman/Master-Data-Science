@@ -64,7 +64,7 @@ head(monthly_index,10)
 ### Exercise
 
 ```{r}
-dates_df = read.csv("E:/Master-Data-Science/Semester_1/Data_Mining/Data/dates_formats3.csv", header=T, sep = ';', stringsAsFactors = FALSE)
+dates_df = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dates_formats3.csv", header=T, sep = ';', stringsAsFactors = FALSE)
 head(dates_df,10)
 ```
 
@@ -110,7 +110,7 @@ str(NZ_format_new)
 ```
 
 ```{r}
-new_df = data.frame(cbind(Japanese_format_new,US_format_new,CA_mix_format_new,SA_mix_format_new, NZ_format_new))
+new_df = data.frame(Japanese_format_new,US_format_new,CA_mix_format_new,SA_mix_format_new, NZ_format_new)
 head(new_df)
 ```
 
@@ -268,15 +268,15 @@ head(AirP_decompose$random,10)
 Kepegunan Siri Masa
 
 $$
-1.~\sum(y_t) = u_t,~untuk~semua~t
+1.~/sum(y_t) = u_t,~untuk~semua~t
 $$
 
 $$
-2.~Var(y_t) = \sum[(y_t-u_y)^2]~=~\sigma^2
+2.~Var(y_t) = /sum[(y_t-u_y)^2]~=~/sigma^2
 $$
 
 $$
-Cov(y_t,y_{t-k})~=~\gamma_k,~untuk~semua~t
+Cov(y_t,y_{t-k})~=~/gamma_k,~untuk~semua~t
 $$
 
 ```{r}

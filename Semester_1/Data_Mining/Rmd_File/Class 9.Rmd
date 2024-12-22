@@ -118,18 +118,126 @@ seqiplot(mvad.seq, main='Plot indeks jujukan',
 
 ## Plot Jujukan kekerapan
 
+20 jujukan yang paling kerap berlaku
+
 ```{r}
-filtered.seq = mvad.seq[seqtransn(mvad.seq) > 8, ]
+seqfplot(mvad.seq, main='20 jujukan yang paling kerap berlaku',
+         idxs=1:20)
+```
+
+## Plot taburan keadaan
+
+corak umum keseluruhan set trajektori dalam data jujukan
+
+```{r}
+seqdplot(mvad.seq, border=NA, 
+    main='plot taburan keadaan')
+```
+
+## Plot keadaan modal
+
+jujukan bagi keadaan yang paling kerap berlaku pada setiap kedudukan
+
+keadaan dominan pada setiap masa
+
+```{r}
+seqmsplot(mvad.seq)
+```
+
+# Indeks Entropi
+
+Ukuran terhadap variasi keadaan dalam dalam data jujukan
+
+![](images/clipboard-4148765734.png)
+
+dengan $p_i$ ialah perkadaran entiti dalam keadaan-i, $a$ ialah bilangan keadaan.
+
+Jika nilai entropi= 0 menunjukkan bahawa semua entiti berada dalam keadaan yang sama (variasi adalah 0)
+
+## Entropi Rentas Lintang
+
+```{r}
+seqHtplot(mvad.seq, main='Entropi Rentas Lintang')
+seqdplot(mvad.seq, border=NA, main='plot taburan keadaan')
+```
+
+# Data Jujukan Peristiwa
+
+```{r}
+mvad.seqe = seqecreate(mvad.seq)
+head(mvad.seqe)
+```
+
+## Sub-jujukan
+
+```{r}
+fsubseq = seqefsub(mvad.seqe, pmin.support=0.05)
+```
+
+15 subjujukan paling kerap
+
+```{r fig.height=8, fig.width=6}
+plot(fsubseq[1:15], col='yellow')
+```
+
+# Mengkategorikan corak
+
+```{r}
+library(cluster)
 ```
 
 ```{r}
-table(seqtransn(filtered.seq))
+submat = seqsubm(mvad.seq, method = 'TRATE')
+submat
 ```
 
 ```{r}
-seqiplot(filtered.seq)
+dist.om = seqdist(mvad.seq, method='OM',sm=submat)
+```
+
+dapatkan kelompok dalam data berdasarkan jarak optimum
+
+```{r}
+clusterward = agnes(dist.om, diss=T, method='ward')
+plot(clusterward);abline(h=800, lty='dotted', col='red')
+```
+
+misalkan k=4 kelompok adalah signifikan
+
+```{r}
+cl.4 = cutree(clusterward, 4)
+cl4fac = factor(cl.4, labels=paste("Kumpulan", 1:4))
+head(cl4fac)
+```
+
+## Jalankan analisis lanjutan terhadap setiap group
+
+setiap individu dalam kumpulan yang sama akan mempunyai ciri yang hampir sama
+
+```{r}
+seqfplot(mvad.seq, group = cl4fac,
+         main='10 jujukan yang paling kerap berlaku',
+         idxs=1:10)
 ```
 
 ```{r}
-seqtrate(filtered.seq)
+seqdplot(mvad.seq,
+         group=cl4fac,
+         border=NA, 
+         main='plot taburan keadaan')
+```
+
+```{r}
+seqHtplot(mvad.seq,group=cl4fac, main='Entropi Rentas Lintang')
+```
+
+```{r}
+seqmsplot(mvad.seq, group=cl4fac)
+```
+
+## sub-jujukan bagi setiap group
+
+```{r}
+disc = seqecmpgroup(fsubseq, group = cl4fac)
+plot(disc[1:6])
 ```

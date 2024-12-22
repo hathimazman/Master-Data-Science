@@ -18,7 +18,7 @@ library(arulesViz)
 ```
 
 ```{r}
-load("E:/Master-Data-Science/Semester_1/Data_Mining/Data/titanic.raw.rdata")
+load("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/titanic.raw.rdata")
 head(titanic.raw,10)
 ```
 
