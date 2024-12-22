@@ -1,13 +1,18 @@
 ---
 title: "Integrasi Data"
 output:
-  pdf_document: default
+  pdf_document: 
+  keeptex: TRUE
 knitr:
   opts_chunk: 
-    echo: true
-    include: true
-    message: false  # Optional: Hide messages
-    warning: false  # Optional: Hide warnings
+    echo: TRUE
+    include: TRUE
+    message: FALSE  # Optional: Hide messages
+    warning: FALSE  # Optional: Hide warnings
+    tidy.opts: 
+      width.cutoff: 60
+    tidy: TRUE
+    results: 'asis'
 ---
 
 # 1. Import data ke dalam R
@@ -148,7 +153,12 @@ city_mapping = list('NY'='New York', 'LA'='Los Angeles', 'CHI'='Chicago')
 bina fungsi untuk ubah suai nama singkat ke penuh
 
 ```{r}
-standard_city_name = function(city){ if(city%in%names(city_mapping)){ return(city_mapping[[city]])} else{ return(city) } }
+standard_city_name = function(city){ 
+  if(city%in%names(city_mapping)){ 
+    return(city_mapping[[city]])} 
+  else{ 
+    return(city) 
+  } }
 ```
 
 gunakan fungsi terhadap data
