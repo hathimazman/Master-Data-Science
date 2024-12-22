@@ -1,31 +1,36 @@
 ---
 title: "Pembersihan Data"
-output: html_document
-editor_options: 
-  markdown: 
-    wrap: 72
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
 ---
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, include=F}
 library(mice)
 ```
 
 # Pembersihan Data
 
 # 1. Kenalpasti corak data-data lenyap library(mice)
+
 ```{r echo=TRUE}
-MData = read.csv(file.choose(), sep = ";") 
-head(MData, 10)
+MData = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/MData.csv", sep = ";") 
+head(MData)
 
 md.pattern(MData)
-summary(MData)
 
 ```
 
 # 2. Keluarkan cerapan yang mengandungi data lenyap MData2
+
 ```{r echo=TRUE}
 MData2 = MData[complete.cases(MData),]
-MData2
+head(MData2)
 ```
 
 ## 2.1 Lihat cerapan yang mempunyai data lenyap
@@ -35,13 +40,14 @@ MData[!complete.cases(MData),]
 ```
 
 # 3. Lengkapkan data lenyap secara manual
+
 ```{r echo=TRUE}
-MData$crim
-MData$indus 
-indus.fix = edit(MData$indus) # Tak tukar ori data
-indus.fix
+# indus.fix = edit(MData$indus) # Tak tukar ori data
+# head(indus.fix)
 ```
+
 # 4. Gunakan sukatan memusat sebagai anggaran terhadap data lenyap
+
 ```{r echo=TRUE}
 attach(MData)
 
@@ -51,9 +57,13 @@ hist(indus) #tak simteri
 hist(medv) # tak simetri 
 hist(rm) # simetri
 ```
+
 ## 4.2 Untuk data taburan bersifat pincang/bukan simetri: median boleh digunakan.
+
 ### Kenal pasti median data
-#### crim 
+
+#### crim
+
 ```{r echo=TRUE}
 median.crim = median(crim, na.rm=T) 
 median.crim 
@@ -63,7 +73,9 @@ par(mfrow = c(1,2))
 hist(crim, main="Bentuk taburan data asal")
 hist(crim.fix, main="Bentuk taburan data dengan anggaran median")
 ```
-#### indus 
+
+#### indus
+
 ```{r echo=TRUE}
 median.indus = median(indus, na.rm=T) 
 median.crim 
@@ -73,7 +85,9 @@ par(mfrow = c(1,2))
 hist(indus, main="Bentuk taburan data asal")
 hist(indus.fix, main="Bentuk taburan data dengan anggaran median")
 ```
-#### medv 
+
+#### medv
+
 ```{r echo=TRUE}
 median.medv = median(medv, na.rm=T) 
 median.medv 
@@ -83,8 +97,10 @@ par(mfrow = c(1,2))
 hist(medv, main="Bentuk taburan data asal")
 hist(medv.fix, main="Bentuk taburan data dengan anggaran median")
 ```
+
 ## 4.3 Untuk data taburan normal/simetri dengan nilai berangka: nilai minboleh digunakan.
-#### rm 
+
+#### rm
 
 ```{r echo=TRUE}
 mean.rm = mean(rm, na.rm=T) 
@@ -96,14 +112,273 @@ hist(rm, main="Bentuk taburan data asal")
 hist(rm.fix, main="Bentuk taburan data dengan anggaran median")
 ```
 
+Bentukkan set data lengkap
 
+```{r}
+MData.lengkap = MData
+MData.lengkap$crim = crim.fix
+MData.lengkap$medv = medv.fix
+MData.lengkap$indus = indus.fix
+MData.lengkap$rm = rm.fix
+md.pattern(MData.lengkap)
+MData.lengkap = MData.lengkap[-1]
+head(MData.lengkap)
+```
 
+# 5. Gunakan maklumat k-jiran terdekat sebagai anggaran terhadap data lenyap
 
+```{r}
+iris.mis1 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/iris.mis1.csv")
+iris.mis1 = iris.mis1[-1]
 
+library(multiUS)
 
+iris.mis1 = KNNimp(data=iris.mis1, k=10)
+head(iris.mis1)
+```
 
+# 6. Anggaran data lenyap menerusi pelbagai kaedah imputasi statistik: (pakej mice)
 
+## 6.1 Data dengan p/ubah nilai berangka
 
+model = predictive mean matching
 
+```{r}
+airquality = read.table("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/airquality.txt", header=T)
+par(mfrow = c(1,1))
+md.pattern(airquality)
+```
 
+```{r, include=F}
+ImpData = mice(airquality, m=5, meth='pmm')
+completeData = complete(ImpData)
+```
 
+## 6.2 Data dengan p/ubah nilai berbeza
+
+model = Logistic Regression
+
+```{r}
+data2 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dat2.csv")
+data2 = data2[-1]
+md.pattern(data2)
+str(data2)
+```
+
+```{r}
+library(dplyr)
+dat = data2%>%
+            mutate(Smoking = as.factor(Smoking)) %>%
+            mutate(Education = factor(Education, levels = c("Low","Medium","High"), ordered=T)) %>%
+            mutate(Gender = as.factor(Gender))
+```
+
+# Imputasi data
+
+```{r}
+init = mice(dat, maxit=0)
+meth = init$method
+predM = init$predictorMatrix
+```
+
+setkan kaedah imputasi yang digunakan
+
+Setiap p/ubah akan mengambil kaedah yang berbeza mengikut jenis data
+
+```{r}
+meth[c('Age')] = "pmm"
+meth[c('Cholesterol')] = "pmm"
+meth[c('SystolicBP')] = "pmm"
+meth[c('BMI')] = "pmm"
+meth[c('Gender')] = "logreg"
+meth[c('Smoking')] = "logreg"
+meth[c('Education')] = "polyreg"
+
+ImputedData = mice(dat, method=meth, predictorMatrix = predM)
+
+CompletedData = complete(ImputedData)
+md.pattern(CompletedData)
+```
+
+# Mengurus Data Pencil
+
+## 1. Pendekatan Univariat (satu p/ubah)
+
+```{r}
+ozone3 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/ozone3.csv", header=T)
+ozone3 = ozone3[,-1]
+attach(ozone3)
+str(ozone3)
+
+par(mfrow = c(2,7))
+for (col in names(ozone3)) {
+  boxplot(ozone3[[col]], main = col)
+}
+```
+
+### 1.1 Mengesan data pencil
+
+Ozone Reading
+
+```{r}
+outlier_ozone = boxplot.stats(ozone_reading)$out
+out_ind = which(ozone_reading%in%outlier_ozone)
+
+ozone3[c(out_ind),]
+```
+
+Pressure height
+
+```{r}
+outlier_PH = boxplot.stats(pressure_height)$out
+out_ind = which(pressure_height%in%c(outlier_PH))
+
+ozone3[c(out_ind),]
+```
+
+Wind Speed
+
+```{r}
+outlier_WS = boxplot.stats(Wind_speed)$out
+out_ind = which(Wind_speed%in%outlier_WS)
+
+ozone3[c(out_ind),]
+```
+
+Visibility
+
+```{r}
+outlier_vis = boxplot.stats(Visibility)$out
+out_ind = which(Visibility%in%outlier_vis)
+
+ozone3[c(out_ind),]
+```
+
+## 2. Pendekatan Bivariat (2 p/ubah (X dan Y)):
+
+### 2.1 X ialah kategori dan y berangka
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(ozone3$ozone_reading~ozone3$Month, main="Plot Kotak Bacaan Ozone Bulanan")
+boxplot(ozone3$ozone_reading~ozone3$Day_of_week, main="Plot Kotak Bacaan Ozone Harian")
+```
+
+Kesan data pencil dari set bulanan
+
+```{r}
+outBiv = boxplot(ozone3$ozone_reading~ozone3$Month)$out
+out_D = which(ozone3$ozone_reading%in%outBiv)
+ozone3[c(out_D),]
+```
+
+Kesan data pencil dari set harian
+
+```{r}
+outBiv = boxplot(ozone3$ozone_reading~ozone3$Day_of_week)$out
+out_H = which(ozone3$ozone_reading%in%outBiv)
+ozone3[c(out_H),]
+```
+
+### 2.2 X ialah berangka dan y berangka
+
+```{r}
+head(ozone3,5)
+boxplot(ozone3$ozone_reading~ozone3$pressure_height, main = "Plot Kotak ozone_reading vs pressure_height") # tak sesuai
+plot(ozone3$pressure_height, ozone3$ozone_reading, main = "Plot Serakan ozone_reading vs pressure_height")
+```
+
+#### Kenal pasti data pencil, setkan nilai ambang (threshold) bersesuaian nilai ambang bawah (low threshold)
+
+```{r}
+x_min = 5400
+y_min = 5
+```
+
+#### nilai ambang atas (high threshold)
+
+```{r}
+x_max = 5900
+y_max = 35
+```
+
+#### kesan data pencil dari data asal
+
+```{r}
+outlier_MinT = ozone3[ozone3$pressure_height < x_min & ozone3$ozone_reading < y_min,]
+outlier_MinT
+
+outlier_MaxT = ozone3[ozone3$pressure_height > x_max & ozone3$ozone_reading > y_max,]
+outlier_MaxT
+```
+
+## 3. Pendekatan Multivariat
+
+### 3.1 kes terselia
+
+y = ozone_reading
+
+x = lain pemboleh ubah
+
+```{r}
+model.Reg = lm(ozone_reading~.,data = ozone3)
+summary(model.Reg)
+```
+
+#### Jarak Cook
+
+```{r}
+cooksd = cooks.distance(model.Reg)
+```
+
+kenal pasti data pencil
+
+```{r}
+plot(cooksd, main="Data Pencil Berdasarkan Jarak Cook")
+min_cook = 4*mean(cooksd)
+abline(h=(min_cook), col='red', lty=2)
+
+text(x=1:length(cooksd), y=cooksd,
+     labels = ifelse(cooksd>min_cook, names(cooksd), ""), col='blue')
+```
+
+ekstrak data outlier
+
+```{r}
+outlier_cook = as.numeric(names(cooksd)[cooksd>min_cook])
+ozone3[outlier_cook,]
+```
+
+### 3.2 kes tak terselia
+
+```{r}
+dataMUS  = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/dataMUS.csv", header=T)
+dataMUS = dataMUS[-1]
+
+```
+
+hitung jarak Mahalanobis
+
+```{r}
+M_dist = mahalanobis(dataMUS, center = colMeans(dataMUS), cov = cov(dataMUS))
+```
+
+setkan nilai ambang untuk kesan data pencil, 97.5 persentil untuk taburan khi-kuasa dua.
+
+```{r}
+ambang = qchisq(0.975, df=ncol(dataMUS))
+
+outlier_MD = which(M_dist>ambang)
+
+dataMUS[outlier_MD,]
+```
+
+# pengvisualan 3d
+
+```{r}
+library(scatterplot3d)
+install.packages("scatterplot3d")
+
+s3d = scatterplot3d(dataMUS, main="Pengecaman Data Pencil mengikut Jarak Mahalanobis")
+s3d$points(dataMUS[outlier_MD,], col='red', pch = 16, cex = 1.5)
+```
