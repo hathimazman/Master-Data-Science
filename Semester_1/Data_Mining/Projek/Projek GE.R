@@ -3,6 +3,7 @@ library(stringr)
 library(mice)
 library(TraMineR)
 library(zoo)
+library(arulesViz)
 
 ge12 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Projek/DataSet/candidates_ge12.csv")
 ge13 = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Projek/DataSet/candidates_ge13.csv")
@@ -172,4 +173,77 @@ seqiplot(data.seq,
 seqfplot(data.seq, idxs=idxs, with.legend=T, cex.legend=0.5)
 
 seqdplot(data.seq, border=T, cex.legen=0.5)
+
+seqHtplot(data.seq, main='Entropi Rentas Lintang')
 #====================
+# Aturan Sekutuan
+
+test = as(AS_ge12, 'transactions')
+
+itemFrequencyPlot(test, topN=10)
+
+#GE12
+str(ge12)
+AS_ge12 = ge12
+
+for (col in seq(length(colnames(AS_ge12)))) {
+  AS_ge12[,col] = as.factor(AS_ge12[,col])
+}
+
+str(AS_ge12)
+
+Aturan.12 = apriori(AS_ge12,
+                    parameter = list(supp=0.1, conf=0.5),
+                    appearance = list(rhs='result=1', default="lhs"),)
+
+head(inspect(Aturan.12))
+plot(Aturan.12, method="paracoord", main='Aturan Jujukan GE12 \n (Supp = 0.1, Conf = 0.5)')
+
+#GE13
+AS_ge13 = ge13
+
+for (col in seq(length(colnames(AS_ge13)))) {
+  AS_ge13[,col] = as.factor(AS_ge13[,col])
+}
+
+str(AS_ge13)
+
+Aturan.13 = apriori(AS_ge13,
+                    parameter = list(supp=0.1, conf=0.5),
+                    appearance = list(rhs='result=1', default="lhs"),)
+
+head(inspect(Aturan.13))
+plot(Aturan.13, method="paracoord", main='Aturan Jujukan GE13 \n (Supp = 0.1, Conf = 0.5)')
+
+#GE14
+AS_ge14 = ge14
+
+for (col in seq(length(colnames(AS_ge14)))) {
+  AS_ge14[,col] = as.factor(AS_ge14[,col])
+}
+
+str(AS_ge14)
+
+Aturan.14 = apriori(AS_ge14,
+                    parameter = list(supp=0.1, conf=0.5),
+                    appearance = list(rhs='result=1', default="lhs"),)
+
+head(inspect(Aturan.14))
+plot(Aturan.14, method="paracoord", main='Aturan Jujukan GE14, \n (Supp = 0.1, Conf = 0.5)')
+
+#GE15
+AS_ge15 = ge15
+
+for (col in seq(length(colnames(AS_ge15)))) {
+  AS_ge15[,col] = as.factor(AS_ge15[,col])
+}
+
+str(AS_ge15)
+
+Aturan.15 = apriori(AS_ge15,
+                    parameter = list(supp=0.05, conf=0.1),
+                    appearance = list(rhs=c('result=1'), default='lhs'),)
+temp = sort(Aturan.15, by="lift", decreasing=TRUE)
+
+head(inspect(Aturan.15))
+plot(Aturan.15, method="paracoord", main='Aturan Jujukan GE15 \n (Supp = 0.05, Conf = 0.1)')
