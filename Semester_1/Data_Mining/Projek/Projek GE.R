@@ -175,12 +175,8 @@ seqfplot(data.seq, idxs=idxs, with.legend=T, cex.legend=0.5)
 seqdplot(data.seq, border=T, cex.legen=0.5)
 
 seqHtplot(data.seq, main='Entropi Rentas Lintang')
-#====================
+#===================================
 # Aturan Sekutuan
-
-test = as(AS_ge12, 'transactions')
-
-itemFrequencyPlot(test, topN=10)
 
 #GE12
 str(ge12)
@@ -194,7 +190,7 @@ str(AS_ge12)
 
 Aturan.12 = apriori(AS_ge12,
                     parameter = list(supp=0.1, conf=0.5),
-                    appearance = list(rhs='result=1', default="lhs"),)
+                    appearance = list(default='lhs', rhs="result=1"),)
 
 head(inspect(Aturan.12))
 plot(Aturan.12, method="paracoord", main='Aturan Jujukan GE12 \n (Supp = 0.1, Conf = 0.5)')
@@ -241,9 +237,43 @@ for (col in seq(length(colnames(AS_ge15)))) {
 str(AS_ge15)
 
 Aturan.15 = apriori(AS_ge15,
-                    parameter = list(supp=0.05, conf=0.1),
+                    parameter = list(supp=0.08, conf=0.1),
                     appearance = list(rhs=c('result=1'), default='lhs'),)
 temp = sort(Aturan.15, by="lift", decreasing=TRUE)
 
 head(inspect(Aturan.15))
-plot(Aturan.15, method="paracoord", main='Aturan Jujukan GE15 \n (Supp = 0.05, Conf = 0.1)')
+plot(Aturan.15, method="paracoord", main='Aturan Jujukan GE15 \n (Supp = 0.08, Conf = 0.1)')
+
+#======================
+#GE 15 Johor
+
+AS_ge15_johor = ge15[ge15$state == "Johor",]
+str(AS_ge15_johor)
+
+for (col in seq(length(colnames(AS_ge15_johor)))) {
+  AS_ge15_johor[,col] = as.factor(AS_ge15_johor[,col])
+}
+
+Aturan.15.johor = apriori(AS_ge15_johor,
+                          parameter = list(supp=0.1, conf=0.5),
+                          appearance = list(rhs='result=1', default='lhs'),)
+head(inspect(Aturan.15.johor))
+plot(Aturan.15.johor, method="paracoord", main='Aturan Jujukan GE15 Johor \n (Supp = 0.1, Conf = 0.5)')
+
+
+#======================
+
+for (state in unique(ge15$state)) {
+  AS_ge15_state = ge15[ge15$state == state,]
+  str(AS_ge15_state)
+  
+  for (col in seq(length(colnames(AS_ge15_state)))) {
+    AS_ge15_state[,col] = as.factor(AS_ge15_state[,col])
+  }
+  
+  Aturan.15.state = apriori(AS_ge15_state,
+                            parameter = list(supp=0.1, conf=0.5),
+                            appearance = list(rhs='result=1', default='lhs'),)
+  head(inspect(Aturan.15.state))
+  plot(Aturan.15.state, method="paracoord", main=paste('Aturan Jujukan GE15', state, '\n (Supp = 0.1, Conf = 0.5)'))
+}
