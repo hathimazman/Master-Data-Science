@@ -1,0 +1,177 @@
+---
+title: "Class 6 - Classification Analysis"
+output:
+    pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data = read.csv("G:/My Drive/Master-Data-Science/Semester_1/Business_Analytics/Data/index.csv", header=T)
+str(data)
+```
+
+```{r}
+table(data$Purpose)/1000*100
+```
+
+```{r}
+data$Account.Balance <- replace(data$Account.Balance, data$Account.Balance==4, 3)
+data$Account.Balance = factor(data$Account.Balance, levels = seq(1,3), labels = c('No Account', 'No balance','Some balance'))
+
+data$Payment.Status.of.Previous.Credit[data$Payment.Status.of.Previous.Credit <=1] =1
+data$Payment.Status.of.Previous.Credit[data$Payment.Status.of.Previous.Credit ==2] = 2 
+data$Payment.Status.of.Previous.Credit[data$Payment.Status.of.Previous.Credit >=3] = 3
+data$Payment.Status.of.Previous.Credit = factor(data$Payment.Status.of.Previous.Credit, levels = seq(1,3), labels = c('Some Problems','Paid Up','No Problems(in this bank)'))
+
+data$Value.Savings.Stocks[data$Value.Savings.Stocks == 4] = 3
+data$Value.Savings.Stocks[data$Value.Savings.Stocks == 5] = 4
+data$Value.Savings.Stocks = factor(data$Value.Savings.Stocks, levels = seq(1,4), labels = c('None','Below 100 DM','[100, 1000)','Above 1000 DM'))
+
+data$Length.of.current.employment[data$Length.of.current.employment == 2] = 1
+data$Length.of.current.employment[data$Length.of.current.employment == 3] = 2
+data$Length.of.current.employment[data$Length.of.current.employment == 4] = 3
+data$Length.of.current.employment[data$Length.of.current.employment == 5] = 4
+data$Length.of.current.employment = factor(data$Length.of.current.employment, levels = seq(1,4), labels = c('Below 1 year (including unemployed)','[1,4)','[4,7)','Above 7'))
+
+data$Sex...Marital.Status[data$Sex...Marital.Status <=2] = 1
+data$Sex...Marital.Status[data$Sex...Marital.Status ==3] = 2
+data$Sex...Marital.Status[data$Sex...Marital.Status ==4] = 3
+data$Sex...Marital.Status = factor(data$Sex...Marital.Status, levels = seq(1,3), labels = c('Male Divorces/Single','Male Married/Widowed','Female'))
+
+data$No.of.Credits.at.this.Bank[data$No.of.Credits.at.this.Bank == 3] = 2
+data$No.of.Credits.at.this.Bank = factor(data$No.of.Credits.at.this.Bank, levels = seq(1,2), labels = c('1','More than 1'))
+
+data$Guarantors[data$Guarantors >= 2] = 2
+data$Guarantors = factor(data$Guarantors, levels = seq(1,2), labels = c('None','Yes'))
+
+data$Concurrent.Credits[data$Concurrent.Credits <=2] = 1
+data$Concurrent.Credits[data$Concurrent.Credits ==3] = 2
+data$Concurrent.Credits = factor(data$Concurrent.Credits, levels = seq(1,2), labels = c('Other Banks or Dept Stores','None'))
+
+data = data[-21]
+
+data$Purpose[data$Purpose ==1] = 1
+data$Purpose[data$Purpose ==2] = 2
+data$Purpose[data$Purpose %in% c(3,4,5,6)] = 3
+data$Purpose[data$Purpose %in% c(8,9,10,0)] = 4
+data$Purpose = factor(data$Purpose, levels = seq(1,4), labels = c('New Car','Used Car','Home Related','Other'))
+```
+
+```{r}
+str(data)
+
+```
+
+# Statistical Testing
+
+Chi-square for
+
+```{r}
+Categorical.Table = data.frame(
+    'Variable' = character(),
+  'p-value' = numeric()
+)
+  
+for (i in colnames(data[,-c(1,3,6,14)])){
+  test = chisq.test(table(data$Creditability,data[,i]))
+  test2 = data.frame(i,test$p.value)
+  Categorical.Table = rbind(Categorical.Table, test2)
+}
+Categorical.Table
+```
+
+```{r}
+#Numerical.Table = data.frame(
+#    Variable = character(),
+#    'mean.credit.worthy' = numeric(),
+#    'mean.credit.nonworthy' = numeric(),
+#    'p.value' = numeric()
+#)
+  
+#for (i in colnames(data[,c(3,6,14)])){
+#  test = t.test(data[,i] ~ data$Creditability)
+#  Numerical.Table[Variable] = i
+#  Numerical.Table[mean.credit.worthy] = test$estimate[1]
+#  Numerical.Table[mean.credit.nonworthy] = test$estimate[2]
+#  Numerical.Table[p.value] = test$p.value
+#}
+#Numerical.Table
+```
+
+# Train test split
+
+```{r}
+indexes = sample(1:nrow(data), size = 0.5*nrow(data))
+Train = data[indexes,]
+Test = data[-indexes,]
+```
+
+# Logistic Regression
+
+generalized linear model = glm()
+
+-   when y is discrete/binary
+
+$$
+H_0~:~B_j =0 \newline
+H_1:B_j \not=0
+$$
+
+## Create initial model
+
+```{r}
+logisticmodel50 = glm(Creditability~Account.Balance+Payment.Status.of.Previous.Credit+Purpose+Value.Savings.Stocks+Length.of.current.employment+Sex...Marital.Status+Most.valuable.available.asset+Type.of.apartment+Concurrent.Credits+Duration.in.Current.address+Credit.Amount+Age..years., family='binomial',data=Train)
+summary(logisticmodel50)
+```
+
+## Optimize model
+
+```{r}
+logisticmodel50final = glm(Creditability~Account.Balance + Payment.Status.of.Previous.Credit + Purpose + Length.of.current.employment + Sex...Marital.Status, data=Train, family = 'binomial' )
+summary(logisticmodel50final)
+```
+
+## Obtain fitted values
+
+```{r}
+fit50 = fitted.values(logisticmodel50final)
+head(fit50)
+```
+
+## Change binary response
+
+```{r}
+thres = rep(0,500)
+for (i in 1:500) {
+  if(fit50[i]>0.5) {
+    thres[i] = 1
+  }
+  else {
+    thres[i] = 0
+  }
+}
+str(thres)
+str(Train$Creditability)
+```
+
+## Create cross table
+
+```{r}
+conf.mat = table(Train$Creditability, thres)
+conf.mat
+```
+
+## Compute accuracy
+
+```{r}
+sum(diag(conf.mat))/500*100
+```
