@@ -1,0 +1,179 @@
+---
+title: "Test"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(forecast)
+library(readxl)
+library(mice)
+library(arules)
+library(arulesViz)
+
+# Load libraries
+library(fable)
+library(fabletools)
+library(tsibble)
+
+```
+
+```{r}
+data = read_excel('Combined Data.xlsx')
+```
+
+```{r}
+data2 = data %>% 
+  mutate(Date = as.Date(Date)) %>%
+  complete(Date = seq.Date(min(Date), max(Date), by = "month")) %>%
+  filter(Date <=as.Date('2019-12-01'))
+tail(data2)
+```
+```{r}
+md.pattern(data2)
+```
+```{r}
+mice_result = mice(data2, m=10, method=NULL, maxit=10, seed=123)
+imputed_data = complete(mice_result)
+data2 = imputed_data
+md.pattern(data2)
+```
+```{r}
+data_ts = ts(data2[,2:ncol(data2)], start = c(2010,1), end=c(2019,12),frequency = 12)
+plot(data_ts)
+```
+```{r}
+str(data2)
+```
+
+
+```{r}
+data2.scaled = scale(data2[,4:ncol(data2)])
+str(data2.scaled)
+```
+
+```{r}
+FA = factanal(data2.scaled, factors = 3, rotation = "varimax", scores = 'regression')
+FA$scores
+
+completedf = data.frame(
+  Date = data2$Date,
+  Admission = data2$Admission,
+  FA$scores
+)
+
+str(completedf)
+
+```
+
+```{r}
+model_with_time = lm(Admission ~ ., data = completedf)
+summary(model_with_time)
+```
+# Factor Analysis
+```{r}
+data_tsibble_FA = tsibble(
+  Date = data2$Date,
+  Admission = data2$Admission,
+  FA_score = FA$scores,
+  index = Date
+)
+data_tsibble = data_tsibble %>%
+  mutate(Month = factor(format(Date, "%m")))
+head(data_tsibble)
+```
+
+```{r}
+model <- data_tsibble %>%
+  model(
+    tslm = TSLM(Admission ~ trend() + Month)
+  )
+
+report(model)
+```
+```{r}
+model2 <- data_tsibble %>%
+  model(
+    tslm = TSLM(Admission ~ trend() + Month + X1 + X2 + X3)
+  )
+
+report(model2)
+```
+```{r}
+library(psych)
+scree(data2.scaled)
+```
+```{r}
+e = eigen(cor(data2.scaled))
+ev = e$values
+evr = e$vectors
+```
+```{r}
+Prop.var = ev/length(ev)
+cumsum(Prop.var)
+```
+```{r}
+pca = data2.scaled %*% evr
+colnames(pca) = c('PC1', 'PC2', 'PC3','PC4','PC5','PC6','PC7')
+
+pca_final = pca[,1:5]
+```
+
+```{r}
+completedf2 = data.frame(
+  Date = data2$Date,
+  Admission = data2$Admission,
+  pca_final
+)
+head(completedf2)
+```
+```{r}
+model_with_time3 = lm(Admission ~ ., data = completedf2)
+
+summary(model_with_time3)
+```
+```{r}
+completedf2_tsibble = tsibble(
+  Date = completedf2$Date,
+  Admission = completedf2$Admission,
+  PC1 = pca_final[,1],
+  PC2 = pca_final[,2],
+  PC3 = pca_final[,3],
+  PC4 = pca_final[,4],
+  PC5 = pca_final[,5],
+  index = Date
+)
+
+head(completedf2_tsibble)
+```
+```{r}
+model3 <- completedf2_tsibble %>%
+  model(
+    tslm = TSLM(Admission ~ trend() + Month + PC1 + PC2 + PC3 + PC4 + PC5)
+  )
+
+report(model3)
+```
+
+```{r}
+completedf2_tsibble <- completedf2_tsibble %>%
+  mutate(Month = factor(format(Date, "%m")))
+```
+
+# ARIMA
+```{r}
+str(data_tsibble_FA)
+
+fit_arima = auto.arima(data_tsibble_FA$Admission,
+                       xreg = data_tsibble_FA$FA_score,
+                       seasonal = TRUE,
+                       stepwise = TRUE,
+                       approximation = FALSE)
+
+summary(fit_arima)
+```
+```{r}
+test = forecast(fit_arima, h=12, xreg = data_tsibble_FA$FA_score)
+autoplot(test)
+```
+

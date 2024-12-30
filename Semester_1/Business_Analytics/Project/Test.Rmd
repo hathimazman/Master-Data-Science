@@ -1,0 +1,90 @@
+---
+title: "Test"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(arrow)
+library(zoo)
+library(mice)
+library(forecast)
+```
+
+```{r}
+data = read_parquet("bedutil_02_timeseries_facility.parquet")
+head(data)
+```
+```{r}
+str(data)
+```
+```{r}
+Johor = data %>% filter(state == "Johor") %>% 
+  select(date,util_nonicu, util_icu,util_vent) %>% 
+  mutate(date = as.Date(date)) %>%
+  complete(date = seq.Date(min(date), max(date), by = "day")) %>%
+  group_by(date) %>% 
+  summarise(util_nonicu = mean(util_nonicu, na.rm=T), util_icu = mean(util_icu, na.rm=T), util_vent = mean(util_vent, na.rm=T))
+
+head(Johor,20)
+
+mice_result = mice(Johor, m=10, method=NULL, maxit=10, seed=123)
+imputed_data = complete(mice_result)
+Johor = imputed_data
+tail(Johor,20)
+
+Johor_ts = ts(Johor[, 2:4], start = c(2023, 9,7), frequency = 365)
+
+
+plot(Johor_ts)
+```
+
+
+```{r}
+Johor_zoo <- zoo(Johor[, 2:4], 
+                 order.by = seq.Date(as.Date("2023-09-07"), 
+                                     as.Date("2024-09-06"), 
+                                     by = "day"))
+str(Johor_zoo)
+```
+
+```{r}
+plot(Johor_zoo)
+```
+
+# COVID DATA
+
+```{r}
+covid = read_parquet("https://storage.data.gov.my/healthcare/covid_cases.parquet")
+head(covid)
+```
+
+```{r}
+Johor = covid %>% filter(state == "Johor") %>% 
+  select(date, cases_new, cases_import, cases_recovered, cases_active)
+
+head(Johor)  
+```
+```{r}
+Johor_ts = ts(Johor[, 2:5], start = c(2020, 1,25), frequency = 365)
+plot(decompose(Johor_ts[, 1]))
+```
+```{r}
+model = auto.arima(Johor_ts[, 1])
+model
+```
+```{r}
+forecast = forecast(model, h=365)
+```
+
+```{r}
+autoplot(forecast)
+```
+```{r}
+data2 = tbats(Johor_ts[, 2])
+
+forecast2 = forecast(data2, h=365)
+plot(forecast2)
+```
+
+

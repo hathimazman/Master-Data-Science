@@ -1,0 +1,52 @@
+---
+title: "Test2"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(mice)
+library(forecast)
+library(corrplot)
+```
+
+```{r}
+data = read.csv('insurance.csv')
+str(data)
+```
+
+```{r}
+data = data %>%
+  mutate(sex = factor(sex),
+         smoker = factor(smoker),
+         region = factor(region))
+str(data)
+NumCols = c('age', 'bmi', 'children', 'charges')
+CatCols = c('sex','smoker','region')
+```
+
+```{r}
+Q1 = quantile(data$charges, 0.25)
+Q3 = quantile(data$charges, 0.75)
+IQR = Q3 - Q1
+data = data %>%
+  filter(charges > (Q1 - 1.5 * IQR) & charges < (Q3 + 1.5 * IQR))
+```
+
+
+```{r}
+corrplot(cor(data[NumCols[-4]]), order = 'hclust')
+```
+```{r}
+chi2 = chisq.test(data$sex, data$smoker)
+summary(data)
+```
+
+```{r}
+model = lm(charges ~ age + sex + bmi + children+ smoker + region -1, data = data)
+summary(model)
+```
+```{r}
+
+```
+
