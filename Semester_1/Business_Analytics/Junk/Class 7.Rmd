@@ -1,0 +1,86 @@
+---
+title: "Class 7 - Association Rule"
+output:
+    pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+A -\> B, or B given A
+
+1.  Support $P(A \cap B)$
+
+2.  Confidence $P(B|A) = \frac{P(A \cap B)}{P(A)}$
+
+3.  Lift $P(A|B) = \frac{P(A \cap B)}{P(A)*P(B)}$
+
+**Apriori**
+
+1.  Frequent Itemsets: These are sets of items that appear together in a
+    transaction more frequently than a specified threshold (called
+    support).
+2.  Association Rules: These are rules of the form {A} → {B}, where:
+    -   A is an item or itemset (e.g., "Bread"),
+    -   B is another item or itemset (e.g., "Butter").
+    -   The rule suggests that if A is bought, Bis likely to be bought
+        as well.
+
+```{r}
+library(arules)
+library(arulesViz)
+```
+
+```{r}
+data(Groceries)
+head(Groceries)
+```
+
+```{r}
+summary(Groceries)
+```
+
+```{r}
+inspect(head(Groceries))
+```
+
+```{r}
+rules = apriori(Groceries, parameter = list(support = 0.05, confidence = 0.1))
+sorted_rules = sort(rules, by='lift', decreasing=T)
+inspect(sorted_rules)
+```
+
+```{r}
+plot(sorted_rules, method='graph')
+```
+
+```{r}
+itemFrequencyPlot(Groceries, topN=10)
+```
+
+```{r}
+library(ggplot2)
+plot(sorted_rules,
+  method = "graph",
+  control = list(
+    edges = ggraph::geom_edge_link(
+      end_cap = ggraph::circle(4, "mm"),
+      start_cap = ggraph::circle(4, "mm"),
+      color = "green",
+      arrow = arrow(length = unit(2, "mm"), angle = 20, type = "closed"),
+      alpha = .8
+    ),
+    nodes = ggraph::geom_node_point(aes(size = support, color = lift)),
+    nodetext = ggraph::geom_node_label(aes(label = label), alpha = .8, repel = TRUE)
+  ),
+  limit = 10
+) +
+  scale_color_gradient(low = "blue", high = "red") +
+  scale_size(range = c(2, 10))
+```

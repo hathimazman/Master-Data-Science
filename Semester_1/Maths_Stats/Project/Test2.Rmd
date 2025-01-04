@@ -3,6 +3,8 @@ title: "Test2"
 output: html_document
 ---
 
+# Load Libraries
+
 ```{r}
 library(tidyverse)
 library(mice)
@@ -10,10 +12,14 @@ library(forecast)
 library(corrplot)
 ```
 
+# Load Dataset
+
 ```{r}
 data = read.csv('insurance.csv')
 str(data)
 ```
+
+# Data Cleaning
 
 ```{r}
 data = data %>%
@@ -21,32 +27,117 @@ data = data %>%
          smoker = factor(smoker),
          region = factor(region))
 str(data)
-NumCols = c('age', 'bmi', 'children', 'charges')
+NumCols = c('age', 'bmi', 'charges', 'children')
 CatCols = c('sex','smoker','region')
 ```
 
+# Finding Null Values
+
 ```{r}
-Q1 = quantile(data$charges, 0.25)
-Q3 = quantile(data$charges, 0.75)
-IQR = Q3 - Q1
+md.pattern(data)
+```
+
+# Handling Outliers
+
+```{r}
+# Charges
+Q1_charges = quantile(data$charges, 0.25)
+Q3_charges = quantile(data$charges, 0.75)
+IQR_charges = Q3_charges - Q1_charges
+
+#Age
+Q1_age = quantile(data$age, 0.25)
+Q3_age = quantile(data$age, 0.75)
+IQR_age = Q3_age - Q1_age
+
+#BMI
+Q1_bmi = quantile(data$bmi, 0.25)
+Q3_bmi = quantile(data$bmi, 0.75)
+IQR_bmi = Q3_bmi - Q1_bmi
+
 data = data %>%
-  filter(charges > (Q1 - 1.5 * IQR) & charges < (Q3 + 1.5 * IQR))
+  filter(charges > (Q1_charges - 1.5 * IQR_charges) & charges < (Q3_charges + 1.5 * IQR_charges)) %>%
+  filter(age > (Q1_age - 1.5 * IQR_age) & age < (Q3_age + 1.5 * IQR_age)) %>%
+  filter(bmi > (Q1_bmi - 1.5 * IQR_bmi) & bmi < (Q3_bmi + 1.5 * IQR_bmi))
+  
 ```
 
+#Summary of data
 
 ```{r}
-corrplot(cor(data[NumCols[-4]]), order = 'hclust')
-```
-```{r}
-chi2 = chisq.test(data$sex, data$smoker)
 summary(data)
 ```
+
+# Visualizing Data
+
+```{r fig.height=10, fig.width=10}
+par(mfrow = c(1,3))
+for (col in NumCols[-4]) {
+  hist(data[[col]], main = col)
+}
+```
+
+```{r fig.height=10, fig.width=10}
+par(mfrow = c(2,2))
+for (col in CatCols) {
+  barplot(table(data[[col]]), main = col)
+}
+```
+
+# Model Building
 
 ```{r}
 model = lm(charges ~ age + sex + bmi + children+ smoker + region -1, data = data)
 summary(model)
 ```
-```{r}
 
+# Checking Assumptions
+
+## Linearity
+
+```{r}
+pairs(data[NumCols])
 ```
 
+```{r}
+cor(data[NumCols])
+```
+
+```{r}
+cor(data[NumCols][-4]) %>%
+  corrplot(order = 'hclust')
+```
+
+## Independence
+
+```{r}
+chi1 = chisq.test(data$sex, data$smoker)
+chi1
+```
+
+## Normality and Equal Variance
+
+```{r}
+plot(model)
+```
+
+#Model Optimization
+
+```{r}
+MASS::boxcox(model)
+```
+
+```{r}
+str(data)
+data2 = data %>%
+  mutate(charges = log(charges))
+
+model2 = lm(charges ~ age + sex + bmi + children+ smoker + region-1, data = data2)
+summary(model2)
+```
+
+# Recheck New Model
+
+```{r}
+plot(model2)
+```
