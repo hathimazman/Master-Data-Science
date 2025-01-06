@@ -1,0 +1,173 @@
+---
+title: "Class 3"
+output: 
+    pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r fig.height=8, fig.width=8}
+plot(y=trees$Girth, x=trees$Height, 
+     main = 'Black Cherry Trees', 
+     sub = 'Height vs Girth',
+     xlab = 'Height of Trees',
+     ylab = 'Girth of Trees',
+     cex.main = 3, cex.sub=1,
+     cex.lab = 1.5, cex.axis = 0.7,
+     col.main = 2, col.sub = 'darkblue',
+     col.axis = 1, col.lab = 'purple',
+     col = 'magenta', 
+     xlim = c(60,90), ylim = c(5,21))
+```
+
+```{r fig.height=8, fig.width=8}
+plot(Height~Girth, data=trees,
+     type = 'o', pch = 19, col = 'red', lty=2)
+tplot = c(rep(c('a','b','c'), 10), 'end')
+text(y=trees$Height,x=trees$Girth, tplot, pos = 2)
+```
+```{r}
+cars = c(1,3,6,4,9)
+trucks = c(2,5,4,5,12)
+suvs = c(4,4,6,6,15)
+
+plot(cars, type='o', ylim=c(0,15))
+points(trucks,pch=3,col=2)
+lines(suvs, lty=2, col=3)
+legend(1.5,15,cex=0.8, pch=c(1,3), lty=c(1,2),col=c(1,2,3), c('cars','trucks','suvs'))
+```
+
+```{r}
+curve(x*log(x+1)+sin(x^3),from=0,to=10,col="magenta",lty=4)
+
+```
+```{r}
+bp1 = barplot(cars, main = 'CARS', border='blue', ylab='Count', xlab='Days', 
+        names.arg=c('Mon','Tues','Wed','Thurs','Fri'),
+        col=rainbow(5), xlim=c(0,8))
+barplot(5, add=T, space=6.3, col='black',names.arg='Sat')
+```
+```{r}
+bp1
+```
+
+
+
+```{r}
+automob = cbind(cars,trucks,suvs)
+barplot(automob, beside=T, col=rainbow(5))
+```
+```{r}
+boxplot(trees$Height)
+boxplot(mtcars$mpg ~ mtcars$cyl, horizontal=T, col=rainbow(3))
+```
+```{r}
+pie(cars, labels=c('Mon','Tues','Wed','Thurs','Fri'), main='PIE CHART!!!!!')
+
+```
+```{r}
+automob = data.frame(automob)
+boxplot(automob, horizontal=T)
+stripchart(automob, add=T)
+```
+```{r}
+data("InsectSprays")
+attach(InsectSprays)
+
+boxplot(InsectSprays$count~InsectSprays$spray, col=c('plum','royalblue','rosybrown','seagreen','yellowgreen','lightcoral'),
+        xlab='Type of Spray',ylab='Count of Insects', main='Insect Spray')
+stripchart(InsectSprays$count~InsectSprays$spray, add=T, vertical=T, col='slategrey', pch=19)
+```
+# Exercise 1
+
+```{r}
+data = read.csv('visualization.csv')
+data = data %>% mutate(Country = as.factor(Country)) %>% mutate(row.max = apply(data[,2:5], 1 , max))
+data
+```
+
+```{r fig.height=8, fig.width=8}
+country = c('A','B','C','D','E','F','G','H','I','J')
+
+plot(data$row.max, type='h',ylim=c(0,120), main='Population Plot')
+points(data$Population.under.65.years...., type='p',col=1, pch=1)
+points(data$Poor.under.65.years...., type='p', col=2, pch=2)
+points(data$Population.above.65.years...., type='p', col=3, pch=3)
+points(data$Poor.above.65.years...., type='p', col=4, pch=4)
+
+text(x=c(1,2,3,4,5,6,7,8,9,10), y=data$row.max, country, pos=3)
+
+legend(1,120, cex=0.8, pch=c(1,2,3,4), col=c(1,2,3,4), c('Population < 65','Poor < 65 ','Population > 65','Poor > 65'))
+
+```
+
+# Exercise 2
+
+```{r}
+Male = data.frame(
+  'Hair' = c(rep('Black', 4),rep('Brown', 4),rep('Red', 4),rep('Blond', 4)),
+  'Eye' = c(rep(c('Brown','Blue','Hazel','Green'), 4)),
+  A = c(32,11,10,3,53,50,25,15,10,10,7,7,3,30,5,8)
+)
+
+Female = data.frame(
+  'Hair' = c(rep('Black', 4),rep('Brown', 4),rep('Red', 4),rep('Blond', 4)),
+  'Eye' = c(rep(c('Brown','Blue','Hazel','Green'), 4)),
+  A = c(36,9,5,2,66,34,29,14,16,7,7,7,4,64,5,8)
+)
+```
+
+```{r fig.height=8, fig.width=10}
+layout(matrix(c(1,1,2,3,4,5), nrow=2,byrow=F))
+
+F_M = c(sum(Male[3]), sum(Female[,3]))
+pie(F_M, labels = c('Male','Female'), col=c('blue','pink'), main='Sex')
+
+
+Male_hair = Male %>% group_by(Hair) %>% summarise(sumA = sum(A))
+pie(data.frame(Male_hair)[,2], main='Male Hair', labels = data.frame(Male_hair)[,1], col = c('Black','Yellow','Brown','Red'))
+
+Female_hair = Female %>% group_by(Hair) %>% summarise(sumA = sum(A))
+pie(data.frame(Female_hair)[,2], main='Female Hair', labels = data.frame(Female_hair)[,1], col = c('Black','Yellow','Brown','Red'))
+
+Male_eye = Male %>% group_by(Eye) %>% summarise(sumA = sum(A))
+pie(data.frame(Male_eye)[,2], main='Male Eye', labels = data.frame(Male_eye)[,1], col = c('Blue','Brown','Green','Beige'))
+
+Female_eye = Female %>% group_by(Eye) %>% summarise(sumA = sum(A))
+pie(data.frame(Female_eye)[,2], main='Female Eye', labels = data.frame(Female_eye)[,1], col = c('Blue','Brown','Green','Beige'))
+
+```
+
+# Exercise 3
+
+```{r}
+data3 = data.frame(
+  Date.Emails = c('1/10','2/10','3/10','4/10','5/10','6/10','7/10'),
+  Genuine.Emails = c(300,700,600,400,400,800,400),
+  Contains.Virus = c(50,100,75,50,100,35,50),
+  Spam.Emails = c(850,400,100,400,300,550,600),
+  Others = c(100,200,200,300,200,100,250)
+)
+t(as.matrix(data3))
+```
+
+```{r}
+data.complete = data3 %>% mutate(Sum = apply(data3[-1], MARGIN=1,sum))
+data.complete = t(as.matrix(data.complete[,-1]))
+
+```
+
+```{r fig.height=6, fig.width=10}
+bp = barplot(data.complete[1:4,], space = 2, beside=F,col=c('darkblue','blue','skyblue','cyan'), xlim=c(2,25))
+
+barplot(data.complete[5,], col='violetred', add=T, space=c(3,rep(2,6)), names.arg=data3[,1])
+
+legend(23,1400, cex=0.8, pch=15,col=c('darkblue','blue','skyblue','cyan','violetred'), c('Genuine','Virus','Spam','Others','Total'))
+
+
+```
+

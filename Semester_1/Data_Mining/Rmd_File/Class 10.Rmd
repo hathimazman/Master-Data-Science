@@ -1,0 +1,182 @@
+---
+title: "Perlombongan Data Teks"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+Data berbentuk tak berstruktur
+
+1.  Corpus Text
+2.  Pembersihan Data
+
+```{r, include=F}
+packages = c('tm','SnowballC','wordcloud','RColorBrewer','syuzhet','ggplot2')
+lapply(packages, library, character.only = TRUE)
+```
+
+```{r}
+text = readLines("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/text.txt")
+class(text)
+```
+
+# Jelmakan data kepada corpus data
+
+```{r}
+docs = Corpus(VectorSource(text))
+inspect(docs)
+class(docs)
+```
+
+# Pembersihan teks
+
+## 1. Keluarkan aksara khas daripada teks, iaitu simbol-simbol; /, \@, \| akan digantikan dengan ruang kosong.
+
+```{r}
+toSpace = content_transformer(function(x, pattern) 
+  gsub(pattern, "",x))
+```
+
+gantikan semua simbol yang nak dikeluarkan daripada teks dengan ruang kosong
+
+```{r}
+docs2 = tm_map(docs, toSpace, "!")
+docs3 = tm_map(docs2, toSpace, ":")
+docs4 = tm_map(docs3, toSpace, ",")
+```
+
+## 2. Tukar teks huruf besar kepada huruf kecil.
+
+```{r}
+docs5 = tm_map(docs4, content_transformer(tolower))
+```
+
+## 3. Keluarkan nombor-nombor.
+
+```{r}
+docs6 = tm_map(docs5, removeNumbers)
+```
+
+## 4. Keluarkan kata henti (stopwords). Contoh kata henti dalam bahasa Inggeris “the, is, at, on”. Tiada senarai semesta (universal) kata henti yang digunakan dalam NLP.
+
+```{r}
+docs7 = tm_map(docs6, removeWords, stopwords("english"))
+```
+
+## 5. Keluaran tanda baca (punctuation).
+
+```{r}
+docs8 = tm_map(docs7, removePunctuation)
+```
+
+## 6. Buang semua ruang tambahan yang tidak perlu dalam teks.
+
+```{r}
+docs9 = tm_map(docs8, stripWhitespace)
+inspect(docs9)
+```
+
+# Tokenisasi
+
+Mewakili perkataan kepada format angka yang kemudiannya boleh digunakan dalam perlombongan teks.
+
+To obtain bag of words
+
+Boleh guna tokenisasi atau korpus data
+
+# Pembendungan Teks (Text Stemming)
+
+Turunkan data kepada bentuk akar (root form)
+
+```{r}
+docs10 = tm_map(docs9, stemDocument)
+```
+
+# Matriks Sebutan-Dokumen
+
+```{r}
+dtm = TermDocumentMatrix(docs10)
+m = as.matrix(dtm)
+dim(m)
+```
+
+## 10 ayat paling kerap disebut dalam teks
+
+```{r}
+v = sort(rowSums(m), decreasing=T)
+d = data.frame(word=names(v), freq=(v))
+head(d,10)
+```
+
+# Awan Perkataan
+
+```{r}
+set.seed(12)
+wordcloud(words=d$word, freq=d$freq, min.freq=2,
+          max.words = 150, random.order=F, colors = brewer.pal(8, "Dark2"))
+```
+
+# Perkaitan Perkataan (Word Association)
+
+## Contoh: Perkataan yang sering diserbut bersama 'freedom'?
+
+```{r}
+findAssocs(dtm, terms='freedom', corlimit=0.3)$freedom
+```
+
+## Cari hubungan ayat yang berlaku sekurang kurangnya 10 kali
+
+```{r}
+findAssocs(dtm, terms=findFreqTerms(dtm,lowfreq=10), corlimit=0.5)
+```
+
+# Analisis Sentimen
+
+```{r}
+library(sentimentr)
+
+x = "Sentiment analysis is super fun"
+```
+
+```{r}
+sentiment(x)
+```
+
+```{r}
+y = "Sentiment analysis is super boring. I do love working with R"
+sentiment(y)
+```
+
+```{r}
+sentiment_text = get_sentiment(text, method='syuzhet')
+sentiment_text
+```
+
+```{r}
+summary(sentiment_text)
+hist(sentiment_text)
+```
+
+# Klasifikasi Emosi
+
+```{r}
+d2 = get_nrc_sentiment(text)
+td = data.frame(t(d2))
+```
+
+## Pengvisualan
+
+```{r}
+td_new = data.frame(rowSums(td))
+names(td_new)[1] = 'Count'
+td_new = cbind("sentiment" = rownames(td_new), td_new)
+rownames(td_new) = NULL
+
+qplot(sentiment, weight=Count, data=td_new,
+      geom='bar', fill=sentiment, ylab='Count') + ggtitle("Sentiment Score")
+```

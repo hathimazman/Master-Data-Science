@@ -1,0 +1,246 @@
+---
+title: "Perlombongan Data Reruang (Spatial)"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+Data yang melibatkan ruang, lokasi dan geografi.
+
+*Objek Reruang : spatial objects*
+
+Contoh : set data vektor mungkin menerangkan maklumat tentang sempadan negara di dunia bersama sama dengan maklumat tentang saiz populasi
+
+*Medan Reruang : spatial fields*
+
+Contoh : aplikasi analisis reruang yang melibatkan data meteorologi, sains bumi, analisis imej dan lain lain. Jika data reruang dicerap bersama dengan maklumat masa, ianya dikenali sebagai analisis ruang masa
+
+-   Data Meteorologi
+-   Data objek bergerak
+-   Data Sains Bumi
+-   Data Wabak Penyakit
+-   Data diagnostik penyakit
+-   Data demografi
+
+# Spatial Points / Data Titik
+
+```{r}
+load("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/wst.RData")
+wst
+attach(wst)
+library(sp)
+library(raster)
+names(wst)
+```
+
+## Takrifkan data reruang
+
+```{r}
+lonlat = cbind(longitude, latitude)
+pts = SpatialPoints(lonlat)
+```
+
+## Takrifkan CRS dalam data reruang
+
+```{r}
+crdref = CRS('+proj=longlat +datum=WGS84')
+
+pts =SpatialPoints(lonlat, proj4string=crdref)
+```
+
+## Masukkan maklumat p/ubah data yang diminati
+
+```{r}
+df = data.frame(ID = name, precip)
+ptsdf = SpatialPointsDataFrame(pts, data=df)
+```
+
+## Plot Data
+
+```{r}
+plot(ptsdf, axes=T)
+```
+
+## Lihat details data
+
+```{r}
+showDefault(ptsdf)
+```
+
+# Spatial Lines / Data Garis
+```{r}
+lon = c(-116.8, -114.2, -112.9, -111.9,-114.2,-115.4,-117.7)
+lat = c(41.3,42.9,42.4,39.8,37.6,38.3,37.6)
+```
+
+```{r}
+lonlat = cbind(lon,lat)
+lns = spLines(lonlat, crs=crdref)
+plot(lns,axes=T)
+```
+# Spatial Polygon / Data Poligon
+```{r}
+pols = spPolygons(lonlat, crs=crdref)
+plot(pols, axes=T)
+```
+# Data Raster
+```{r}
+r=raster(ncol=20,nrow=20, xmx=-80,xmn=-150, ymn=20, ymx=60)
+
+x = rexp(ncell(r), rate=1)
+values(r) = x
+plot(r)
+```
+```{r}
+r2 = r*r
+r3 = sqrt(r)
+r4 = 2*r2+r3
+
+s = stack(r,r2,r3,r4)
+plot(s)
+```
+
+#Beberapa teknik manipulasi data vektor reruang
+
+## Mempersembahkan data reruang sebagai format data frame
+```{r}
+library(terra)
+f = system.file('external/lux.shp', package='raster')
+p = shapefile(f)
+plot(p, axes=T)
+```
+
+```{r}
+d = data.frame(p)
+d
+```
+
+## Mengekstrak atribut tertentu
+```{r}
+p$NAME_2
+p$AREA
+p2 = p[,'NAME_2']
+data.frame(p2)
+```
+
+## Tambah maklumat atribut baharu
+```{r}
+Temp = round(10*rexp(12),3)
+
+p$Temperature = Temp
+data.frame(p)
+```
+
+## Pilih subset data
+```{r}
+i = which(p$NAME_1 == 'Luxembourg')
+
+g = p[i,]
+par(mfrow=c(1,2))
+plot(p,axes=T)
+plot(g, axes=T)
+```
+```{r}
+data.frame(g)
+```
+
+## Integrasi Data
+Data simulasi
+```{r}
+dfr = data.frame(District = p$NAME_1, Canton = p$NAME_2, 
+                 Precipitation = round(10*rexp(12),3))
+dfr = dfr[order(dfr$Canton),]
+```
+```{r}
+data2 = merge(dfr,p, by.y=c('NAME_1','NAME_2'), by.x=c('District','Canton'))
+data.frame(data2)
+```
+
+## Manipulasi peta
+### Bahagikan peta kepada 4 zon
+```{r}
+zon = raster(p,nrow=2,ncol=2, vals=1:4)
+names(zon) = "Zone"
+```
+```{r}
+zon = as(zon, 'SpatialPolygonsDataFrame')
+plot(p, axes=T)
+plot(zon, add=T, border='blue', lwd=2, lty=2)
+```
+### Pilih zon tertentu
+```{r}
+zon2 = zon[2,]
+plot(p, axes=T)
+plot(zon2, add=T, border='red', lwd=2, lty=2)
+```
+### Zoom Zon
+```{r}
+e = intersect(p, zon2)
+plot(e,axes=T)
+```
+
+### Buang Zon
+```{r}
+e2 = erase(p, zon2)
+plot(e2,axes=T)
+```
+
+### Takrik lokasi yang nak pilih
+```{r}
+e3 = extent(5.8,6.3,49.6,50)
+pe = crop(p, e3)
+plot(p, axes=T)
+plot(pe, axes=T, add=T, col='red')
+```
+
+# Manipulasi Data Raster
+## Mengekstrak objek tunggal RasterLayer daripada objek RasterBrick atau RasterStack
+```{r}
+r5 = raster(s, layer=2)
+plot(r5)
+```
+```{r}
+r6 = r2+10
+plot(r6)
+```
+
+## Algebra dalam data raster
+```{r}
+r7=r6^2
+r8 = r*r2+r7
+plot(r8)
+```
+
+## Tambah nilai baharu dalam sel
+```{r}
+pi = rgamma(400,30,20)
+r8$new = pi
+plot(r8)
+```
+
+## Pangkas dan gabungkan data raster
+```{r}
+l2 = crop(s,extent(-130,-100,30,40))
+plot(l2)
+```
+```{r}
+l3 = crop(s, extent(-100,-80,40,45))
+plot(l3)
+```
+```{r}
+m = merge(l2,l3)
+plot(m)
+```
+
+## Fungsi deskriptif
+```{r}
+cellStats(s, mean)
+```
+```{r}
+cellStats(s, sd)
+```
