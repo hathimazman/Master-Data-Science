@@ -1,0 +1,108 @@
+---
+title: "Class 4 - Data Analysis"
+output: html_document
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+Steps for hypothesis testing ;
+
+1.  Define null and alternative hypothesis; $H_0$ and $H_1$ respectively.
+
+2.  Choose a suitable test and select $\alpha$
+
+3.  Compute test statistic
+
+4.  Make a statistical decision based on p-value/critical value;
+
+    -   Reject $H_0$ and accept $H_1$ if p-value smaller than significant level. This indicates there is evidence against null hypothesis.
+
+    -   Fail to rejecct $H_0$ if p-value is bigger than significance level. This indicates there is not enough evidence against null hypothesis
+
+# Exercise
+
+## One sample t-test
+
+1.  A fisherman breeds red tilapias in a pond in Sungai Terengganu. He claims that the mean weight of the red tilapias exceeds 1.2 kg. Assume that the weight of the population of red tilapias is approximated normal. A random sample of 5 red tilapias was taken from his pond, and their weights were 1.1, 1.2, 1.3, 1.2 and 1.4 kg, respectively. Test at 𝛼 = 0.05 whether the fisherman’s claim is reasonable.
+
+$$
+H_0 : \mu = mu
+\newline
+H_1 : \mu > mu
+$$
+
+```{r}
+library(TeachingDemos)
+pop_mean = 1.2
+sample = c(1.1,1.2,1.3,1.2,1.4)
+n = 5
+
+t.test(sample, mu=pop_mean, alternative='greater')
+```
+
+p-value \> $\alpha$. Therefore, failed to reject $H_0$, there is not enough evidence to reject that the mean weight of the red tilapias is 1.2kg.
+
+## Two Sample Test of Proportions
+
+2.  For 80 randomly selected men, 30 regularly bicycled to campus; while for 100 randomly selected women, 20 regularly bicycled to campus. Test 𝐻0: 𝑝1 = 𝑝2 vs. 𝐻1: 𝑝1 \> 𝑝2 at 0.05 level of significance.
+
+$$
+H_0 : p1 = p2
+\newline
+H_1 : p1 > p2
+$$
+
+```{r}
+prop.test(c(30,20), c(80,100), alternative='greater', correct=F)
+```
+
+p-value \< $\alpha$. Therefore, there is enough evidence to reject $H_0$, there is enough evidence to reject that the proportion of men who regularly cycle to campus is equal to women.
+
+## One-way ANOVA 
+3.  The `PlantGrowth` dataset are results from an experiment on the growth of plants with different treatments. A researcher wants to know if the average weights of the plants in the three experimental circumstances vary significantly. Perform a test to find out the answer for him.
+
+$$
+H_0 : \mu_1 = \mu_2 = \mu_3
+\newline
+H_1 : \mu_i \not= \mu_j,~ (for~some~i~and~j)
+$$
+
+```{r}
+data("PlantGrowth")
+str(PlantGrowth)
+
+one.way = aov(weight~group, data=PlantGrowth)
+summary(one.way)
+```
+p-value < $\alpha$. Therefore, there is enough evidence to reject $H_0$. There is enough evidence to reject that all the means between groups is the same.
+
+
+##
+
+4.  Based on the `Salaries` dataset in the car package, build a simple linear model for the salaries of professors against the years of service, i.e `salary` as the dependent variable and `yrs.service` as the independent variable. Then build a multiple linear regression with an additional independent variable of `yrs.since.phd` and a dummy variable model with both `yrs.service` and `rank` as independent variables. Write down the equation for the 3 models and compare them. 
+
+```{r}
+library(carData)
+data(Salaries)
+str(Salaries)
+```
+Model 1
+```{r}
+lm1 = lm(salary ~ yrs.service, data = Salaries)
+summary(lm1)
+```
+Model 2
+```{r}
+lm2 = lm(salary ~ yrs.service + yrs.since.phd, data=Salaries)
+summary(lm2)
+```
+Model 3
+```{r}
+lm3 = lm(salary ~ yrs.service + rank, data=Salaries)
+summary(lm3)
+```
+

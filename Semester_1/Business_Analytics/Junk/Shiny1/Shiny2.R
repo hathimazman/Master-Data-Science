@@ -33,9 +33,23 @@ server <- function(input, output) {
     
     abline(model, col='blue')
     
-    points(input$spend, predict(model, data.frame(marketing_total = input$spend)), col='blue', cex=2, pch=19)
+    newdata = data.frame(marketing_total = input$spend)
+    pred = predict(model, newdata, interval='predict')
     
-    abline(h = predict(model, data.frame(marketing_total = input$spend)), col='red', lty=2)
+    points(c(rep(input$spend, 2)),
+           c(pred[2], pred[3]),
+           col='orange', cex=2, pch='-')
+    
+    segments(input$spend, pred[2], input$spend, pred[3],
+             col = 'orange', lty=2, lwd=2)
+    
+    points(input$spend, pred[1], pch=19, col='blue', cex=2)
+    
+    text(54,55, pos=4, cex=1.0,
+         paste0("Predicted revenues of $",
+                round(pred[1], 2) * 1000,
+         " range of {", round(pred[2], 2) * 1000,
+         " to ", round(pred[3], 2) * 1000, "}"))
     
   })
 }
