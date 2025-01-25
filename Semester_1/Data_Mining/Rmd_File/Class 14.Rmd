@@ -1,0 +1,289 @@
+---
+title: "Perlombongan Proses"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(bupaR)
+library(edeaR)
+library(eventdataR)
+library(processmapR)
+library(processmonitR)
+library(xesreadR)
+library(petrinetR)
+library(daqapo)
+library(dplyr)
+```
+
+```{r}
+data(patients)
+head(data.frame(patients))
+```
+
+```{r}
+patients%>% process_map()
+```
+
+```{r}
+data(sepsis)
+head(data.frame(sepsis))
+```
+
+```{r}
+sepsis%>%process_map()
+```
+
+```{r}
+data(traffic_fines)
+head(data.frame(traffic_fines))
+```
+
+```{r}
+traffic_fines%>%process_map()
+```
+
+# Teknik Penilaian DaQaPo
+
+DaQAPO merujuk kepada Penilaian Kualiti Data untuk Proses Berorientasi Data Quality Assessment for Process Oriented
+
+DaQAPO merupakan suatu set kerangka fungsi penilaian untuk mendapatkan maklumat perihalan berkaitan data log peristiwa
+
+Meta data
+
+```{r}
+patients%>%mapping
+```
+
+```{r}
+patients %>% summary
+```
+
+```{r}
+data(hospital_actlog)
+hospital_actlog %>% process_map()
+```
+
+## Kes ID yang tiada rekod/hilang
+
+```{r}
+hospital_actlog %>% detect_case_id_sequence_gaps()
+```
+
+## Keberlakuan aktiviti mengikut syarat
+
+Contoh : Jika specialization "TRAU", aktiviti "Clinical Exam" sepatutnya dijalankan
+
+```{r}
+hospital_actlog %>% detect_conditional_activity_presence(condition = specialization == "TRAU",
+                                                         activities = "Clinical exam")
+```
+
+## Nilai pencil tempoh masa aktiviti
+
+Contoh : tempoh masa aktiviti "Treatment" sepatutnya 1-15minit
+
+```{r}
+hospital_actlog %>% detect_duration_outliers(Treatment=duration_within(lower_bound=0, upper_bound = 15))
+```
+
+## Tempoh tak aktif
+
+Contoh : ada tak tempoh \>30min tanpa sebarang aktiviti
+
+```{r}
+hospital_actlog %>% detect_inactive_periods(threshold=30)
+```
+
+## Kes kes tak lengkap
+
+Contoh :ada tak kes yang tak menjalani 5 prosedur sepatutnya
+
+```{r}
+hospital_actlog %>% detect_incomplete_cases(activities=c("Registration","Triage","Clinical exam","Treatment","Treatment evaluation"))
+```
+
+## Nama aktiviti aktiviti yang salah rekod
+
+```{r}
+hospital_actlog %>% detect_incorrect_activity_names(allowed_activities = c("Treatment","Clinical exam","Treatment","Treatment evaluation", "Registration", "Triage"))
+```
+
+# Subset Data Log Peristiwa
+## Tapisan Peristiwa
+### Label aktiviti
+Contoh : Data bagi kes yang menjalani x-ray & blood test 
+
+```{r}
+P1 <- patients %>% filter_activity(c("X-Ray", "Blood test")) %>% activities
+data.frame(P1)
+```
+
+### Kekerapan aktiviti
+Contoh : Aktiviti yang berlaku > 300 kali
+```{r}
+P2 <- patients %>% filter_activity_frequency(interval =c(300,500)) %>% activities
+data.frame(P2)
+```
+
+### Label sumber
+Contoh : bilangan aktiviti yang dijalankan oleh pekerja r1 & r4
+```{r}
+P3 <- patients %>% filter_resource(c("r1","r4")) %>% resource_frequency("resource")
+P3
+```
+
+### Kekerapan sumber
+Contoh : Pekerja mana yang jalanakn 200-300 aktiviti
+```{r}
+P4 <- patients %>% filter_resource_frequency(interval = c(200,300)) %>% resources()
+P4
+```
+
+### Pangkasan kes
+Contoh :Lihat keseluruhan aktiviti bermula dari Registration sehingga pesakit perlu jalankan MRI scan atau X-Ray
+```{r}
+patients %>% filter_trim(start_activities = "Registration", end_activities = c("MRI SCAN","X-Ray")) %>% process_map()
+```
+
+## Tapisan Kes
+### Masa pemprosesan
+Contoh : Lihat kes dengan masa pemprosesan antara 50- 100 jam
+```{r}
+patients %>% filter_throughput_time(interval=c(50,100), unit="hours") %>% process_map()
+
+```
+
+### Panjang jejak
+Contoh : kes yang memerlukan 2-5 prosedur
+```{r}
+patients %>% filter_trace_length(interval=c(2,5)) %>% traces
+```
+
+### Keberlakuan suatu aktiviti
+Contoh : kes-kes yang memerlukan imbasan x-ray
+```{r}
+patients %>% filter_activity_presence("X-Ray") %>% traces
+```
+
+### Titik akhir
+Contoh : lihat data kes bermula drpd "Blood test" hingga "Discuss Results"
+```{r}
+patients %>% filter_endpoints(start_activities = "Blood test", end_activities = "Discuss Results")
+```
+
+### Duluan (Precedence)
+Contoh : 
+```{r}
+patients %>% filter_precedence(antecedents = "Triage and Assessment", consequents = "Blood test") %>% process_map()
+```
+
+### Kekerapan jejak
+Contoh : <= 2 prosedur
+```{r}
+patients %>% filter_trace_frequency(interval=c(0,2)) %>% traces
+```
+
+# Plot pemetaan proses
+## Kekerapan Mutlak
+```{r}
+patients %>% process_map()
+```
+
+## Kekerapan relatif.
+```{r}
+patients %>% process_map(frequency("relative"))
+```
+
+## Profil prestasi.
+```{r}
+patients %>% process_map(performance())
+```
+
+# Analisis Kawalan Aliran (Control Flow Analysis)
+## Perkadaran aktiviti
+```{r}
+patients %>% activity_presence() %>% plot()
+```
+## Panjang jejak
+```{r}
+patients %>% trace_length("trace") %>% plot()
+
+```
+## Liputan Jejak
+```{r}
+patients %>% trace_coverage("trace") %>% plot()
+```
+
+## Pematuhan berasaskan aturan
+Contoh : jika kes menjalani "ER Registartion", kes juga akan ambil prosedur "CRP" dan "LacticAcid".
+```{r}
+library(processcheckR)
+X1 <- sepsis %>% check_rules(p1=starts("ER Registration"),p2=and("CRP","LacticAcid"))
+```
+## Penapisan berdasarkan aturan
+
+```{r}
+X2 <- sepsis %>% filter_rules(p1=starts("ER Registration"),p2=and("CRP","LacticAcid"))
+```
+
+# Analisis Prestasi
+## Masa pemprosesan
+```{r}
+patients %>% processing_time("activity") %>% plot()
+```
+
+## Masa Keseluruhan
+```{r}
+patients %>% throughput_time("case") %>% plot()
+```
+
+## Masa terbiar (Idle Time)
+```{r}
+patients %>% idle_time("resource", unit="days") %>% plot() 
+```
+
+# Analisis Organisasi
+## Kekerapan sumber
+```{r}
+patients %>% resource_frequency("resource") %>% plot()
+```
+
+## Penglibatan Sumber
+```{r}
+patients %>% resource_involvement(level="resource") %>% plot()
+```
+
+## Pengkhususan Kerja
+```{r}
+patients %>% resource_specialization("resource")
+```
+
+## Rangkaian penyerahan kerja
+```{r}
+patients %>% resource_map()
+```
+
+## Matriks duluan sumber
+```{r}
+patients %>% resource_matrix() %>% plot()
+```
+
+# Plot Carta Titik
+```{r}
+library(bupaverse)
+sepsis %>% dotted_chart()
+```
+# Plot Jejak Peristiwa
+```{r}
+sepsis %>% trace_explorer(n_traces=10, coverage=0.1)
+patients %>% trace_explorer(coverage=1)
+?trace_explorer
+```
+

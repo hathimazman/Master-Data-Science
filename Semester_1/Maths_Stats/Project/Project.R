@@ -69,7 +69,7 @@ summary(model)
 
 # Checking Assumptions
 ## Linearity
-pairs(data[NumCols])
+pairs(data[NumCols], main="Pair Plot of Numerical Variables")
 
 cor(data[NumCols])
 
@@ -97,37 +97,3 @@ model2 = lm(log(charges) ~ age + sex + bmi + children+ smoker + region -1, data 
 # Recheck New Model
 summary(model2)
 plot(model2)
-
-# Model testing
-# Define the new applicant's data number 1
-new_applicant <- data.frame(
-  age = 40,
-  sex = "female",
-  bmi = 30.2,
-  children = 2,
-  smoker = "yes",
-  region = "southeast"
-)
-
-# Use the predict function with the model
-predicted_log_charges <- predict(model2, newdata = new_applicant, interval='confidence', level = 0.9)
-
-# Convert log(charges) back to the original scale
-predicted_charges <- exp(predicted_log_charges)
-
-
-# Define the new applicant's data number 2
-new_applicant2 <- data.frame(
-  age = 26,
-  sex = "male",
-  bmi = 25,
-  children = 0,
-  smoker = "yes",
-  region = "southeast"
-)
-
-# Use the predict function with the model
-predicted_log_charges <- predict(model2, newdata = new_applicant2, interval='confidence', level = 0.9)
-
-# Convert log(charges) back to the original scale
-predicted_charges <- exp(predicted_log_charges)

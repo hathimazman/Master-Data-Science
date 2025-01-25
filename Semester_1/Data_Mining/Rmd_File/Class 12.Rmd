@@ -1,0 +1,63 @@
+---
+title: "Perlombongan Data Web"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+Semak sama ada website benarkan data diambil
+```{r}
+library(robotstxt)
+paths_allowed(paths=c("https://en.wikipedia.org/wiki/List_of_Formula_One_drivers"))
+
+```
+
+# Import data website
+```{r}
+library(xml2)
+library(rvest)
+link <- "https://en.wikipedia.org/wiki/List_of_Formula_One_drivers"
+page <- read_html(link)
+```
+# Convert HTML kepada table
+```{r}
+drivers_F1 <- html_element(page, "table.sortable")%>% html_table()
+str(drivers_F1)
+```
+# Pilih p/ubah yang diminati untuk dianalisa
+```{r}
+drivers_F1 <-drivers_F1[c(1:4,7:9)]
+drivers_F1 <- drivers_F1[-nrow(drivers_F1),]
+```
+
+# Negara mana paling banyak menang F1?
+```{r}
+drivers_F1$`Drivers' Championships` <- substr(as.double(drivers_F1$`Drivers' Championships`),
+                                              start=1,stop=1)
+library(tidyverse)
+drivers_F1 %>% group_by(Nationality) %>%
+  summarise(championship_country = sum(as.double(`Drivers' Championships`),na.rm=TRUE)) %>%
+  arrange(desc(championship_country))
+```
+
+# Pelumba mana menang paling banyak F1?
+```{r}
+drivers_F1 %>% group_by(`Driver name`) %>%
+  summarise(championship_country = sum(as.double(`Drivers' Championships`),na.rm=TRUE)) %>%
+  arrange(desc(championship_country))
+
+```
+
+# Apa hubungan petak bermula dengan bilangan kemenangan F1?
+```{r}
+drivers_F1 %>% filter(`Pole positions` > 1) %>%
+  ggplot(aes(x=as.double(`Pole positions`), y=as.double(`Drivers' Championships`))) +
+  geom_point(position='jitter')
+
+```
+

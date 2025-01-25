@@ -133,7 +133,7 @@ points <- matrix(runif(30,1,15),
 max_distance(points[3,], points)
 ```
 
-## 3. Mann-Kendall test is a statistical test used to determine the existence of monotonic trend in a data set X. 
+## 3. Mann-Kendall test is a statistical test used to determine the existence of monotonic trend in a data set X.
 
 ### a) Write an R function that computes the test statistic, SMK, of the Mann-Kendall test for a data set X of size n which is given as follows:
 

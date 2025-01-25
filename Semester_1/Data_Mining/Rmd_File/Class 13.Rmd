@@ -1,0 +1,324 @@
+---
+title: "Perlombongan Data Graf"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+# Asas teori graf
+
+## Definisi penting:
+
+1.  Graf : terdiri daripada 2 set (verteks[V] dan sisi[E])
+
+2.  Sisi : Pasangan tidak tertib bagi dua verteks ($v_1$, $v_2$)
+
+3.  Darjah (degree) : bilangan kali verteks berlaku sebagai titik akhir untuk sisi
+
+4.  Gelung (Loop) : Sisi yang menghubungkan verteks yang sama
+
+5.  Sisi berganda (Multiple edge) : Sisi yang menghubungkan dua verteks yang sama
+
+6.  Graf Mudah (Simple graph) : Graf yang tidak mempunyai gelung dan sisi berganda
+
+7.  Subgraf : Graf yang terdiri daripada sebahagian verteks dan sisi graf asal
+
+8.  Klik : Subgraf yang mana setiap verteks berhubung dengan setiap verteks yang lain
+
+9.  Laluan (Path) : Sisipan verteks yang berlainan
+
+10.  Graf Isomorfik : Graf yang boleh wujud dalam bentuk yang berbeza tetapi mempunyai bilangan verteks, sisi dan juga ciri ketersambungan sisi yang sama
+
+11. Graf Automorfik : Graf yang mempunyai struktur yang sama, tetapi mempunyai tingkahlaku hubungan yang berbeza. Oleh itu, ianya bukanlah graf yang sama secara tepat.
+
+```{r, include=F}
+library(igraph)
+```
+
+# Jenis jenis data graf
+
+## Graf terarah dan tak terarah
+
+### Graf tak terarah
+
+input hubungan nod-nod
+
+```{r}
+g <- graph_from_literal(1-2,1-3,1-7,3-4,2-3,2-4,3-5,4-5,
+                       4-6,4-7,5-6,5-8,6-7,7-8)
+
+```
+
+Labelkan nod-nod
+
+```{r}
+V(g)$name <- c("Adam", "Judy", "Bobby", "Sam", "Frank",
+              "Tom", "Jerry", "Jay")
+set.seed(12)
+plot(g)
+
+```
+
+### Graf terarah
+
+```{r}
+dg<- graph_from_literal(KL-+CHINA,KL-+London,CHINA++London)
+plot(dg)
+```
+
+# Graf berwajaran
+
+```{r}
+m <- read.table(row.names=1, header=T, text = 
+                      "  A   B   C   D  E   F
+                      A  0   0   0   0  0   1
+                      B  0   0   0.5 0  0   0.5
+                      C  0.5 0.2 0   0  0.3 0
+                      D  0.1 0   0   0  0.3 0.6
+                      E  0.2 0   0.1 0  0.7 0
+                      F  0   0.4 0.2 0  0.3 0.1")
+m<- as.matrix(m)
+
+ig <- graph_from_adjacency_matrix(m, weighted=T)
+plot(ig, edge.label=E(ig)$weight)
+```
+
+# Graf berkitar dan tak berkitar
+
+## Grad berkitar
+
+```{r}
+plot(ig, edge.label=E(ig)$weight)
+```
+
+## Graf tak berkitar
+
+```{r}
+plot(dg)
+```
+
+# Graf Pokok
+
+```{r}
+tr <- make_tree(40, children=3, mode='undirected')
+plot(tr)
+```
+
+# Graf Bipartit
+
+```{r}
+gb <- sample_bipartite(10,5,p=0.4)
+colo<- c('blue','red')
+shape <- c('circle','square')
+
+plot(gb, vertex.color=colo[as.numeric(V(gb)$type)+1],
+     vertex.shape=shape[as.numeric(V(gb)$type)+1])
+```
+
+# Hiper Graf
+
+```{r}
+library(HyperG)
+h <- hypergraph_from_edgelist(list(1:2, 2:5,3:7,
+                             c(1,3,5,7,9)))
+plot(h)
+```
+
+# Perwakilan Data Graf
+
+## Senarai Bersebelahan
+```{r}
+Adj.list1 <- as_adj_list(g)
+plot(g)
+Adj.list1
+```
+```{r}
+Adj.list2 <- as_adj_list(dg)
+plot(dg)
+Adj.list2
+```
+
+```{r}
+Adj.list3 <- as_adj_list(tr)
+plot(tr)
+head(Adj.list3,5)
+```
+
+## Seanari Sisi
+```{r}
+Ed.list1<- as.data.frame(as_edgelist(g))
+Ed.list2<- as.data.frame(as_edgelist(dg))
+Ed.list3<- as.data.frame(as_edgelist(gb))
+Ed.list1
+```
+
+## Matriks Bersebelahan
+```{r}
+Adj.M1<- as_adjacency_matrix(g)
+Adj.M2<- as_adjacency_matrix(dg)
+Adj.M3<- as_adjacency_matrix(ig)
+Adj.M1
+```
+
+# Teknik Manipulasi Graf
+
+## Keluarkan verteks tertentu
+```{r}
+h <- g-vertices(c("Jerry","Bobby"))
+plot(h)
+```
+
+## Menjana Subgraf
+```{r}
+
+h2 <- graph_from_literal("Adam"-"Judy","Adam"-"Tom",
+                     "Judy"-"Aminah", "Aminah"-"Frank")
+plot(h2)
+```
+
+## Gabungkan graf
+```{r}
+h3 <- union(h2,g)
+plot(h3)
+```
+## Mengubah suai sisi data
+```{r}
+E(h3)
+E(h3)$type<- c("email", "phone", "FB", "email", "class",
+            "Twitter", "neighbour", "phone", "FB", "email",
+            "class", "neighbour", "phone", "email", "email",
+            "FB", "neighbour")
+E(h3)$weight<- c(10, 1, 3, 2, 2, 2, 1, 5, 9, 8,1, 6, 2, 9,
+                 3, 10, 7)
+edge_attr(h3)
+
+```
+
+# Pengvisualan Graf
+```{r}
+plot(h3)
+plot(h3, vertex.label=V(h3)$gender)
+plot(h3, vertex.label=V(h3)$gender, edge.label=E(h3)$type)
+plot(h3, vertex.label=V(h3)$name, edge.label=E(h3)$type)
+plot(h3, vertex.label=V(h3)$name, edge.label=E(h3)$weight)
+```
+
+# Analisis prominen nod
+```{r}
+library(statnet)
+#import pakej daripada platfom github
+library(devtools)
+#install_github("DougLuke/UserNetR")
+library(UserNetR)
+
+data(Bali)
+par(mar=c(1,1,1,1))
+plot(Bali, displaylabels=T)
+```
+
+## Nama nod
+```{r}
+Name<- Bali%v%"vertex.names"
+```
+
+## Role nod
+```{r}
+Role<- Bali%v%"role"
+```
+
+## Atribut Sisi
+```{r}
+Attr<- Bali%e%"IC"
+```
+
+
+## Ukuran Nod Prominen
+### Kepusatan Darjah
+```{r}
+deg<- degree(Bali)
+```
+
+### Kepusatan Kedekatan
+```{r}
+cls<- closeness(Bali)
+```
+
+### Kepusatan Antara
+```{r}
+btw<- betweenness(Bali)
+```
+
+### Pemusatan
+```{r}
+library(statnet)
+library(UserNetR)
+data(Bali)
+plot(Bali, displaylabels=T)
+```
+```{r fig.height=8, fig.width=8}
+rolecat <- Bali%v%"role"
+name <- Bali%v%"vertex.names"
+library(RColorBrewer)
+library(ggplot2)
+my_pal <- brewer.pal(5, "Set2")
+gplot(Bali, displaylabels=T,
+       vertex.col=my_pal[as.factor(rolecat)])
+legend("topright", legend=c("BM","CT","OA","SB","TL"),
+       col=my_pal, pch=19, cex=1)
+```
+#### Ukuran Pemusatan Graf
+```{r}
+centralization(Bali, degree)
+centralization(Bali, closeness)
+```
+
+### Analisis titik potong
+```{r}
+net <-Bali
+cpnet <- cutpoints(net, return.indicator = T)
+# cpnet = 4 "TRUE"
+name[4]
+```
+
+# Analisis Sub Kumpulan
+```{r fig.height=8, fig.width=8}
+data(Facebook)
+plot(Facebook)
+```
+## Clique
+```{r}
+clique <- cliques(Facebook)
+```
+
+### Clique Terbesar
+```{r}
+max_clique <- max_cliques(Facebook)
+```
+
+## K-teras
+```{r}
+k_core <- coreness(Facebook)
+```
+
+plot teras yang sama 
+```{r fig.height=8, fig.width=8}
+V(Facebook)$color<- as.factor(k_core)
+plot(Facebook, main='sub=kumpulan mengikut k-teras',
+     vertex.size=7, vertex.label.cex=0.7)
+```
+
+## Pengesanan komuniti & ukuran modulariti
+```{r, fig.height=8, fig.width=8}}
+Komuniti_D <- cluster_louvain(Facebook)
+plot(Komuniti_D, Facebook)
+```
+```{r}
+skor_modulariti <- modularity(Komuniti_D)
+skor_modulariti
+```
+
