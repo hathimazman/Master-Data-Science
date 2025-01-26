@@ -140,32 +140,24 @@ max_distance(points[3,], points)
 ![](images/clipboard-4153019008.png)
 
 ```{r}
-x = runif(30,0,10)
-smk_function = function(x){
-  diff<-vector()
-  final<-vector()
-  for(i in 1:(length(x)-1)){
-    diff[i]=x[i+1]-x[i]
-    if(diff[i]>0){
-      final[i]=1
-    } else if (diff[i]==0){
-      final[i]=0
-    } else
-      final[i]=-1
-  }
-  smk=sum(final)
-  return(smk)
+Df <- function (i,x) {
+  n <- length(x)
+  j <- (i+1):n
+  y <- x[j] - x[i]
+  return(y)
 }
 
-# n = length(x)
-# y = x[1:(n-1)]
-# z = x[2:n]
-# s = z-y
-# s[s<0] = -1
-# s[s==0] = 0
-# s[s>0] = 1
-
-smk_function(x)
+Smk <- function(x) {
+  n <- length(x)
+  i <- 1:(n-1)
+  s <- do.call(c,lapply(i,function(i) Df(i,x)))
+  s[s<0] <- -1
+  s[s==0] <- 0
+  s[s>0] <- 1
+  smk <- sum(s)
+  return(smk)
+}
+Smk(x)
 ```
 
 ### b) If X is a series with no tie values, then the standardized test statistic, ZMK, is written as:

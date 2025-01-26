@@ -1,6 +1,7 @@
 ---
 title: "Class 4 - Data Analysis"
-output: html_document
+output: 
+  pdf_document: default
 knitr:
   opts_chunk: 
     echo: true
