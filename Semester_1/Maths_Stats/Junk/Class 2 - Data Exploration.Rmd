@@ -33,6 +33,7 @@ myc3
 ```
 
 ```{r}
+library(readxl)
 myc4 = read_excel('example2.xlsx', sheet = "Sheet1")
 myc4
 ```

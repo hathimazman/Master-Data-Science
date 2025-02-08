@@ -23,8 +23,7 @@ rbinom(6,size=1,prob=0.5)
 ```
 
 ```{r}
-hist(runif(50,min=0,max=100))
-
+hist(runif(50,min=0,max=100), breaks=15, main='histogram')
 ```
 
 # Monte Carlo Simulation
@@ -87,12 +86,12 @@ pai <- function(a) {
 data = pai(1000)
 par(mfrow=c(1,2))
 plot(data$n, data$deviation)
-plot(data$n, data$estimate, col='blue')
+plot(data$n, data$estimate, col='blue');abline(h=3.1416,col='red',lty='dashed')
 ```
 
 ## 2. Let $Y_1, Y_2, ... Y_n$ be a random sample from a normal distribution. Compare three estimators for the mean µ of the distribution;
 
-i) Sample mean
+i)  Sample mean
 
 ii) Sample 20% trimmed mean (R code: mean(x, trim=0.2))
 
@@ -151,4 +150,8 @@ clt <- function(m,n) {
 }
 
 clt(100,1000)
+```
+
+```{r}
+hist(rexp(1000))
 ```

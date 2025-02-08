@@ -93,7 +93,7 @@ data
 ```{r fig.height=8, fig.width=8}
 country = c('A','B','C','D','E','F','G','H','I','J')
 
-plot(data$row.max, type='h',ylim=c(0,120), main='Population Plot')
+plot(data$row.max, type='h',ylim=c(0,120), main='Population Plot',xlab="Country",ylab="Population")
 points(data$Population.under.65.years...., type='p',col=1, pch=1)
 points(data$Poor.under.65.years...., type='p', col=2, pch=2)
 points(data$Population.above.65.years...., type='p', col=3, pch=3)
@@ -162,7 +162,7 @@ data.complete = t(as.matrix(data.complete[,-1]))
 ```
 
 ```{r fig.height=6, fig.width=10}
-bp = barplot(data.complete[1:4,], space = 2, beside=F,col=c('darkblue','blue','skyblue','cyan'), xlim=c(2,25))
+bp = barplot(data.complete[1:4,],space=2, beside=F,col=c('darkblue','blue','skyblue','cyan'), xlim=c(2,25))
 
 barplot(data.complete[5,], col='violetred', add=T, space=c(3,rep(2,6)), names.arg=data3[,1])
 
