@@ -41,7 +41,7 @@ head(clus)
 ```
 
 ```{r}
-plot(clus$longitude, clus$latitude, col = two$cluster, asp = 1, pch = two$cluster, main = 'Sites for two kiosk')
+plot(clus$longitude, clus$latitude, col = two$cluster, asp=1, pch = two$cluster, main = 'Sites for two kiosk')
 points(two$centers[,2], two$centers[,1], pch = 23, col = 'maroon', bg = 'lightblue', cex=3)
 text(two$centers[,2], two$centers[,1], cex = 1.1, col = 'black', attributes(two$centers)$dimnames[[1]])
 ```
@@ -112,8 +112,8 @@ text(test1$centers[,1], test1$centers[,2], cex = 1.1, col = 'black', attributes(
 ```
 
 ```{r}
-market$age_scale = as.numeric(scale(market$age))
-market$income_scale = as.numeric(scale(market$income))
+market$age_scale = scale(market$age)
+market$income_scale = scale(market$income)
 head(market,10)
 ```
 
@@ -135,6 +135,9 @@ Unscale data
 
 ```{r}
 #unscale each of the scaled values in the scaled_data vector
+income_mean <- attr(market$income_scale, "scaled:center")
+income_sd <- attr(market$income_scale, "scaled:scale")
+market$income_unscaled <- market$income_scale * income_sd + income_mean
 #scaled_data * attr(scaled_data, 'scaled:scale') + attr(scaled_data, 'scaled:center')
 ```
 
@@ -153,9 +156,9 @@ library(dendextend)
 ```{r}
 dend = as.dendrogram(hc_mod)
 dend_six_color = color_branches(dend, k = 6)
-plot(dend_six_color, leaflab = "none", horiz = F,
+plot(dend_six_color, leaflab = "none", horiz = T,
      main = 'Age and Income Dendogram', ylab = 'Height')
-abline(h = 37.5, lty= 'dashed', col = 'blue')
+abline(v = 35, lty= 'dashed', col = 'blue')
 ```
 
 ```{r}

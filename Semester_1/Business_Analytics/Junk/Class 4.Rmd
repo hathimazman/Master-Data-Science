@@ -19,11 +19,11 @@ Assumption :
 -   Differencing technique:
 
 $$
-y/_diff/_trend = y_{(t+1)}-y_t
+y\_diff\_trend = y_{(t+1)}-y_t
 $$
 
 $$
-y/_diff/_seasonal = y_{(t + lag)}-y_t
+y\_diff\_seasonal = y_{(t + lag)}-y_t
 $$
 
 ```{r, include=F}

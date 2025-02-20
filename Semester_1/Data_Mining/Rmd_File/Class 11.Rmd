@@ -43,6 +43,7 @@ names(wst)
 ```{r}
 lonlat = cbind(longitude, latitude)
 pts = SpatialPoints(lonlat)
+pts
 ```
 
 ## Takrifkan CRS dalam data reruang
@@ -51,6 +52,7 @@ pts = SpatialPoints(lonlat)
 crdref = CRS('+proj=longlat +datum=WGS84')
 
 pts =SpatialPoints(lonlat, proj4string=crdref)
+pts
 ```
 
 ## Masukkan maklumat p/ubah data yang diminati
@@ -58,12 +60,13 @@ pts =SpatialPoints(lonlat, proj4string=crdref)
 ```{r}
 df = data.frame(ID = name, precip)
 ptsdf = SpatialPointsDataFrame(pts, data=df)
+ptsdf
 ```
 
 ## Plot Data
 
 ```{r}
-plot(ptsdf, axes=T)
+plot(pts, axes=T)
 ```
 
 ## Lihat details data
@@ -287,12 +290,13 @@ measure of similarity between nearby observations
 ```{r}
 p <- shapefile(system.file("external/lux.shp", package="raster"))
 library(spdep)
-w <- poly2nb(p, row.names=p$ld)
+w <- poly2nb(p)
 ww <- nb2listw(w)
 moran.test(p$AREA, ww)
 ```
 
 # Interpolasi RUang
+
 ```{r}
 library(devtools)
 #install_github('rspatial/rspat')
@@ -300,6 +304,7 @@ library(rspat)
 ```
 
 ## Precipitation in California
+
 ```{r}
 d <- spat_data('precipitation')
 head(d)
@@ -307,17 +312,21 @@ str(d)
 ```
 
 ## Curahan Hujan Tahunan
+
 ```{r}
 d$prec <- rowSums(d[,6:17])
 ```
 
 ## peta
+
 ```{r}
 dsp<- vect(d, c("LONG", "LAT"), 
            crs="+proj=longlat +datum=WSG84")
 CA <- spat_data("counties")
 ```
+
 ## Takrifkan kategori amaun curahan hujan
+
 ```{r}
 cuts <- c(0,200,300,500,1000,3000)
 library(ggplot2)
@@ -326,24 +335,28 @@ plot(CA)
 plot(dsp, "prec", type="interval", col=blues(10),
      breaks=cuts, add=T)
 ```
+
 ## Anggarkan data curahan hujan di kawasan yang tiada cerapan data teknik Poligon Hampiran
 
 ```{r}
 v <- voronoi(dsp)
 plot(v)
 ```
+
 ```{r}
 vca <- crop(v, CA)
 plot(vca, 'prec')
 ```
 
 # Kaedah regressi setempat
+
 ```{r}
 houses <- read.csv("G:/My Drive/Master-Data-Science/Semester_1/Data_Mining/Data/hd.csv", sep=';', header=T)
 str(houses)
 ```
 
 Jelmakan data kepada kelas reruang
+
 ```{r}
 hvect <- vect(houses, c('longitude','latitude'))
 ```
@@ -351,31 +364,37 @@ hvect <- vect(houses, c('longitude','latitude'))
 ```{r}
 plot(hvect, cex=0.5, axes=T)
 ```
+
 ```{r}
 countries<- spat_data('counties')
 crs(hvect) <- crs(countries)
 ```
 
-
 ## Regresi biasa
+
 ```{r}
 hd <- houses
 model <- glm(houseValue~income+houseAge+roomhead+bedroomhead+population, data=hd)
 summary(model)
 ```
+
 Model regresi biasa tidak mencerminkan maklumat yang berbeza terhadap lokasi yang berbeza
 
 ## Geographically Weighted Regression (GWR) Regresi
+
 Regresi setempat yang mempertimbangkan maklumat reruang dalam data
+
 ```{r}
 plot(hvect, cex=0.5, axes=T)
 plot(countries, add=T)
 ```
+
 ```{r}
 countrynames <- unique(hd$NAME)
 ```
 
 ### Model regresi yang berbeza terhadap kawasan berbeza
+
 ```{r}
 regfun <- function(x) {
   dat <- hd[hd$NAME == x,]
@@ -389,25 +408,30 @@ res <- sapply(countrynames, regfun)
 ```
 
 ### Kesan p/ubah income terhadap harga rumah
+
 ```{r}
 dotchart(sort(res['income',]), cex=0.65)
 ```
 
 ### Hasilkan peta bagi variasi parameter regresi setempat
+
 ```{r}
 resdf<- data.frame(NAME=colnames(res), t(res))
 dcounties <- aggregate(countries[,'NAME'], 'NAME')
 cnres <- merge(dcounties, resdf, by='NAME')
 ```
+
 ### Pengaruh income terhadap nilai rumah berdasarkan lokasi berbeza
+
 ```{r}
 plot(cnres, 'income')
 ```
+
 ### Untuk p/ubah yang lain
+
 ```{r}
 cnres2 <- cnres
 values(cnres2) <- as.data.frame(scale(as.data.frame(cnres)[-1]))
 plot(cnres2, 2:7, plg=list(x='topright'),
      mar=c(1,1,1,1))
 ```
-

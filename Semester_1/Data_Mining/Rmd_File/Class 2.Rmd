@@ -97,9 +97,9 @@ ambil nombor bukan 15 dan bukan 20
 x[x!=15&x!=20]
 ```
 
-# Subset bagi struktur data 
+# Subset bagi struktur data
 
-## 1. Subset mengikut nombor dan nama. 
+## 1. Subset mengikut nombor dan nama.
 
 ### 1.1 kekalkan nombor subset \>3
 
@@ -139,23 +139,23 @@ pilih data dgn size \> 6 & \<10 serta kekalkan lajur subject & sex
 subset(data,size>6&size<10, select=c("subject", "sex"))
 ```
 
-## 3. Subset berdasarkan Operator Logik (AND). 
+## 3. Subset berdasarkan Operator Logik (AND).
 
-### 3.1 pilih data dgn subject \<3 dan wanita 
+### 3.1 pilih data dgn subject \<3 dan wanita
 
 ```{r}
 subset(data, subject<3 & sex=="F")
 ```
 
-## 4. Subset berdasarkan Operator Logik (OR). 
+## 4. Subset berdasarkan Operator Logik (OR).
 
-### 4.1 pilih data dgn subject \<3 atau wanita 
+### 4.1 pilih data dgn subject \<3 atau wanita
 
 ```{r}
 subset(data, subject<3 | sex=="F")
 ```
 
-## 5. Subset data dengan syarat penjelmaan. 
+## 5. Subset data dengan syarat penjelmaan.
 
 ```{r}
 subset(data, log2(size)>3) 
@@ -170,13 +170,13 @@ log2(data$size)
 names(mtcars)
 ```
 
-## 2. Dapatkan maklumat tentang pembolehubah. (variable) 
+## 2. Dapatkan maklumat tentang pembolehubah. (variable)
 
 ```{r}
 ls() #---to visualize list of set variables
 ```
 
-###  2.1 to remove variable(pembolehubah) 
+### 2.1 to remove variable(pembolehubah)
 
 ```{r}
 rm(v3) 
@@ -193,19 +193,19 @@ ncol(mtcars)
 dim(mtcars)
 ```
 
-## 4. Lihat n baris pertama bagi set data. 
+## 4. Lihat n baris pertama bagi set data.
 
 ```{r}
 head(mtcars, 10)
 ```
 
-## 5. Dapatkan jumlah data lenyap. 
+## 5. Dapatkan jumlah data lenyap.
 
 ```{r}
 colSums(is.na(mtcars))
 ```
 
-# Pembundaran nombor 
+# Pembundaran nombor
 
 ## 1. Membundarkan kepada integer terdekat.
 
@@ -214,26 +214,26 @@ x = seq(-2.5,2.5, by=0.03)
 round(x,1)
 ```
 
-## 2. Membundarkan ke sempadan atas integer. 
+## 2. Membundarkan ke sempadan atas integer.
 
 ```{r}
 ceiling(x)
 ```
 
-## 3. Membundarkan ke sempadan bawah integer. 
+## 3. Membundarkan ke sempadan bawah integer.
 
 ```{r}
 floor(x)
 ```
 
-## 4. Membundarkan kepada bilangan titik perpuluhan tertentu. 
+## 4. Membundarkan kepada bilangan titik perpuluhan tertentu.
 
 ```{r}
 xp = c(0.001,0.07,1.2,44.0233,738.1111,27.998) 
 round(xp,digits=2)
 ```
 
-# Pengisihan (sorting) 
+# Pengisihan (sorting)
 
 ## 1. Pengisihan mengikut tertib menaik.
 
@@ -260,7 +260,7 @@ attach(mtcars) #supaya boleh call column tanpa '$'
 newdata = mtcars[order(mpg),]
 ```
 
-### 3.2 isih mengikut susunan p/ubah mpg & cyl 
+### 3.2 isih mengikut susunan p/ubah mpg & cyl
 
 ```{r}
 newdata2 = mtcars[order(cyl,mpg),] 
@@ -276,7 +276,7 @@ newdata3 = mtcars[order(-cyl,hp),]
 newdata3
 ```
 
-# Perawakan 
+# Perawakan
 
 ## 1. Perawakan tertib vektor.
 
@@ -294,7 +294,7 @@ data4 = data3[sample(1:nrow(data3)),]
 data4
 ```
 
-# aras dalam p/ubah faktor (rename classes) 
+# aras dalam p/ubah faktor (rename classes)
 
 ## 1. Membina pembolehubah faktor baharu.
 
@@ -331,7 +331,7 @@ xf2 = revalue(xf, c("beta"="delta","gamma"="zeta"))
 xf2
 ```
 
-## 4. Menambah dan menurunkan aras dalam pembolehubah faktor. 
+## 4. Menambah dan menurunkan aras dalam pembolehubah faktor.
 
 ```{r}
 # ses.f = factor(ses.f, levels=c(levels(ses.f), "very high")) 
@@ -345,7 +345,7 @@ newdata = droplevels(ses.f)
 newdata
 ```
 
-# Jujukan dalam blok 
+# Jujukan dalam blok
 
 ## 1. Mentakrifkan saiz blok.
 
@@ -354,14 +354,14 @@ x = rnorm(22)*100
 x
 ```
 
-### 1.1 blok saiz 4 
+### 1.1 blok saiz 4
 
 ```{r}
 block = ceiling(length(x)/4)*4 
 block #24 values needed for block size 4 required
 ```
 
-## 2. Menggantikan nilai yang terkurang dengan NA. 
+## 2. Menggantikan nilai yang terkurang dengan NA.
 
 ```{r}
 x[block] = NA 
@@ -375,13 +375,13 @@ xm = matrix(x,nrow=4)
 xm
 ```
 
-## 4. Menghitung ukuran statistik lajur. 
+## 4. Menghitung ukuran statistik lajur.
 
 ```{r}
 colMeans(xm,na.rm=T)
 ```
 
-## 5. Jalankan Pengekodan Panjang (Run Length Encoding). 
+## 5. Jalankan Pengekodan Panjang (Run Length Encoding).
 
 hitung bilangan nilai seragam dalam jujukan
 
@@ -398,7 +398,7 @@ summary(test)
 
 # ifelse dan nested ifelse
 
-## 1. Pernyataan mudah ifelse( ). 
+## 1. Pernyataan mudah ifelse( ).
 
 ```{r}
 mydata = data.frame(x1=seq(1,20,by=2), x2=sample(100:200,10,FALSE), x3=LETTERS[1:10]) 
@@ -412,9 +412,9 @@ mydata$y = ifelse(mydata$x2>150, -1, 0)
 mydata
 ```
 
-## 2. Fungsi ifelse( ) terhadap pemboleh ubah kualitatif (aksara). 
+## 2. Fungsi ifelse( ) terhadap pemboleh ubah kualitatif (aksara).
 
-### 2.1 bina data y2 
+### 2.1 bina data y2
 
 jika x3 ialah A & D, x1 darab dengan 2 selainnya x1 darab dengan 3
 
@@ -425,9 +425,9 @@ mydata$y2 = ifelse(mydata$x3%in%c("A","D"), mydata$x1*2, mydata$x1*3)
 mydata
 ```
 
-## 3. Pernyataan Nested ifelse( ). 
+## 3. Pernyataan Nested ifelse( ).
 
-### 3.1 bina data y3 x1 darab dengan 5 jika x3 ialah nilai A, B, dan D 
+### 3.1 bina data y3 x1 darab dengan 5 jika x3 ialah nilai A, B, dan D
 
 jika nilai x3 ialah C&H x1 darab 10
 
@@ -440,7 +440,7 @@ mydata$y3 = ifelse(mydata$x3%in%c("A","B","D"), mydata$x1*5,
 mydata
 ```
 
-# Aggregate data 
+# Aggregate data
 
 ## 1. Pengagregatan satu pemboleh ubah & kumpulan berdasarkan satu pemboleh ubah.
 
@@ -466,7 +466,7 @@ aggregate(point~team+event, data=df, FUN=mean)
 aggregate(point~team+event, data=df, FUN=sd)
 ```
 
-## 3. Pengagregatan pemboleh ubah berganda & kumpulan berdasarkan satu pemboleh ubah. 
+## 3. Pengagregatan pemboleh ubah berganda & kumpulan berdasarkan satu pemboleh ubah.
 
 hitung purata point dan level berdasarkan team
 
@@ -474,7 +474,7 @@ hitung purata point dan level berdasarkan team
 aggregate(cbind(point,level)~team, data=df, FUN=mean)
 ```
 
-## 4. Pengagregatan pemboleh ubah berganda & kumpulan berdasarkan pemboleh ubah berganda. 
+## 4. Pengagregatan pemboleh ubah berganda & kumpulan berdasarkan pemboleh ubah berganda.
 
 hitung purata point dan level berdasarkan team dan event
 
@@ -482,7 +482,7 @@ hitung purata point dan level berdasarkan team dan event
 aggregate(cbind(point,level)~team+event, data=df, FUN=mean)
 ```
 
-# Penggelungan 
+# Penggelungan
 
 ## 1. Fungsi Apply
 
@@ -534,7 +534,7 @@ mydata6 = rename(mydata, IndexXY=Index, USState=State)
 mydata6
 ```
 
-## 5. Menapis baris. 
+## 5. Menapis baris.
 
 ### pilih subset data untuk index "A"
 
@@ -557,25 +557,25 @@ mydata9 = filter(mydata, Index%in%c("A","C") & Y2002>=130000)
 mydata9
 ```
 
-##  8. Syarat 'OR' dalam pemilihan kriteria.
+## 8. Syarat 'OR' dalam pemilihan kriteria.
 
 ```{r}
 mydata10 = filter(mydata, Index%in%c("A","C") | Y2002>=130000) 
 mydata10
 ```
 
-##  9. Syarat NOT. 
+## 9. Syarat NOT.
 
-### ambil data bukan Index A,C,M & N 
+### ambil data bukan Index A,C,M & N
 
 ```{r}
 mydata11 = filter(mydata, !Index%in%c("A","C","M","N")) 
 mydata11
 ```
 
-## 10. Syarat CONTAINS. 
+## 10. Syarat CONTAINS.
 
-### teknik digunakan untuk cari padanan data  / pattern matching 
+### teknik digunakan untuk cari padanan data / pattern matching
 
 dapatkan data dengan syarat p/ubah untuk State yang ada pattern nama Ar
 
@@ -584,7 +584,7 @@ mydata12 = filter(mydata, grepl("Ar", State))
 mydata12
 ```
 
-## 11. Memperihalkan pemboleh ubah terpilih. 
+## 11. Memperihalkan pemboleh ubah terpilih.
 
 hitung min & median by p/ubah 2015
 
@@ -610,7 +610,7 @@ summarise_at(mydata, vars(Y2005,Y2006), function(x) log(sd(x-mean(x))))
 summarise_if(mydata, is.numeric, list(means=mean, medians=median))
 ```
 
-## 15. Menyusun data menerusi pemboleh ubah berganda. 
+## 15. Menyusun data menerusi pemboleh ubah berganda.
 
 ### 15.1 Susunan menaik
 
@@ -624,7 +624,7 @@ arrange(mydata, Index, Y2011)
 arrange(mydata, desc(Index), Y2011)
 ```
 
-## 16. Operator Pipe %\>%. 
+## 16. Operator Pipe %\>%.
 
 berguna untuk tulis sub-queries, gabungkan beberapa fungsi secara serentak
 

@@ -313,7 +313,7 @@ plot(Facebook, main='sub=kumpulan mengikut k-teras',
 ```
 
 ## Pengesanan komuniti & ukuran modulariti
-```{r, fig.height=8, fig.width=8}}
+```{r, fig.height=8, fig.width=8}
 Komuniti_D <- cluster_louvain(Facebook)
 plot(Komuniti_D, Facebook)
 ```

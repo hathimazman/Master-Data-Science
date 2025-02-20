@@ -76,19 +76,12 @@ data$Purpose = factor(data$Purpose, levels = seq(1,4), labels = c('New Car','Use
 md.pattern(data)
 ```
 
-```{r}
-str(data)
-
-```
-
 # Statistical Testing
-
-Chi-square for
 
 ```{r}
 Categorical.Table = data.frame(
     'Variable' = character(),
-  'p-value' = numeric()
+    'p-value' = numeric()
 )
   
 for (i in colnames(data[,-c(1,3,6,14)])){
@@ -96,16 +89,26 @@ for (i in colnames(data[,-c(1,3,6,14)])){
   test2 = data.frame(i,test$p.value)
   Categorical.Table = rbind(Categorical.Table, test2)
 }
+colnames(Categorical.Table) <- c("Variable","p-value")
+
+#Categorical.Table$significance[Categorical.Table$`p-value` < 0.01] <- "***"
+#Categorical.Table$significance[Categorical.Table$`p-value` < 0.05] <- "**"
+#Categorical.Table$significance[Categorical.Table$`p-value` < 0.1] <- "*"
+Categorical.Table$significance <- cut(Categorical.Table$`p-value`, breaks = c(-Inf,0.01,0.05,0.1, Inf), labels = c("***","**","*", ""))
 Categorical.Table
+
+```
+
+```{r}
+t.test(Age..years.~ Creditability, data=data)
 ```
 
 # Train test split
 
 ```{r}
-indexes = sample(1:1000, size = 500)
+indexes = sample(1:nrow(data), size = 0.5*nrow(data))
 Train = data[indexes,]
 Test = data[-indexes,]
-
 ```
 
 # Logistic Regression
@@ -230,7 +233,6 @@ library(tree)
 
 tree_model = tree(Creditability ~ Account.Balance+Duration.of.Credit..month.+Payment.Status.of.Previous.Credit+Purpose+Credit.Amount+Value.Savings.Stocks+Length.of.current.employment+Instalment.per.cent+Sex...Marital.Status+
 Guarantors+Duration.in.Current.address+Most.valuable.available.asset+Age..years.+Concurrent.Credits+Type.of.apartment+No.of.Credits.at.this.Bank+Occupation+No.of.dependents+Telephone, data=Train, method="class")
-
 ```
 
 ```{r}
@@ -280,6 +282,7 @@ plot(perf2, main='ROC-AUC Curve Testing Data');abline(a = 0, b = 1, col = "red",
 
 ```{r}
 tree_model_prune = prune.misclass(tree_model, best=8)
+plot(tree_model_prune);text(tree_model_prune, pretty=1, cex=1)
 ```
 
 ### Evaluate Train Set
