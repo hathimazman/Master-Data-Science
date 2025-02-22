@@ -32,7 +32,7 @@ knitr:
 
 9.  Laluan (Path) : Sisipan verteks yang berlainan
 
-10.  Graf Isomorfik : Graf yang boleh wujud dalam bentuk yang berbeza tetapi mempunyai bilangan verteks, sisi dan juga ciri ketersambungan sisi yang sama
+10. Graf Isomorfik : Graf yang boleh wujud dalam bentuk yang berbeza tetapi mempunyai bilangan verteks, sisi dan juga ciri ketersambungan sisi yang sama
 
 11. Graf Automorfik : Graf yang mempunyai struktur yang sama, tetapi mempunyai tingkahlaku hubungan yang berbeza. Oleh itu, ianya bukanlah graf yang sama secara tepat.
 
@@ -71,7 +71,7 @@ dg<- graph_from_literal(KL-+CHINA,KL-+London,CHINA++London)
 plot(dg)
 ```
 
-# Graf berwajaran
+# Graf berwajaran (Weighted)
 
 ```{r}
 m <- read.table(row.names=1, header=T, text = 
@@ -132,11 +132,13 @@ plot(h)
 # Perwakilan Data Graf
 
 ## Senarai Bersebelahan
+
 ```{r}
 Adj.list1 <- as_adj_list(g)
 plot(g)
 Adj.list1
 ```
+
 ```{r}
 Adj.list2 <- as_adj_list(dg)
 plot(dg)
@@ -150,6 +152,7 @@ head(Adj.list3,5)
 ```
 
 ## Seanari Sisi
+
 ```{r}
 Ed.list1<- as.data.frame(as_edgelist(g))
 Ed.list2<- as.data.frame(as_edgelist(dg))
@@ -158,6 +161,7 @@ Ed.list1
 ```
 
 ## Matriks Bersebelahan
+
 ```{r}
 Adj.M1<- as_adjacency_matrix(g)
 Adj.M2<- as_adjacency_matrix(dg)
@@ -168,12 +172,14 @@ Adj.M1
 # Teknik Manipulasi Graf
 
 ## Keluarkan verteks tertentu
+
 ```{r}
 h <- g-vertices(c("Jerry","Bobby"))
 plot(h)
 ```
 
 ## Menjana Subgraf
+
 ```{r}
 
 h2 <- graph_from_literal("Adam"-"Judy","Adam"-"Tom",
@@ -182,11 +188,21 @@ plot(h2)
 ```
 
 ## Gabungkan graf
+
 ```{r}
 h3 <- union(h2,g)
 plot(h3)
 ```
+
+## Mengubah suai nod data
+
+```{r}
+V(h3)$gender <- c('male','female','male','female','male','male','male','male','female')
+plot(h3)
+```
+
 ## Mengubah suai sisi data
+
 ```{r}
 E(h3)
 E(h3)$type<- c("email", "phone", "FB", "email", "class",
@@ -200,15 +216,17 @@ edge_attr(h3)
 ```
 
 # Pengvisualan Graf
+
 ```{r}
 plot(h3)
-plot(h3, vertex.label=V(h3)$gender)
+plot(h3, vertex.label=V(h3)$gender, vertex.size=100)
 plot(h3, vertex.label=V(h3)$gender, edge.label=E(h3)$type)
 plot(h3, vertex.label=V(h3)$name, edge.label=E(h3)$type)
 plot(h3, vertex.label=V(h3)$name, edge.label=E(h3)$weight)
 ```
 
 # Analisis prominen nod
+
 ```{r}
 library(statnet)
 #import pakej daripada platfom github
@@ -222,44 +240,52 @@ plot(Bali, displaylabels=T)
 ```
 
 ## Nama nod
+
 ```{r}
 Name<- Bali%v%"vertex.names"
 ```
 
 ## Role nod
+
 ```{r}
 Role<- Bali%v%"role"
 ```
 
 ## Atribut Sisi
+
 ```{r}
 Attr<- Bali%e%"IC"
 ```
 
-
 ## Ukuran Nod Prominen
+
 ### Kepusatan Darjah
+
 ```{r}
 deg<- degree(Bali)
 ```
 
 ### Kepusatan Kedekatan
+
 ```{r}
 cls<- closeness(Bali)
 ```
 
 ### Kepusatan Antara
+
 ```{r}
 btw<- betweenness(Bali)
 ```
 
 ### Pemusatan
+
 ```{r}
 library(statnet)
 library(UserNetR)
 data(Bali)
 plot(Bali, displaylabels=T)
 ```
+
 ```{r fig.height=8, fig.width=8}
 rolecat <- Bali%v%"role"
 name <- Bali%v%"vertex.names"
@@ -271,13 +297,16 @@ gplot(Bali, displaylabels=T,
 legend("topright", legend=c("BM","CT","OA","SB","TL"),
        col=my_pal, pch=19, cex=1)
 ```
+
 #### Ukuran Pemusatan Graf
+
 ```{r}
 centralization(Bali, degree)
 centralization(Bali, closeness)
 ```
 
 ### Analisis titik potong
+
 ```{r}
 net <-Bali
 cpnet <- cutpoints(net, return.indicator = T)
@@ -286,39 +315,46 @@ name[4]
 ```
 
 # Analisis Sub Kumpulan
+
 ```{r fig.height=8, fig.width=8}
 data(Facebook)
 plot(Facebook)
 ```
+
 ## Clique
+
 ```{r}
 clique <- cliques(Facebook)
 ```
 
 ### Clique Terbesar
+
 ```{r}
 max_clique <- max_cliques(Facebook)
 ```
 
 ## K-teras
+
 ```{r}
 k_core <- coreness(Facebook)
 ```
 
-plot teras yang sama 
-```{r fig.height=8, fig.width=8}
+plot teras yang sama
+
+```{r fig.height=10, fig.width=10}
 V(Facebook)$color<- as.factor(k_core)
 plot(Facebook, main='sub=kumpulan mengikut k-teras',
      vertex.size=7, vertex.label.cex=0.7)
 ```
 
 ## Pengesanan komuniti & ukuran modulariti
+
 ```{r, fig.height=8, fig.width=8}
 Komuniti_D <- cluster_louvain(Facebook)
 plot(Komuniti_D, Facebook)
 ```
+
 ```{r}
 skor_modulariti <- modularity(Komuniti_D)
 skor_modulariti
 ```
-

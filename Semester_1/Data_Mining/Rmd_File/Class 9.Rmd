@@ -34,8 +34,12 @@ mvad.scode = c('EM','FE','HE','JL','SC','TR')
 
 ```{r}
 mvad.seq = seqdef(mvad, 15:86, states=mvad.scode, labels = mvad.labels,
-                  xtstep=6)
+                  xtstep=10)
 head(mvad.seq,10)
+```
+
+```{r}
+seqiplot(mvad.seq)
 ```
 
 ```{r}
@@ -112,15 +116,14 @@ seqiplot(mvad.seq, main='Plot indeks jujukan',
 pilih individu khusus (1,2,15,90,200,267, 456,666,700)
 
 ```{r}
-seqiplot(mvad.seq, main='Plot indeks jujukan',
-         idxs=c(1,2,15,90,200,267, 456,666,700))
+seqiplot(mvad.seq, main='Plot indeks jujukan')
 ```
 
 ## Plot Jujukan kekerapan
 
 20 jujukan yang paling kerap berlaku
 
-```{r}
+```{r fig.height=8,fig.width=8}
 seqfplot(mvad.seq, main='20 jujukan yang paling kerap berlaku',
          idxs=1:20)
 ```
