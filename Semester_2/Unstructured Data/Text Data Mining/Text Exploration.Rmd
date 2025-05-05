@@ -35,7 +35,7 @@ eg1 <- read.table("dataset/GC.txt", fill=T,header=F) #Data CG.txt
 eg1[1,]
 
 eg2 <- read.csv("dataset/GC.csv",header=F) #Data CG.csv
-eg2[1,]
+eg2
 ```
 
 ### Using tm Package
@@ -69,7 +69,7 @@ docs<-data.frame(doc_id=c("doc_1","doc_2"),
                  dmeta1=1:2,dmeta2=letters[1:2],stringsAsFactors=F) 
 mytext<-DataframeSource(docs) 
 mycorpus<-VCorpus(mytext) 
-#inspect(mycorpus)
+inspect(mycorpus)
 ```
 
 ### Example using DirSource

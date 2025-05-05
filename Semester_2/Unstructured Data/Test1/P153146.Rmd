@@ -1,0 +1,124 @@
+---
+title: "P153146 Test 1"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+knitr:
+  opts_chunk:
+    echo: true
+    include: true
+    message: false
+    warning: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("G:/My Drive/Master-Data-Science/Semester_2/Unstructured Data/Test1")
+library(tidyverse)
+library(tm)
+library(SnowballC)
+library(textstem)
+library(wordcloud2)
+```
+
+#4. LittleMonkey.csv
+```{r}
+monkey <- readLines("LittleMonkeys.csv", encoding = "UTF-8")
+```
+
+
+## a) extract all words with a symbol (!)
+```{r}
+str_view(monkey, pattern="[a-zA-Z]*!")
+```
+
+## b) extract all words that contain a pair of the same letters next to each other
+```{r}
+str_view(monkey,"([a-zA-Z])\\1")
+```
+
+## c) extract all words that have two vowels next to each other
+```{r}
+str_view(monkey,"([aeiou])\\1")
+```
+
+## d) identify the location of pattern "mon". Then extract all words that is started with this pattern.
+```{r}
+grep("mon", monkey)
+```
+
+```{r}
+str_view(monkey, "\\bmon")
+```
+## e) count the word "monkeys" in the lyrics. How many altogether?
+```{r}
+monkey_count <- str_count(pattern = "monkeys", monkey)
+sum(monkey_count)
+```
+
+
+# 5. BBCnews.txt
+```{r}
+bbc = readLines("BBCnews.txt", encoding = "UTF-8")
+docs = Corpus(VectorSource(bbc))
+docs
+```
+
+
+## a) Perform the following data cleaning in order
+```{r}
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+```
+
+### remove hyphen (-), remove numbers, remove punctuation, transform to lower case, remove stop words, strip whitespace
+```{r}
+docs1 <- tm_map(docs, toSpace, "-")
+docs2 <- tm_map(docs1, removeNumbers)
+docs3 <- tm_map(docs2, removePunctuation)
+docs4 <- tm_map(docs3, content_transformer(tolower))
+docs5 <- tm_map(docs4, removeWords, stopwords("english"))
+docs6 <- tm_map(docs5, stripWhitespace)
+```
+## b) perfrom lemmatization
+```{r}
+docs7 <- tm_map(docs6, lemmatize_strings)
+```
+## c) tabulate the terms and its respective frequencies. The terms must appear atlear five times
+```{r}
+dtm<-DocumentTermMatrix(docs7)
+inspect(dtm)
+freq<-colSums(as.matrix(dtm))
+ord<-order(freq,decreasing=T)
+
+wf<-data.frame(names(freq),freq)
+names(wf)<-c("TERM","FREQ")
+
+# Sort the wf dataframe by FREQ
+wf<-wf[order(wf$FREQ,decreasing=T),] %>%
+  filter(FREQ >= 5)
+
+wf
+
+```
+
+## d) build a colourful word cloud for all the terms in part (c)
+```{r}
+wordcloud2(wf)
+```
+
+### Construct a bar chart (histogram) for these terms, explain your wordcloud and bar chart
+```{r}
+ggplot(wf,aes(x=TERM,y=FREQ)) + 
+  geom_bar(stat="identity") +
+  theme(axis.text.x=element_text(angle=45,hjust=1))
+```
+## e) Find the words that are associated with terms "coast". What can you comment on the output appear?
+```{r}
+findAssocs(dtm, "coast", 0.3)
+```
+
+
+
