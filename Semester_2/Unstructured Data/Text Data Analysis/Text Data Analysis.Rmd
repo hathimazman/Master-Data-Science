@@ -1,5 +1,297 @@
 ---
 title: "Text Data Analysis"
-output: html_document
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
 ---
+
+# Topic Modelling & Latent Dirichlet Allocation (LDA)
+
+What is topic modelling?
+
+-   Statistical model to discover the topics that occur in a collection of documents
+-   Method for finding a group of words ( ie topics) from a collection of document that best represents the info in the collection
+-   Form of text mining
+
+```{r}
+library(tidytext)
+library(topicmodels)
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+```
+
+
+```{r include=F}
+setwd("G:/My Drive/Master-Data-Science/Semester_2/Unstructured Data/Text Data Analysis")
+```
+
+```{r}
+data("AssociatedPress")
+```
+
+## Turn dtm into LDA
+
+```{r}
+ap_lda <- LDA(AssociatedPress,k =4,control=list(seed=1234)) #create two topic LDA model
+ap_topics <- tidy( ap_lda,matrix ="beta") #Extract the per topic per word probabilities
+```
+
+## Find terms that are most common within each topics
+
+```{r}
+ap_top_terms <- ap_topics %>% 
+  group_by (topic) %>% 
+  top_n (10,beta) %>% 
+  ungroup () %>% 
+  arrange (topic, beta)
+
+ap_top_terms %>% 
+  mutate(term=reorder(term,beta)) %>%
+  ggplot(aes(term,beta,fill=factor(topic))) +
+  geom_col(show.legend=F) +
+  facet_wrap(~ topic, scales="free") +
+  coord_flip()
+
+```
+
+## Find beta spread
+```{r}
+beta_spread <- ap_topics %>%
+  mutate(topic=paste0("topic",topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic2>0.004 | topic4>0.004) %>%
+  mutate(log_ratio = log2(topic4/topic2))
+
+beta_spread %>% 
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term,log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip() 
+```
+
+## Gamma 
+```{r}
+ap_documents <- tidy(ap_lda, matrix='gamma')
+ap_documents[ap_documents$document == 4,]
+
+ap_documents %>% subset(document == 4)
+```
+```{r}
+tidy(AssociatedPress) %>% filter(document==15) %>%
+  arrange(desc(count))
+```
+
+
+# Exercise
+```{r}
+library(tm)
+mytext <- DirSource("G:/My Drive/Master-Data-Science/Semester_2/Unstructured Data/Text Data Mining/dataset/movies")
+docs <- VCorpus(mytext)
+```
+
+```{r}
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+
+docs<-tm_map(docs,toSpace,"-")
+docs<-tm_map(docs,removePunctuation)
+docs<-tm_map(docs,content_transformer(tolower))
+docs<-tm_map(docs,removeNumbers)
+docs<-tm_map(docs,removeWords,stopwords("english")) #remove stop words
+```
+
+```{r}
+dtm <- DocumentTermMatrix(docs)
+movie_lda <- LDA(dtm,k=3,control=list(seed=1234)) #create two topic LDA model
+movie_topics <- tidy(movie_lda,matrix ="beta") #Extract the per topic per word probabilities
+```
+
+```{r}
+movie_top_terms <- movie_topics %>% 
+  group_by (topic) %>% 
+  top_n (3,beta) %>% 
+  ungroup () %>% 
+  arrange (topic, beta)
+
+movie_top_terms %>% 
+  mutate(term=reorder(term,beta)) %>%
+  ggplot(aes(term,beta,fill=factor(topic))) +
+  geom_col(show.legend=F) +
+  facet_wrap(~ topic, scales="free") +
+  coord_flip()
+```
+
+# Exercise 2
+```{r}
+mytext2 <- DirSource("data")
+docs2 <- VCorpus(mytext2)
+```
+
+```{r}
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+
+docs2<-tm_map(docs2,toSpace,"-")
+docs2<-tm_map(docs2,removePunctuation)
+docs2<-tm_map(docs2,content_transformer(tolower))
+docs2<-tm_map(docs2,removeNumbers)
+docs2<-tm_map(docs2,removeWords,stopwords("english")) #remove stop words
+```
+
+```{r}
+dtm2 <- DocumentTermMatrix(docs2)
+test_lda <- LDA(dtm2,k=2,control=list(seed=1234)) #create two topic LDA model
+test_topics <- tidy(test_lda,matrix ="beta") #Extract the per topic per word probabilities
+```
+
+```{r}
+test_top_terms <- test_topics %>% 
+  group_by (topic) %>% 
+  top_n (10,beta) %>% 
+  ungroup () %>% 
+  arrange (topic, beta)
+
+test_top_terms %>% 
+  mutate(term=reorder(term,beta)) %>%
+  ggplot(aes(term,beta,fill=factor(topic))) +
+  geom_col(show.legend=F) +
+  facet_wrap(~ topic, scales="free") +
+  coord_flip()
+```
+
+```{r}
+beta_spread <- test_topics %>%
+  mutate(topic=paste0("topic",topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic1>0.004 | topic2>0.004) %>%
+  mutate(log_ratio = log2(topic2/topic1))
+
+beta_spread %>% 
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term,log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip() 
+```
+
+# Text Cluster Analysis
+```{r}
+mytext2 <- DirSource("TextFile")
+docsz <- Corpus(mytext2)
+#as.character(docs[[1]])
+```
+
+```{r}
+getTransformations()
+```
+
+
+```{r}
+docsz <- tm_map(docsz,content_transformer(tolower))
+
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+
+docsz <- tm_map(docsz, toSpace, "-")
+docsz <- tm_map(docsz, removePunctuation) #remove punctuation
+docsz <- tm_map(docsz, removeNumbers) #Strip digits
+docsz <- tm_map(docsz, removeWords, stopwords("english")) #remove stopwords
+docsz <- tm_map(docsz, stripWhitespace) #remove whitespace
+```
+
+```{r}
+tdm <-DocumentTermMatrix(docsz) #Create document term matrix
+tdm
+```
+## Present text data numerically, weighted TF-IDF
+```{r}
+tdm.tfidf <- weightTfIdf(tdm)
+tdm.tfidf <- removeSparseTerms(tdm.tfidf, 0.999)
+tfidf.matrix <- as.matrix(tdm.tfidf)
+```
+## Cosine distance matrix (useful for specific clustering algorithms)
+```{r}
+library(proxy)
+dist.matrix <-dist(tfidf.matrix , method = "cosine")
+```
+
+## Perform clustering
+```{r}
+truth.K=3
+
+library(dbscan)
+clustering.kmeans<- kmeans(tfidf.matrix , truth.K)
+clustering.hierarchical <-hclust(dist.matrix , method = "ward.D2")
+clustering.dbscan <-hdbscan(dist.matrix , minPts=10)
+```
+
+```{r}
+library(cluster)
+clusplot(as.matrix(dist.matrix),clustering.kmeans$cluster,color=T,shade=T,labels=2,lines=0)
+plot(clustering.hierarchical)
+rect.hclust(clustering.hierarchical,3)
+plot(as.matrix(dist.matrix),col=clustering.dbscan$cluster+1L)
+```
+## Combine results
+```{r}
+master.cluster <- clustering.kmeans$cluster
+slave.hierarchical <- cutree(clustering.hierarchical, k = truth.K)
+slave.dbscan <- clustering.dbscan$cluster
+```
+
+## Plotting results
+```{r}
+library(colorspace)
+points <- cmdscale(dist.matrix, k = 3)
+palette <- diverge_hcl(truth.K) # Creating a color palette
+```
+
+```{r}
+layout(matrix(1:3,ncol=1))
+plot(points, main = 'K-Means Clustering', col = as.factor(master.cluster),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+plot(points, main = 'Hierarchical Clustering', col = as.factor(slave.hierarchical),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+plot(points, main = 'Densty-based Clustering', col = as.factor(slave.dbscan),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+```
+
+```{r}
+table(master.cluster)
+table(slave.hierarchical)
+table(slave.dbscan)
+```
+
+## Elbow Plot
+Accumulator for cost results
+```{r}
+cost_df <- data.frame()
+```
+
+## Run kmeans for all clusters up to 100
+```{r}
+for (i in 1:20) {
+  kmeans <- kmeans(x=tfidf.matrix, centers=i, iter.max=100)
+  cost_df <- rbind(cost_df, cbind(i,kmeans$tot.withinss))
+}
+
+names(cost_df) <- c("cluster","cost")
+
+```
+
+```{r}
+plot(cost_df$cluster, cost_df$cost)
+lines(cost_df$cluster, cost_df$cost)
+```
 
