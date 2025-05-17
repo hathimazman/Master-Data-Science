@@ -10,7 +10,7 @@ knitr:
     warning: false  # Optional: Hide warnings
 ---
 
-# Topic Modelling & Latent Dirichlet Allocation (LDA)
+# TDA I: Topic Modelling & Latent Dirichlet Allocation (LDA)
 
 What is topic modelling?
 
@@ -25,7 +25,6 @@ library(tidyr)
 library(ggplot2)
 library(dplyr)
 ```
-
 
 ```{r include=F}
 setwd("G:/My Drive/Master-Data-Science/Semester_2/Unstructured Data/Text Data Analysis")
@@ -61,6 +60,7 @@ ap_top_terms %>%
 ```
 
 ## Find beta spread
+
 ```{r}
 beta_spread <- ap_topics %>%
   mutate(topic=paste0("topic",topic)) %>%
@@ -75,20 +75,22 @@ beta_spread %>%
   coord_flip() 
 ```
 
-## Gamma 
+## Gamma
+
 ```{r}
 ap_documents <- tidy(ap_lda, matrix='gamma')
 ap_documents[ap_documents$document == 4,]
 
 ap_documents %>% subset(document == 4)
 ```
+
 ```{r}
 tidy(AssociatedPress) %>% filter(document==15) %>%
   arrange(desc(count))
 ```
 
-
 # Exercise
+
 ```{r}
 library(tm)
 mytext <- DirSource("G:/My Drive/Master-Data-Science/Semester_2/Unstructured Data/Text Data Mining/dataset/movies")
@@ -129,6 +131,7 @@ movie_top_terms %>%
 ```
 
 # Exercise 2
+
 ```{r}
 mytext2 <- DirSource("data")
 docs2 <- VCorpus(mytext2)
@@ -181,7 +184,8 @@ beta_spread %>%
   coord_flip() 
 ```
 
-# Text Cluster Analysis
+# TDA II: Text Cluster Analysis
+
 ```{r}
 mytext2 <- DirSource("TextFile")
 docsz <- Corpus(mytext2)
@@ -191,7 +195,6 @@ docsz <- Corpus(mytext2)
 ```{r}
 getTransformations()
 ```
-
 
 ```{r}
 docsz <- tm_map(docsz,content_transformer(tolower))
@@ -211,19 +214,24 @@ docsz <- tm_map(docsz, stripWhitespace) #remove whitespace
 tdm <-DocumentTermMatrix(docsz) #Create document term matrix
 tdm
 ```
+
 ## Present text data numerically, weighted TF-IDF
+
 ```{r}
 tdm.tfidf <- weightTfIdf(tdm)
 tdm.tfidf <- removeSparseTerms(tdm.tfidf, 0.999)
 tfidf.matrix <- as.matrix(tdm.tfidf)
 ```
+
 ## Cosine distance matrix (useful for specific clustering algorithms)
+
 ```{r}
 library(proxy)
 dist.matrix <-dist(tfidf.matrix , method = "cosine")
 ```
 
 ## Perform clustering
+
 ```{r}
 truth.K=3
 
@@ -240,7 +248,9 @@ plot(clustering.hierarchical)
 rect.hclust(clustering.hierarchical,3)
 plot(as.matrix(dist.matrix),col=clustering.dbscan$cluster+1L)
 ```
+
 ## Combine results
+
 ```{r}
 master.cluster <- clustering.kmeans$cluster
 slave.hierarchical <- cutree(clustering.hierarchical, k = truth.K)
@@ -248,6 +258,7 @@ slave.dbscan <- clustering.dbscan$cluster
 ```
 
 ## Plotting results
+
 ```{r}
 library(colorspace)
 points <- cmdscale(dist.matrix, k = 3)
@@ -274,12 +285,15 @@ table(slave.dbscan)
 ```
 
 ## Elbow Plot
+
 Accumulator for cost results
+
 ```{r}
 cost_df <- data.frame()
 ```
 
 ## Run kmeans for all clusters up to 100
+
 ```{r}
 for (i in 1:20) {
   kmeans <- kmeans(x=tfidf.matrix, centers=i, iter.max=100)
@@ -295,3 +309,112 @@ plot(cost_df$cluster, cost_df$cost)
 lines(cost_df$cluster, cost_df$cost)
 ```
 
+# TDA III: Sentiment Analysis
+
+In sentiment analysis, not much preprocessing is not done as may remove original meaning ie (stemming / lemmatization). Want to extract true emotion.
+
+Different compared to Text Clustering as those typically are more formal documents.
+
+```{r}
+library(tm) # for text mining
+library(SnowballC) # for text stemming
+library(wordcloud) # word cloud generator
+library(RColorBrewer) # color palettes
+library(syuzhet) # for sentiment analysis
+library(ggplot2) # for plotting graphs
+```
+
+```{r}
+text <- read.table("TeamHealthRawData.txt", fill=T, header=F)
+text<-t(text) #From example 1 
+text<-sapply(1:nrow(text),function(x) trimws(paste(text[,x],collapse=" "),"right")) 
+head(text)
+```
+
+## Sentiment Scores
+
+regular sentiment score using get_sentiment() function and method of your choice
+
+note that different methods have different scales
+
+### Syuhzet
+
+```{r}
+syuzhet_vector <- get_sentiment(text, method="syuzhet")
+head(syuzhet_vector,10) # see the first 10 elements of the vector
+summary(syuzhet_vector)
+```
+
+### Bing
+
+```{r}
+bing_vector <- get_sentiment(text, method="bing")
+head(bing_vector)
+summary(bing_vector)
+```
+
+### AFINN
+
+```{r}
+afinn_vector <- get_sentiment(text, method="afinn")
+head(afinn_vector)
+summary(afinn_vector)
+```
+
+### NRC
+
+```{r}
+nrc_vector <- get_sentiment(text, method="nrc")
+head(nrc_vector)
+summary(nrc_vector)
+```
+
+```{r}
+rbind(
+  sign(head(syuzhet_vector)),
+  sign(head(bing_vector)),
+  sign(head(afinn_vector))
+)
+```
+
+## Emotion Classification
+
+run nrc sentiment analysis to return data frame with each row classified as one of the following
+
+emotions, rather than a score : anger, anticipation, disgust, fear, joy, sadness, surprise, trust
+
+and if the sentiment is positive or negative
+
+```{r}
+d<-get_nrc_sentiment(text)
+head(d,10) # head(d,10) - just to see top 10 lines
+```
+
+## Visualization
+
+```{r}
+td<-data.frame(t(d)) #transpose
+td_new <- data.frame(rowSums(td)) #The function rowSums computes column sums across rows for each level of a grouping variable.
+names(td_new)[1] <- "count" #Transformation and cleaning
+td_new <- cbind("sentiment" = rownames(td_new), td_new)
+rownames(td_new) <- NULL
+td_new2<-td_new[1:8,]
+```
+
+### Plot 1
+
+```{r}
+quickplot(sentiment, data=td_new2, weight=count, geom="bar",fill=sentiment,ylab="count")+ggtitle("Survey sentiments")
+```
+
+### Plot 2
+
+```{r}
+barplot(
+  sort(colSums(prop.table(d[, 1:8]))),
+  horiz = TRUE,
+  cex.names = 0.7,
+  las = 1,
+  main = "Emotions in Text", xlab="Percentage"
+)
+```
