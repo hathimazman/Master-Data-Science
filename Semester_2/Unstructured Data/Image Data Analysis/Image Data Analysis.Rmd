@@ -1,0 +1,62 @@
+---
+title: "Image Data Analysis"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+# Part 1 : Image Processing
+
+```{r}
+library(imager)
+parrots <- load.image('images/parrot.png')
+plot(parrots)
+```
+
+```{r}
+rose <- load.image('images/rose.jpeg')
+plot(rose)
+```
+
+## Blur
+
+```{r}
+parrots.blurry <- isoblur(parrots, 10)
+plot(parrots.blurry)
+
+```
+
+## Edges and Greyscale
+```{r}
+parrots.xedges <- deriche(parrots, 2, order=2, axis = 'x') # edge detector along x axis
+parrots.yedges <- deriche(parrots, 2, order=2, axis = 'y') # edge detector along y axis
+gray.parrots <- grayscale(parrots) # convert to grayscale
+plot(parrots.yedges)
+```
+## Denoising
+```{r}
+birds <- parrots
+birds.noisy <- (birds + 0.5*rnorm(prod(dim(birds))))
+layout(t(1:2))
+plot(birds.noisy, main = "Noisy")
+isoblur(birds.noisy,5) %>% plot(main = "Blurred")
+```
+
+## Resizing
+```{r}
+thmb <- resize(parrots, round(width(parrots)/10), round(height(parrots)/10))
+plot(thmb, main="Thumbnail")
+
+```
+
+```{r}
+thmb2 <- resize(parrots,100,100) # if use negative, will be by percentage
+# thmb2 <- resize(parrots, -0.1, -0.1) # will reduce by 0.1% on both axis
+plot(thmb2) 
+save.image(thmb2, "images/small_rose.png")
+```
