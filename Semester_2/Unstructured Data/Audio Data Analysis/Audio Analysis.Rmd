@@ -1,0 +1,213 @@
+---
+title: "Audio Analysis"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tuneR)
+library(seewave)
+```
+
+# Create manual wav
+## Making Sine wave and playing it
+
+```{r}
+help(Wave)
+sr <- 8000 #Sampling rate
+t <- seq(0,2,1/sr) # times in secs if sample for 2s at 8kHz
+y <- (2^15-1)*sin(2*pi*440*t) # sine wave 440Hz scaled to fill out 16 bit range
+```
+
+```{r}
+plot(y[1:500], type="l")
+```
+```{r}
+w <- Wave(y, samp.rate = sr, bit = 16)
+play(w)
+```
+
+```{r}
+plot(y[1:500], type="l")
+y1 <- (2^15-1)*sin(2*pi*220*t)
+w1 = Wave(y1,samp.rate = sr , bit =16)
+play(w1)
+```
+
+## Compare w and w1
+```{r}
+par(mfrow=c(2,1))
+plot(y[1:500], type="l")
+plot(y1[1:500], type="l")
+```
+## Compare in 1 layout
+```{r}
+par(mfrow=c(1,1))
+plot(y[1:500], type="l")
+lines(y1[1:500], lty=3, col='red')
+```
+
+## Try to create another
+```{r}
+wsum <- normalize(w+w1, unit='16') # normalize to make it 16Hz
+play(wsum)
+
+plot((y+y1)[1:500], type='l')
+```
+
+```{r}
+w3 <- normalize(bind(w, w1), unit='16') # bind the two waves, meaning add at the end: play w 2s, w1 2s
+play(w3)
+y3 <- c(y,y1,y+y1)
+plot(y3, type='l')
+```
+# Using tuneR
+## Other signal in ?sine
+### Sine
+```{r}
+Au1 <- sine(500, duration = 100000) #500=freq, duration if 100000, means if divide 44100, it is around 2s
+play(Au1)
+writeWave(Au1, "Audio1.wav") # save the data
+Au11 <- readWave('Audio1.wav') # read the audio
+```
+
+### Noise
+```{r}
+Au2 <- noise(duration=100000)
+play(Au2)
+Au2 <- noise(kind='pink', duration = 100000)
+play(Au2)
+```
+
+### Pulse
+```{r}
+Au3 <- pulse(220, duration=100000)
+play(Au3)
+```
+
+#### Plot 3 signal
+```{r}
+par(mfrow=c(3,1))
+plot(Au1[1:1000])
+plot(Au2[1:1000])
+plot(Au3[1:1000])
+```
+### Sawtooth
+```{r}
+Au4 <- sawtooth(100, duration=100000)
+play(Au4)
+plot(Au4[1:1000])
+```
+
+### Square
+```{r}
+Au5 <- square(200, duration=100000)
+play(Au5)
+plot(Au5[1:2000])
+```
+
+## Combine Au1 and Au5
+```{r}
+Asum <- normalize(bind(Au1,Au2,Au3,Au4,Au5), unit='32')
+play(Asum)
+```
+
+```{r}
+Au6 <- normalize(bind(Au1+Au2), unit='32')
+play(Au6)
+```
+
+
+# Data tico from seewave
+```{r}
+data(tico)
+par(mfrow=c(1,1))
+timer(tico,f=22050,threshold=5,msmooth=c(50,0)) #f is freq, msmooth to smooth the line
+
+timer(tico,f=22050, threshold=5, msmooth=c(100,0))
+```
+
+```{r}
+sr = 8000
+t =seq(0, 2, 1/sr)
+y = (2^15-1)*sin(2*pi*440*t)
+plot(y[1:500], type="l")
+spectrum(y, span=20, log=c("no"))
+```
+
+```{r}
+plot.frequency.spectrum <- function(X.k, xlimits = c(0,length(X.k))) {
+  plot.data <- cbind(0:(length(X.k)-1),Mod(X.k))
+  
+  # Why is scaling necessary?
+  plot.data[2:length(X.k),2] <- 2*plot.data[2:length(X.k),2]
+  
+  plot(plot.data, t='h', lwd=2, main = '',
+     xlab = 'Frequency (Hz)', ylab = "Strength",
+     xlim = xlimits, ylim = c(0,max(Mod(plot.data[,2]))))
+}
+```
+
+
+```{r}
+Yk <- fft(y)
+plot.frequency.spectrum(Yk)
+plot.frequency.spectrum(Yk[1:5000])
+plot.frequency.spectrum(Yk[1:1000])
+```
+```{r}
+data(tico)
+Ticok <- fft(tico@left)
+plot.frequency.spectrum(Ticok[1:length(Ticok)/2])
+```
+
+Strength is frequency of frequency
+
+```{r}
+library(rpanel)
+dynspec(tico, wl=1024, osc=T) # function seewave
+```
+
+```{r}
+spectro(tico) # give spectogram
+```
+
+```{r}
+meanspec(tico) # Obtain average for whole time length
+```
+
+```{r}
+z <- readWave("au/babycry.wav")
+play(z)
+```
+
+```{r}
+timer(z, f=50000, threshold=5, msmooth=c(100,0))
+```
+
+```{r}
+Zk <- fft(z@left)
+plot.frequency.spectrum(Zk)
+```
+
+```{r}
+plot.frequency.spectrum(Zk[1:20000])
+```
+```{r}
+dynspec(z, wl=1024, osc=T)
+```
+
+```{r}
+spectro(z)
+```
+
+```{r}
+meanspec(z)
+```
+
