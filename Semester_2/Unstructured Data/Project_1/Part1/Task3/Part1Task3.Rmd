@@ -1,0 +1,66 @@
+---
+title: "Part1Task3"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tidyverse)
+library(tm)
+library(SnowballC)
+library(textstem)
+library(wordcloud2)
+```
+
+```{r}
+talalusakit = readLines("dataset/talalusakit.csv")
+talalusakit
+```
+```{r}
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+
+process_wordcloud <- function(lyrics, language) {
+  toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+  docs <- Corpus(VectorSource(lyrics))
+  
+  docs <- tm_map(docs, toSpace, "-")
+  docs <- tm_map(docs, removeNumbers)
+  docs <- tm_map(docs, removePunctuation)
+  docs <- tm_map(docs, content_transformer(tolower))
+  docs <- tm_map(docs, stripWhitespace)
+
+  if (language == "en") {
+    docs <- tm_map(docs, removeWords, stopwords("english"))
+  }
+  
+  dtm <- DocumentTermMatrix(docs)
+  freq <- colSums(as.matrix(dtm))
+  
+  wf <- data.frame(TERM = names(freq), FREQ = freq)
+  wf <- wf %>%
+    arrange(desc(FREQ)) %>%
+    filter(FREQ >= 5)
+  
+  print(wordcloud2(wf))
+  return(wf)
+}
+
+```
+
+
+```{r}
+process_wordcloud(talalusakit, "indonesian")
+```
+```{r}
+br <- readLines("dataset/bohemianrhapsody.csv", encoding = 'UTF-8')
+process_wordcloud(br, "en")
+```
+

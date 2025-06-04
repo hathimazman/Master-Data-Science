@@ -1,0 +1,177 @@
+---
+title: "Part1_Task2"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(httr)
+library(rvest)
+library(dplyr)
+library(XML)
+
+library(tidyverse)
+```
+
+```{r}
+newborn_pages <- paste0("https://www.amazon.com/s?k=newborn+diapers&page=",1:3)
+diapers_pages <- paste0("https://www.amazon.com/s?k=diapers&page=",1:3)
+
+```
+
+```{r}
+# Function to extract titles from a single page
+extract_details <- function(page_url) {
+  page <- read_html(page_url)
+  
+  # Extract product titles using the h2 tag with specific classes
+  title_nodes <- html_nodes(page, 'h2.a-size-base-plus.a-spacing-none.a-color-base.a-text-normal span')
+  price_nodes <- html_nodes(page, '.a-price-whole')
+  delivery_nodes <- html_nodes(page, 'div[data-cy="delivery-recipe"] span.a-text-bold')
+  
+  # Get the text content
+  titles <- html_text(title_nodes)
+  prices <- html_text(price_nodes)
+  deliveries <- html_text(delivery_nodes)
+  
+  # Pad shorter vector with NA
+  max_len <- max(length(titles), length(prices), length(deliveries))
+  length(titles) <- max_len
+  length(prices) <- max_len
+  length(deliveries) <- max_len
+  
+  # Combine into dataframe
+  df <- data.frame(Title = titles, Price = prices, Deliveries = deliveries,stringsAsFactors = FALSE)
+  
+  return(df)
+}
+
+newborn <- do.call("rbind", lapply(newborn_pages, extract_details))
+diapers <- do.call("rbind", lapply(diapers_pages, extract_details))
+```
+
+```{r}
+newborn_processed <- newborn %>%
+  mutate(
+    Price = as.numeric(Price),                        
+    DeliveryDateParsed = as.Date(                     
+      paste(Deliveries, format(Sys.Date(), "%Y")),
+      format = "%a, %b %d %Y"
+    ),
+    DeliveryDuration = as.numeric(DeliveryDateParsed - Sys.Date())
+  ) %>%
+  drop_na(Title, Price, DeliveryDateParsed) %>%
+  select(-Deliveries)
+
+  
+newborn_processed 
+```
+
+```{r}
+mean(newborn_processed$DeliveryDuration)
+```
+
+```{r}
+diapers_processed <- diapers %>%
+  mutate(                    
+    Price = as.numeric(Price),                        
+    DeliveryDateParsed = as.Date(                     
+      paste(Deliveries, format(Sys.Date(), "%Y")),
+      format = "%a, %b %d %Y"
+    ),
+    DeliveryDuration = as.numeric(DeliveryDateParsed - Sys.Date())
+  ) %>%
+  drop_na(Title, Price, DeliveryDateParsed) %>%
+  select(-Deliveries)
+
+diapers_processed
+```
+
+```{r}
+mean(diapers_processed$DeliveryDuration)
+```
+
+```{r}
+brands <- c("Huggies", "Pampers", "Mama Bear", "Dyper", "Hello Bello", "Luvs")
+
+# 1. Count matches for each brand (case-insensitive)
+brand_counts <- sapply(brands, function(brand) {
+  sum(str_detect(diapers_processed$Title, regex(brand, ignore_case = TRUE)))
+})
+
+# 2. Calculate mean price per brand
+brand_price <- function(brand) {
+  # Extract titles and prices matching the brand
+  matching <- str_detect(diapers_processed$Title, regex(brand, ignore_case = TRUE))
+  brand_prices <- diapers_processed$Price[matching]
+  
+  # Clean price and convert to numeric
+  brand_prices <- as.numeric(gsub(",", "", brand_prices))
+  brand_prices <- na.omit(brand_prices)
+  
+  # Return mean price if available
+  if (length(brand_prices) == 0) {
+    return(NA)
+  } else {
+    return(mean(brand_prices))
+  }
+}
+
+# 3. Combine results into data frame
+diapers_df <- data.frame(
+  Brand = brands,
+  Count = brand_counts,
+  Mean_Price = sapply(brands, brand_price),
+  stringsAsFactors = FALSE
+)
+
+print(diapers_df)
+
+
+```
+
+```{r}
+newborn_brand_counts <- sapply(brands, function(brand) {
+  pattern <- paste0("(?=.*newborn)(?=.*", brand, ")")
+  sum(str_detect(newborn_processed$Title, regex(pattern, ignore_case = TRUE)))
+})
+
+newborn_brand_price <- function(brand) {
+  pattern <- paste0("(?=.*newborn)(?=.*", brand, ")")
+  matching <- str_detect(newborn_processed$Title, regex(pattern, ignore_case = TRUE))
+  brand_prices <- newborn_processed$Price[matching]
+  
+  brand_prices <- as.numeric(gsub(",", "", brand_prices))
+  brand_prices <- na.omit(brand_prices)
+  
+  if (length(brand_prices) == 0) {
+    return(NA)
+  } else {
+    return(mean(brand_prices))
+  }
+}
+
+newborn_df <- data.frame(
+  Brand = brands,
+  Count = newborn_brand_counts,
+  Mean_Price = sapply(brands, newborn_brand_price),
+  stringsAsFactors = FALSE
+)
+
+print(newborn_df)
+
+```
+
+# Summary
+
+This project was inspired by my personal journey into fatherhood. As a new father, I found myself navigating an overwhelming diaper shopping experience for my daughter. I had to do price comparisons from multiple websites and across multiple brands, raising the fundamental question: "Will the high cost of diapers persist until my daughter outgrows them?". Therefore, this project is a data-driven investigation to compare the diaper prices for different brands in Amazon. This project also compares between newborn and non-newborn diaper prices. Some selected common diaper brands from the USA has been chosen to narrow down the search namely; Huggies, Pampers, Mama Bear, Dyper, Hello Bello, and Luvs. These selected diaper brand will be utilised to filter out non-diaper items that has been scraped from the Amazon website as well. Other than just the prices, i was also interested to know which brand is carried the most in the Amazon website, which brand is the cheapest, and whether there is a difference in delivery timing to ship to Malaysia from USA.
+
+First of all, it can be seen that Amazon is quite consistent with its delivery duration of \~11 days for both newborn, and non-newborn diapers suggesting they keep an abundance of stock for both items. Secondly, it can be seen that generally newborn diapers are more expensive than normal diapers. However, it has a large variance in price ranging from 16-48 USD as compared to 32-39 USD. This higher variability in newborn diaper pricing may reflect differences in pack sizes, marketing strategies aimed at first-time parents, or added features for infant comfort. Nonetheless, normal diapers provide more choices of brand as compared to newborn diapers. For normal diapers, Pampers showed most number of choices followed by Huggies, which is similar to newborn diapers. However, for the Huggies brand, the newborn diapers is the most expensive with mean price of 48 USD, but is the cheapest for normal diapers.
+
+From a personal standpoint, this analysis has helped me conclude that Pampers offers the most favorable balance of availability, price, and variety for my daughter’s needs. Its competitive pricing and wide representation on Amazon make it a reliable choice. Beyond individual decisions, this project highlights the potential for data analysis to empower parents in making informed purchasing decisions. Looking ahead, this kind of monitoring could be expanded to track price trends over time, analyze customer reviews for sentiment insights, or compare prices across other e-commerce platforms. Ultimately, what began as a practical concern has evolved into a meaningful exploration of consumer data and product economics in the parenting space.
