@@ -19,15 +19,43 @@ library(wordcloud2)
 ```
 
 ```{r}
-talalusakit = readLines("dataset/talalusakit.csv")
-talalusakit
+whenwewereyoung <- readLines("dataset/whenwewereyoung.csv")
+bohemian <- readLines("dataset/bohemianrhapsody.csv")
+jatuhsuka <- readLines("dataset/jatuhsuka.csv")
+uptown <- readLines("dataset/uptownfunk.csv")
+mantera <- readLines("dataset/mantera.csv")
+bagaimana <- readLines("dataset/bagaimana.csv")
 ```
+
 ```{r}
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ", x))
 })
 
 process_wordcloud <- function(lyrics, language) {
+  
+    stopwords_bm <- c(
+    "ada", "adalah", "agak", "agaknya", "akan", "aku", "amat", "anda", "apa", "apakah", "atas", "atau",
+    "bagai", "bagaimana", "bahawa", "bahkan", "banyak", "beberapa", "bagi", "begitu", "belum", "bila", "boleh",
+    "bersama", "bolehkah", "bukan", "cuma", "dalam", "dan", "dari", "dahulu", "dengan", "di", "dia", "dialah",
+    "jika", "jadi", "juga", "jangan", "kamu", "kami", "kata", "ke", "ketika", "kerana", "kepada", "kita", "kalau",
+    "lagi", "lalu", "lebih", "mahupun", "maka", "mahu", "mana", "masih", "me", "menjadi", "mungkin", "mesti",
+    "namun", "nya", "orang", "oleh", "pada", "pun", "pernah", "saja", "sangat", "satu", "saya", "sendiri", "sejak",
+    "serta", "sini", "situ", "suatu", "sudah", "semua", "sedang", "sahaja", "tetapi", "telah", "tanpa", "tidak",
+    "tiap", "tiap-tiap", "untuk", "yang"
+  )
+  
+  stopwords_ind <- c(
+    "ada", "adalah", "adakah", "akan", "aku", "amat", "anda", "apa", "apakah", "atau", "bagi", "bahwa",
+    "banyak", "beberapa", "bila", "begitu", "belum", "bisa", "bukan", "cara", "dalam", "dan", "dari",
+    "dengan", "dia", "dimana", "dulu", "guna", "harus", "hingga", "ini", "itu", "jadi", "jika", "juga",
+    "karena", "kami", "kamu", "kan", "ke", "ketika", "kita", "lagi", "lalu", "lebih", "maka", "masih",
+    "mau", "melalui", "mereka", "meskipun", "mesti", "mungkin", "milik", "namun", "nanti", "nya", "oleh",
+    "pada", "pasti", "paling", "perlu", "pernah", "pun", "punya", "saja", "sangat", "salah", "sama", "saya",
+    "sendiri", "sejak", "serta", "sesudah", "setiap", "sudah", "supaya", "sedang", "selalu", "tentang",
+    "tidak", "tanpa", "telah", "untuk", "yang"
+  )
+  
   toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
   docs <- Corpus(VectorSource(lyrics))
   
@@ -39,6 +67,10 @@ process_wordcloud <- function(lyrics, language) {
 
   if (language == "en") {
     docs <- tm_map(docs, removeWords, stopwords("english"))
+  } else if (language == "bm") {
+    docs <- tm_map(docs, removeWords, stopwords_bm)
+  } else if (language == "ind") {
+    docs <- tm_map(docs, removeWords, stopwords_ind)
   }
   
   dtm <- DocumentTermMatrix(docs)
@@ -55,12 +87,22 @@ process_wordcloud <- function(lyrics, language) {
 
 ```
 
-
 ```{r}
-process_wordcloud(talalusakit, "indonesian")
-```
-```{r}
-br <- readLines("dataset/bohemianrhapsody.csv", encoding = 'UTF-8')
-process_wordcloud(br, "en")
+process_wordcloud(whenwewereyoung, "en")
 ```
 
+```{r}
+process_wordcloud(bohemian, "en")
+```
+
+```{r}
+process_wordcloud(uptown, "en")
+```
+
+```{r}
+process_wordcloud(bagaimana, "ind")
+```
+
+```{r}
+process_wordcloud(mantera, "bm")
+```
