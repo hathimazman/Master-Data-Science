@@ -1,0 +1,287 @@
+---
+title: "P153146_Part2"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tidytext)
+library(topicmodels)
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(tm)
+library(reshape2)
+library(proxy)
+library(dbscan)
+library(cluster)
+library(colorspace)
+```
+
+# Upload Data From DirSource
+
+```{r}
+mydir <- DirSource("dataset")
+docs <- VCorpus(mydir)
+```
+
+```{r}
+toSpace <- content_transformer(function(x,pattern){
+  return(gsub(pattern," ", x))
+})
+```
+
+```{r}
+docs <- tm_map(docs, content_transformer(tolower))            # Lowercase
+docs <- tm_map(docs, removePunctuation)                       # Remove punctuation
+docs <- tm_map(docs, removeNumbers)                           # Remove numbers (optional)
+docs <- tm_map(docs, removeWords, stopwords("english"))       # Remove stopwords
+docs <- tm_map(docs, removeWords, "ispire")       # Remove stopwords
+docs <- tm_map(docs, content_transformer(lemmatize_strings))  # Lemmatize
+docs <- tm_map(docs, stripWhitespace)                         # Remove extra spaces
+```
+
+```{r}
+dtm<-DocumentTermMatrix(docs)
+inspect(dtm)
+```
+
+```{r}
+lda <- LDA(dtm, k=3, control=list(seed=1234))
+topics <- tidy(lda, matrix='beta')
+```
+
+# Task 1
+
+## Find 8 terms that are most common within each topic
+
+```{r}
+top_terms <- topics %>%
+  group_by(topic) %>%
+  top_n(8,beta) %>%
+  ungroup() %>%
+  arrange(topic,beta)
+
+top_terms %>%
+  mutate(term=reorder(term,beta)) %>%
+  ggplot(aes(term,beta,fill=factor(topic))) +
+  geom_col(show.legend=F) +
+  facet_wrap(~ topic, scales='free') +
+  coord_flip()
+```
+
+## Extract relevant beta spread
+
+Topic 1 : Private Healthcare Cost
+
+-   Reflect the recent issue on private GP must display price of medication
+
+Topic 2 : Ambiguous, looks like commentary on healthcare in general
+
+-   May be quotes from healthcare personnel / officials.
+
+Topic 3 : Tobacco / Nicotine Industry
+
+-   Regarding recent issue on nicotine products regulations.
+
+```{r}
+topic1vstopic2 <- topics %>%
+  mutate(topic = paste0("topic", topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic1 > 0.007 | topic2 > 0.007) %>%
+  mutate(log_ratio = log2(topic2/topic1))
+
+topic1vstopic2 %>%
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term, log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip()
+```
+
+```{r}
+topic2vstopic3 <- topics %>%
+  mutate(topic = paste0("topic", topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic2 > 0.01 | topic3 > 0.01) %>%
+  mutate(log_ratio = log2(topic3/topic2))
+
+topic2vstopic3 %>%
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term, log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip()
+```
+
+```{r}
+topic1vstopic3 <- topics %>%
+  mutate(topic = paste0("topic", topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic1 > 0.01 | topic3 > 0.01) %>%
+  mutate(log_ratio = log2(topic3/topic1))
+
+topic1vstopic3 %>%
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term, log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip()
+```
+
+## Try different number of topics
+
+```{r}
+lda <- LDA(dtm, k=4, control=list(seed=1234))
+topics <- tidy(lda, matrix='beta')
+```
+
+```{r}
+top_terms <- topics %>%
+  group_by(topic) %>%
+  top_n(8,beta) %>%
+  ungroup() %>%
+  arrange(topic,beta)
+
+top_terms %>%
+  mutate(term=reorder(term,beta)) %>%
+  ggplot(aes(term,beta,fill=factor(topic))) +
+  geom_col(show.legend=F) +
+  facet_wrap(~ topic, scales='free') +
+  coord_flip()
+```
+
+```{r}
+topic1vstopic3 <- topics %>%
+  mutate(topic = paste0("topic", topic)) %>%
+  spread(topic,beta) %>%
+  filter(topic1 > 0.005 | topic3 > 0.005) %>%
+  mutate(log_ratio = log2(topic3/topic1))
+
+topic1vstopic3 %>%
+  mutate(term=reorder(term,log_ratio)) %>%
+  ggplot(aes(term, log_ratio)) +
+  geom_col(show.legend=F) +
+  coord_flip()
+```
+
+## Insight
+
+This project was done using articles from CodeBlue GalenCenter. The objective of this project is to scrape through multiple news articles and identify underlying patterns/topics of discussion that emerge from these articles. A total of 50 articles were gathered, with a main theme surrounding Malaysian healthcare. Although the central theme is related to healthcare, often during the process of collecting articles, there were multiple instances where articles were more socio-political issues related to healthcare. The articles that were collected mainly were topics in the spotlight from April to May 2025. Thus, this project is to identify major repetitive topics or themes that have been persistently discussed for the past 2 months.
+
+The Latent Dirichlet Allocation method is used for this dataset to identify patterns of words within each particular topic. Firstly, the set of articles is kept in a .txt file and compiled into a folder. Once compiled, it is uploaded into R Studio and turned into a document-term matrix. Preprocessing was done, which included lowering, removing punctuation, removing numbers, removing stopwords, lemmatising, and specifically removing the word “ispire”, which refers explicitly to a vape company that is mentioned multiple times across different articles.
+
+Once preprocessing is done, the document-term matrix is then used for LDA with the initial 3 topics. Looking into the first graph, LDA with 3 topics. Based on the graphs, several words come into play when looking into the three topics. Topic 1 has words such as care, health, Malaysia, hospital, and national, which may imply topics on national-level healthcare policy. Topic 2 has words such as: health, manufacture, product, vape, which may suggest topics regarding the tobacco industry. Lastly, the third topic contains words such as price, private, patient, clinic, display, and act, which may suggest a topic regarding the latest issue on the new Act for private hospitals/clinics to display the medication prices.
+
+Looking at topic 1 and topic 2, both topics seem to have overlapping words such as health and Malaysia. This may suggest that both may refer to national-level policies in healthcare. However, if we compare the beta spread of these 2 topics, it can be seen that the similarities only remain in Malaysia, such as health and MOH. Beyond these 3 words, there is a clear separation on topics where topic 1 uses words like hospital and care, where topic 2 uses words such as manufacture, vape, nicotine, and company, which, are further away from each other. From the beta spread, it can be concluded that while both may seem to discuss the topics surrounding national healthcare policy, topic 1 may refer to more hospital-based topics, whereas topic 2 may discuss more on pharmaceutical issues, specifically the tobacco industry.
+
+Similarly, if the analysis is done with$k=4$, a different pattern of topics can be uncovered. Topics such as Healthcare Services, Public Health and Communication, Private Healthcare Costs, and Health Industry (vape/nicotine) appear for topics 1 to 4. Looking into comparison between topic 1 and 3, both share quite a number of similar terms which include; MOH, medical, service, health, national which may represent general healthcare terms which alligns with the suggested topic for both topic 1 and 2 which are Healthcare Services and Health Industry. However, if we expand the beta spread, we can find distinctive words from these topics which clearly highlight the grouped topics. Topic 1 seems to relate more on patient care and palliative services with words such as *nurses,* and *palliative,* whereas topic 3 is related to healtchare regulation, pricing, and policy reinforcement with words such as *KPDN, fee, consultation,* and *act.*
+
+Thus, it can be seen that LDA is a powerful unsupervised machine learning method to uncover hidden thematic structures across multiple text documents. Even with a very narrow scope (healthcare) many nuanced subtopics can be revealed such as legislative issues, public health message, and industrial concerns. This distinction is critical for understanding the direction of media presence. Further evaluation of the dataset can help with looking into the direction of the overall writing such as using sentiment analysis, but even with using LDA, it provides crucial information already.
+
+# Task 2
+
+## TF-IDF
+
+```{r}
+dtm.tfidf <- weightTfIdf(dtm)
+dtm.tfidf <- removeSparseTerms(dtm.tfidf,0.999)
+tfidf.matrix <- as.matrix(dtm.tfidf)
+```
+
+## Cosine distance matrix
+
+```{r}
+dist.matrix <- dist(tfidf.matrix, method = 'cosine')
+```
+
+## Elbow Plot
+
+```{r}
+cost_df <- data.frame()
+for (i in 1:30) {
+  kmeans <- kmeans(x=tfidf.matrix, centers=i, iter.max=100)
+  cost_df <- rbind(cost_df, cbind(i,kmeans$tot.withinss))
+}
+
+names(cost_df) <- c("cluster","cost")
+plot(cost_df$cluster, cost_df$cost)
+lines(cost_df$cluster, cost_df$cost)
+```
+
+## Perform clustering
+
+```{r}
+truth.K=4
+
+clustering.kmeans<- kmeans(tfidf.matrix , truth.K)
+clustering.hierarchical <-hclust(dist.matrix , method = "ward.D2")
+clustering.dbscan <-hdbscan(dist.matrix , minPts=10)
+```
+
+## Combine results
+
+```{r}
+master.cluster <- clustering.kmeans$cluster
+slave.hierarchical <- cutree(clustering.hierarchical, k = truth.K)
+slave.dbscan <- clustering.dbscan$cluster
+```
+
+```{r}
+table(master.cluster)
+table(slave.hierarchical)
+table(slave.dbscan)
+```
+
+## Scatter Plotting
+
+```{r}
+points <- cmdscale(dist.matrix, k = 4)
+palette <- diverge_hcl(truth.K) # Creating a color palette
+```
+
+```{r}
+plot(points, main = 'K-Means Clustering', col = as.factor(master.cluster),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+plot(points, main = 'Hierarchical Clustering', col = as.factor(slave.hierarchical),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+plot(points, main = 'Densty-based Clustering', col = as.factor(slave.dbscan),
+     mai = c(0,0,0,0), mar = c(0,0,0,0),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab ='')
+```
+
+## Different Plotting Methods
+
+```{r}
+clusplot(as.matrix(dist.matrix),clustering.kmeans$cluster,color=T,shade=T,labels=2,lines=0)
+plot(clustering.hierarchical, cex = 0.6)
+rect.hclust(clustering.hierarchical,k=4)
+plot(as.matrix(dist.matrix),col=clustering.dbscan$cluster+1L)
+```
+
+## Insights
+
+For this task, the objective is to perform clustering on the text data using TF-IDF and cosine distance. The process begins with transforming the document-term matrix into a TF-IDF matrix, which is then used to compute a cosine distance matrix. The elbow method is applied to determine the optimal number of clusters for k-means clustering. However, based on the elbow plot, there is not discerning inflection point to identify the best cut off point for number of clusters. Thus, as per the previous analysis using 4 cluster, $k=4$, will be used. The clustering is performed using three methods: k-means, hierarchical clustering, and density-based clustering (DBSCAN). The results of each clustering method are visualized using clusplot and other plotting functions.
+
+Recalling that from LDA, using $k=4$, there were 4 topics isolated which are; healthcare services, public health and communication, private healthcare costs, and health industry (vape/nicotine). When looking at the clustering results, it can be seen that the clusters are not well separated, especially for k-means and HDBSCAN methods. The clusters represent distinct groups of articles, but there is significant overlap between them. Hierarchical method offers a much clearer separation but with persistent overlaps. However, given the nature of the hierarchical clustering and dendograms, explainability of the clusters is much clearer.
+
+| LDA Topic |         Interpretations         |
+|:---------:|:-------------------------------:|
+|     1     |       Healthcare Services       |
+|     2     | Public Health and Communication |
+|     3     |    Private Healthcare Costs     |
+|     4     | Health Industry (Vape/Nicotine) |
+
+: LDA Topics (k=4)
+
+Looking at k-means method of clustering, it can be seen that the clusters are not well separated, with each cluster representing a distinct group of articles. This is the case for HDBSCAN method as well. There is significant overlapping of titles and no clear distinction boundary between each clusters. The scatterplot shows that the clusters are not well separated. This suggests that the k-means and HDBSCAN method may not be the best choice for this dataset, as it does not provide a clear separation of topics.
+
+However, when looking at the hierarchical clustering method, it can be seen that the clusters are much more separated. The dendrogram shows that the clusters are well separated, with each cluster representing a distinct group of articles. This suggests that the hierarchical clustering method is a better choice for this dataset, as it provides a clear separation of topics. Looking at the dendogram, the leftmost cluseter groups multiple headlines about GP fees, prescription costs, and display regulations. These may reflect on LDA topic 3 (Private Healthcare). Second group from the left appears to include themes surrounding legal and regulatory efforts which may suggest topic 1 (Healthcare Services). Third grouping in th dendogram is the most discerning group of all where it almost exclusively groups articles on vape, nicotine, and manufacturing as in topic 4 (Health Industry [Vape/Nicotine]). Lastly the group at the furthermost right is a rather general grouping of multiple topics. This most likely reflects the public health and communication topic which covers a broad issues with general view on public healthcare.
+
+Thus, for this dataset, it can be seen that hierarchical clustering plays a valuable role in identifying the relation of topics to one another. Given the addition understanding of the underlying dataset from the previous analysis. A much deeper understanding of the groupings can be achieved. However, methods of clustering plays a crucial role in the explainability of the clusterings. A suitable clustering method should accompany the right dataset for meaningful insights.
+

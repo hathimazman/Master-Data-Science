@@ -1,0 +1,41 @@
+AI-Powered Drug Pricing Tool To Help GP Clinics Navigate Transparency, Itemised Billing
+By CodeBlue | 26 May 2025
+Heydoc Health has launched a new AI-powered open-access tool to help private GPs comply with price display. HARMONi Lite recommends medicine pricing by comparing with national benchmarks. It also generates price lists. No clinic/patient identifiers stored.
+
+
+HARMONi Lite by Heydoc Health. Graphic from Heydoc Health.
+KUALA LUMPUR, May 26 — The pilot phase of a Malaysian-developed AI-powered tool has launched this week, targeting private general practitioners (GPs) and health care providers to comply with drug price transparency and itemised billing. 
+
+Developed by digital health company Heydoc Health, HARMONi Lite is Malaysia’s first open AI platform for drug pricing. It is designed to help clinics generate Ministry of Health (MOH)-aligned price displays and cost breakdowns using anonymised, real-time market data without compromising patient or clinic privacy.
+
+In recent weeks, private clinics have been under pressure to comply with enforcement of the Price Control and Anti-Profiteering Act 2011 (Act 723), which mandates the display of drug prices in all private clinics, hospitals, and pharmacies. MOH has also announced a push for itemised billing to improve cost transparency for patients.
+
+While these measures aim to build public trust, they have drawn concerns from GP associations, including the Malaysian Medical Association (MMA) and the Federation of Private Medical Practitioners’ Associations Malaysia (FPMPAM), who warn that operational burdens, administrative fragmentation, and unintended cost hikes may follow, especially among small or solo practitioners.
+
+“Doctors are committed to transparency but they need smarter tools, not just rules,” said Dr Raymond Choy, co-founder and CEO of Heydoc Health.
+
+“We built HARMONi Lite in under a month as a lightweight, open-access smart tool that helps GPs comply with confidence, navigate and price fairly and competitively without guesswork.”
+
+HARMONi Lite is currently available as a web-based MVP (Minimum Viable Product) accessible at https://myharmoni.net. It features:
+
+AI-powered pricing recommendations: Based on actual drug cost inputs and market intelligence.
+National pricing benchmarks: See how your medication pricing compares to anonymised national data.
+MOH-aligned printable price display generation: For easy compliance and patient-facing display.
+Privacy-first architecture: No patient or clinic identifiers are stored, shared, or tracked.
+Upcoming roadmap features include itemised billing generators, regional trend insights, and mobile-optimised access.
+
+“This is not a final product. It’s a beginning and we want the profession to help us shape it,” added Dr Choy.
+
+“We invite GPs, pharmacists, policymakers, insurers, and researchers to try the tool, test its logic, and give us feedback to make it better. This is your platform, not ours alone.”
+
+The team behind HARMONi Lite has pledged to share anonymised data insights with stakeholders to support policy refinement, pricing harmonisation, and national formulary alignment.
+
+Heydoc believes that modernising health care pricing starts with clarity and trust, not enforcement alone. HARMONi Lite is the company’s first public open tool in a broader initiative to support:
+
+Medication cost optimisation.
+Transparent drug benefit models.
+Payor formulary pricing intelligence.
+Patient access and affordability strategies.
+“If we want to preserve the future of private primary care, we must give clinics the ability to adapt to changing expectations, with smart, ethical, and scalable technology,” Dr Choy said.
+
+GPs, pharmacists, and health providers are invited to try HARMONi Lite and submit feedback directly through the platform. The platform is FREE to use, and accessible via desktop browser. A mobile version is currently under development.

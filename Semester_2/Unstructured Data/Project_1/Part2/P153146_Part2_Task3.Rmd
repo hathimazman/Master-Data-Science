@@ -1,0 +1,222 @@
+---
+title: "P153146_Part2_Task3"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tm)
+library(SnowballC) 
+library(wordcloud) 
+library(RColorBrewer)
+library(syuzhet) 
+library(ggplot2) 
+library(tidyverse)
+library(tidytext)
+library(textclean)
+```
+
+```{r}
+df <- read.delim("dataset_task3/drugLibTrain_raw.tsv", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+head(df)
+```
+
+```{r}
+df <- df[!duplicated(df$review), ]  # Remove duplicate reviews
+
+# Combine the reviews
+df$full_review <- paste(df$benefitsReview, df$sideEffects, df$commentsReview, sep = " ")
+```
+
+# Data Preparation
+```{r}
+# Create corpus just for highly effective reviews
+corpus_eff <- VCorpus(VectorSource(effective$full_review))
+
+# Clean it
+corpus_eff_clean <- corpus_eff %>%
+  tm_map(content_transformer(tolower)) %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(removeWords, stopwords("english")) %>%
+  tm_map(stripWhitespace)
+
+# Convert back
+effective$cleaned_review <- sapply(corpus_eff_clean, as.character)
+```
+
+```{r}
+# Create corpus for ineffective reviews
+corpus_ineff <- VCorpus(VectorSource(ineffective$full_review))
+
+# Clean it
+corpus_ineff_clean <- corpus_ineff %>%
+  tm_map(content_transformer(tolower)) %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(removeWords, stopwords("english")) %>%
+  tm_map(stripWhitespace)
+
+# Convert back
+ineffective$cleaned_review <- sapply(corpus_ineff_clean, as.character)
+```
+
+# Find separate 2 groups of effectiveness
+```{r}
+#effective <- df[df$effectiveness == "Highly Effective", ] %>% select(full_review)
+#ineffective <- df[df$effectiveness == "Ineffective", ] %>% select(full_review)
+```
+
+# Clean and tokenize the text
+```{r}
+# Convert to tibble
+review_tbl <- tibble(review_id = df$reviewID, text = df$full_review)
+
+# Tokenize into words
+words <- review_tbl %>%
+  unnest_tokens(word, text)
+
+```
+
+
+# Sentiment Scores
+## Syuhzet
+```{r}
+syuhzet_score <- function (text) {
+  sentiment_vector <- get_sentiment(text, method = "syuzhet")
+  return(sentiment_vector)
+}
+
+syuzhet_effective <- syuhzet_score(effective$cleaned_review)
+
+syuzhet_ineffective <- syuhzet_score(ineffective$cleaned_review)
+
+summary(syuzhet_effective)
+summary(syuzhet_ineffective)
+```
+## Bing
+```{r}
+bing_score <- function (text) {
+  sentiment_vector <- get_sentiment(text, method = "bing")
+  return(sentiment_vector)
+}
+
+bing_effective <- bing_score(effective$cleaned_review)
+bing_ineffective <- bing_score(ineffective$cleaned_review)
+
+summary(bing_effective)
+summary(bing_ineffective)
+```
+## AFINN
+```{r}
+afinn_score <- function (text) {
+  sentiment_vector <- get_sentiment(text, method = "afinn")
+  return(sentiment_vector)
+}
+
+afinn_effective <- afinn_score(effective$cleaned_review)
+afinn_ineffective <- afinn_score(ineffective$cleaned_review)
+
+summary(afinn_effective)
+summary(afinn_ineffective)
+```
+
+## NRC
+```{r}
+nrc_score <- function (text) {
+  sentiment_vector <- get_sentiment(text, method = "nrc")
+  return(sentiment_vector)
+}
+
+nrc_effective <- nrc_score(effective$cleaned_review)
+nrc_ineffective <- nrc_score(ineffective$cleaned_review)
+
+summary(nrc_effective)
+summary(nrc_ineffective)
+```
+
+# Emotion Classification
+```{r}
+emotion_effective <- get_nrc_sentiment(effective$cleaned_review)
+
+emotion_ineffective <- get_nrc_sentiment(ineffective$cleaned_review)
+
+head(emotion_effective, 10)  # Display first 10 rows of effective emotions
+```
+
+```{r}
+head(emotion_ineffective, 10)  # Display first 10 rows of ineffective emotions
+```
+
+# Visualization of Sentiment Scores
+```{r}
+new_df <- function(dataframe) {
+  td <- data.frame(t(dataframe))
+  td <- data.frame(rowSums(td))
+  
+  names(td)[1] <- "count"
+  td <- cbind("sentiment" = rownames(td), td)
+  rownames(td) <- NULL
+  td <- td[1:8,]
+  return(td)
+}
+
+td_effective <- new_df(emotion_effective)
+td_effective <- td_effective %>%
+  mutate(proportion = count / sum(count) * 100)  # Calculate proportion for effective
+
+td_ineffective <- new_df(emotion_ineffective)
+td_ineffective <- td_ineffective %>%
+  mutate(proportion = count / sum(count) * 100)  # Calculate proportion for ineffective
+```
+
+```{r}
+quickplot(sentiment, data = td_effective, weight=proportion, geom='bar', fill=sentiment,ylab='percentage (%)') + ggtitle("Survey Sentiments Effective")
+```
+
+```{r}
+quickplot(sentiment, data = td_ineffective, weight=proportion, geom='bar', fill=sentiment,ylab='percentage (%)') + ggtitle("Survey Sentiments Ineffective")
+```
+
+# Filter positive and negative words
+```{r}
+# Load sentiment lexicon (bing)
+bing_sentiments <- get_sentiments("bing")  # includes only "positive" and "negative"
+
+# Join words with sentiment
+sentiment_words <- words %>%
+  inner_join(bing_sentiments, by = "word")
+
+# Count most common positive and negative words
+top_sentiment_words <- sentiment_words %>%
+  count(sentiment, word, sort = TRUE) %>%
+  group_by(sentiment) %>%
+  top_n(15, n) %>%
+  ungroup()
+
+```
+
+```{r}
+ggplot(top_sentiment_words, aes(x = reorder(word, n), y = n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  coord_flip() +
+  labs(title = "Most Common Positive and Negative Words in Reviews",
+       x = "Word", y = "Frequency")
+```
+
+# Insights
+
+This project is a sentiment analysis of drug review. The dataset is obtained from the Drug Reviews dataset from UCI Machine Learning Repository. The dataset provides reviews on specific drugs in relation to specific conditions. There are three separate reviews specifically on the benefits, side effects, and general comments on each drug review. For the analysis of the sentiment of the reviews, the three reviews will be combined into one review for each drug. 
+
+The dataset is then further split into two groups where the effectiveness of the drug is grouped into “highly effective” and “ineffective”. This is to show the disparity between the two groups and identify if there are different reactions to each group. First, sentiment scores were obtained by using multiple methods, namely, Syuzhet, Bing, AFINN, and NRC. Across all sentiment scores, the ineffective group has a lower median score compared to the highly effective group. The syuzhet method is based on a custom lexicon by the Nebrasa Literary Lab where each word has a numeric score (positive, negative, neutral). The net values of the matched words calculate the sentiment score. Syuzhet is able to show the clear disparity between the two groups where the median score for the highly effective group is 0.1, and mean is 0.2021. Whereas, the median for the ineffective group is -0.75, mean -0.6852. This shows a clear difference between the two groups. Similarly, AFINN, which is also a numeric scoring of integers from -5 to +5, can differentiate the two groups with scores median 0 and mean 0.08, median -2 and mean -2.09 for the highly effective and ineffective group, respectively. However, Bing lexicon is a binary polarity method where it assigns only positive and negative to each word, which does not provide enough depth for comparison as well as NRC which method relies more on categorical emotions rather than values. Nonetheless, Bing and NRC is not without their own benefits. 
+
+Bing allows the words to be segregated into positive or negative words. Given this, we are able to map out the distribution of word in both these groups. The top negative words in all the reviews are pain, severe, depression, anxiety, infection, panic, and others. These words suggest that negative reviews more often relate to these side effects and should be addressed. The positive reviews on the other hand focuses more on the effectiveness of the drugs to alleviate the symptoms with words such as better, helped, effective, relief, improved, and others. This should guide the clinicians and pharmacist on the intended effects of medications for better patient satisfaction and quality of life.
+
+NRC on the other hand, allows us to map the review to 8 emotions namely, anger, anticipation, disgust, anticipation, fear, joy, sadness, surprise, and trust. Based on the 2 groups, it can be seen that between the highly effective and ineffective group, the proportion of fear, sadness and anger is increased while the proportion of joy, anticipation decreased. Surprisingly, the trust emotion remains high for both groups. The distribution of emotions in these review according to the groupings reflect on the direction of the patient satisfaction. If the drug is effective in relieving the symptoms, emotions such as joy will increase and the other way round for negative implications. However, it can be seen that the general public still believes in modern medicine where trust remains high regardless of effectiveness of medication. This is the most crucial aspect as if the trust is not handled well or managed as expected, there will be a hurdle of failing to treat even prior to introducing medication.

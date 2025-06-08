@@ -1,0 +1,46 @@
+BIG Caring Group Picks RISE With SAP On AWS To Transform Pharmacy Retail Experience In Malaysia
+By CodeBlue | 4 June 2025
+By choosing RISE with SAP on AWS, BIG Caring Group will not only streamline its immediate operations but will also establish a strong foundation for sustained innovation and growth.
+
+
+Ooh Chin Boon, Chief Information Officer, Big Caring Group. Photo courtesy of Big Caring Group.
+KUALA LUMPUR, June 4 — SAP today announced that BIG Caring Group, Malaysia’s largest retail pharmacy, has selected RISE with SAP on Amazon Web Services (AWS) to deliver a unified, scalable cloud-based data platform to integrate its retail operations across more than 500 stores nationwide. 
+
+Formed through the merger of BIG Pharmacy Healthcare and Caring Pharmacy Group in 2023, BIG Caring Group’s business transformation started back in 2019.
+
+At the time, Caring Pharmacy’s legacy on-premise enterprise resource planning (ERP) software started encountering capacity bottlenecks and complex data transformations that slowed cross-divisional collaboration.
+
+As its network of stores grew, Caring Pharmacy recognised the need for a more robust and modern ERP system to streamline its retail operations.
+
+In 2021, the company deployed SAP S/4HANA Retail to streamline essential functions including supply chain management, inventory control, and customer relationship management (CRM). 
+
+When the company merged with BIG Pharmacy in 2023, the complexity of its retail operations intensified. The newly formed BIG Caring Group—now the largest pharmacy chain in Malaysia—saw an opportunity to further accelerate its digital transformation efforts and integrate disparate systems into one secure, scalable, and agile cloud-based platform. 
+
+Ooh Chin Boon, Chief Information Officer, Big Caring Group said, “Integrating our diverse retail operations onto a unified cloud platform is a crucial milestone for us.
+
+“We have selected RISE with SAP on AWS to help us access more accurate and comprehensive data across the entire group, so that we can respond with more agility to customer demands and supply chain volatility. This strengthens our capacity to deliver enhanced customer experiences and future proof our business.” 
+
+Strategic Shift To Cloud Innovation
+
+The adoption of RISE with SAP on AWS signals a transformative leap for BIG Caring Group, enabling the company to consolidate data from hundreds of stores and various divisions into a single, unified platform in the cloud.
+
+By seamlessly integrating critical business functions such as inventory management, procurement, financial reporting, and customer engagement, the group expects to significantly improve operational efficiency by cutting down manual processes and operating costs, and accelerate decision-making across all business units.
+
+Deploying RISE with SAP on AWS will also provide BIG Caring Group with flexibility and scalability. As the retail pharmacy market evolves rapidly, the group can now tap on AWS’s extensive footprint in the region to efficiently adjust its operations to meet changing customer demands and market conditions.
+
+Shaping the Future Of Pharmacy Retail 
+
+Looking ahead, as BIG Caring Group rolls out the implementation, its strengthened digital foundation will also provide quicker access to rising new technologies, including Generative AI and advanced predictive analytics. 
+
+Vipin Chandran, Managing Director, SAP Malaysia said, “SAP Business AI is a huge enabler of automation and innovation for our customers, and being in the cloud is the first step to unlocking its full potential.
+
+“I’m excited that BIG Caring Group has selected RISE with SAP on AWS to drive their transformation goals. With the group’s massive scale of operations in the country, there is so much opportunity that we can uncover together and reimagine retail experiences in Malaysia.”
+
+Through advanced AI-powered capabilities powered by SAP and AWS, BIG Caring Group is looking to set new standards in customer experience through:
+
+Optimised Inventory Management: Leveraging real-time analytics to forecast demand and maintain optimal stock levels.
+Enhanced Customer Engagement: Using AI-driven insights to tailor personalized experiences and proactive service offerings.
+Operational Excellence: Integrating Internet of Things (IoT) solutions and machine learning to further refine supply chain operations and reduce downtime, ensuring every facet of the business is as efficient as possible.
+By choosing RISE with SAP on AWS, BIG Caring Group will not only streamline its immediate operations but will also establish a strong foundation for sustained innovation and growth.
+
+he pharmacy giant is now well-positioned to lead the industry into a future driven by data, powered by technology, and centered around exceptional customer experiences.

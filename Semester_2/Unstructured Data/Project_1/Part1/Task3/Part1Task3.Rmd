@@ -65,13 +65,13 @@ process_wordcloud <- function(lyrics, language) {
   docs <- tm_map(docs, content_transformer(tolower))
   docs <- tm_map(docs, stripWhitespace)
 
-  if (language == "en") {
-    docs <- tm_map(docs, removeWords, stopwords("english"))
-  } else if (language == "bm") {
-    docs <- tm_map(docs, removeWords, stopwords_bm)
-  } else if (language == "ind") {
-    docs <- tm_map(docs, removeWords, stopwords_ind)
-  }
+  #if (language == "en") {
+  #  docs <- tm_map(docs, removeWords, stopwords("english"))
+  #} else if (language == "bm") {
+  #  docs <- tm_map(docs, removeWords, stopwords_bm)
+  #} else if (language == "ind") {
+  #  docs <- tm_map(docs, removeWords, stopwords_ind)
+  #}
   
   dtm <- DocumentTermMatrix(docs)
   freq <- colSums(as.matrix(dtm))
@@ -106,3 +106,31 @@ process_wordcloud(bagaimana, "ind")
 ```{r}
 process_wordcloud(mantera, "bm")
 ```
+
+# Insights
+
+The songs that was chosen represents a colourful combination of Malay, Indonesian, and English songs which cover genres such as ballad, funk-pop, rap-poetry, and hard-rock. These different spread of song genres can show how using text analysis and wordcloud, a brief understanding of each song can be understood. The song choices are;
+
+1.  When We Were Young - Adele
+
+    This song is a soulful ballad that captures the theme of nostalgia, lost youth, and reconnecting from someone in the past. It is known for Adele's emotional vocals and heartfelt lyrics which reflects the singer's signature style of vulnerability and storytelling.
+
+2.  Uptown Funk - Mark Ronson ft Bruno Mars
+
+    This song is a funk-pop anthem that made global hits with its energetic vibe and retro feel. The blend of retro-funk and pop blending with catchy lyrics gives the listeners confidence, talks about styke, and gives a good time.
+
+3.  Bagaimana Kalau Aku Tidak Baik-Baik Saja - Judika
+
+    This 2021 Indonesian ballad explores emotional pain and heartbreak through very raw and vulnerable lyrics. The accompanying instrumentation provides a sense of mellow and blue, while the lyrics keeps on circling on the question of "What If I'm Not Okay?" which is a heavy feeling after a heartbreak.
+
+4.  Mantera Beradu - Malique ft M Nasir
+
+    This masterpiece of rap-poetry blends rich Malay metaphor, traditional influences, and modern beats giving new life to traditional melody. It features complex wordplay and philosophical themes which is reflected in its nuanced lyrics that require multiple reads to fully comprehend the context.
+
+5.  Bohemian Rhapsody - Queen
+
+    Released in 1976, this iconic rock opera was a record that defied all odds with its unconventional genre. The song structure does not simply rely on one genre but jumps from ballad to opera and to hard rock. This song, guided by its lead singer Freddie Mercury, explores the theme of guilt, fate, and existential crisis.
+
+It can be seen from the spread of song choices we can expect to see certain ideas of the word analysis. Each song has been through preprocessing, except for removing stopwords. Often, song lyrics have limited words, and stopwords often complete the context of the songs. Thus, it is kept. Based on the wordcloud for When We Were Young by Adele, the words; *you, were, young, like, when, just, this, song* were top among others. This reflects on the song's nostalgic and reflective tone and emphasises personal and emotional recollection of the past in relation to another person. It shows that this song is a reflective ballad centered around memories of youth and longing for a lost connection. Wordcloud for Uptown Funk by Mark Ronson ft Bruno Mars contains words such as *funk, you, don't, believe, watch, just, hot,* and *damn.* The high-energy, confident vibe of the song is crystal clear with repetitive punchy words boosting the danceable and boostful mood. This bold and energetic song utilizes catchy repetitive and playful swagger, centered on style and fun. Bagaimana Kalau Aku Tidak Baik Baik Saja by Judika is a sparse wordcloud with only 2 words that appear more than 5 times. It reflects the raw, minimalistic feeling of the song. The prominence of *aku* and *baik* suggests a focus of the singer on self-acceptance, introspection, and well-being. On the other hand, *bawa, yang, hati, dan, dah, tiga* were the top words for Mantera Beradu by Malique. These unique combination of words suggests poetic and metaphorical play tones. These words such as *bawa* and *hati* imply a mellow feeling of leaving and *tiga* possibly imply on a third-party in a relationship. This reflects on a lyrical, metaphor-rich song that seems to explore deeper emotional meaning. Last but not least, the wordcloud from Bohemian Rhapsody by Queen relfects its chaotic and operatic nature. Words such as *Galileo*, *never* and *let* suggests an underlying theartrical play in its song. This complex genre-blending masterpeice uses dramatic and expressive language to touch on themes of fate, guilt, and existentialism.
+
+Overall, wordcloud offers a glimpse into the overall idea of a song. For example, english songs with prominent *you* may indicate direction or conversation. Different genres also imply different usage of language where Pop/R&B uses short and punchy phrases, Ballads use reflective and emotional words, Art Rock uses dramatic and diverse vocabulary, while Rap-Poetry uses nuanced and metaphorical language.
