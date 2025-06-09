@@ -1,0 +1,268 @@
+---
+title: "P153146_Task1"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+```{r}
+library(imager)
+```
+
+# Set path for image files
+```{r}
+flower1 <- load.image("dataset/flower1.jpg")
+flower2 <- load.image("dataset/flower2.jpg")
+scenery1 <- load.image("dataset/scenery1.jpg")
+scenery2 <- load.image("dataset/scenery2.jpg")
+person1 <- load.image("dataset/person1.jpg")
+person2 <- load.image("dataset/person2.jpg")
+building1 <- load.image("dataset/building1.jpg")
+building2 <- load.image("dataset/building2.jpg")
+other1 <- load.image("dataset/other1.jpg")
+other2 <- load.image("dataset/other2.jpg")
+
+image.list <- list(flower1, flower2, scenery1, scenery2, person1, person2, building1, building2, other1, other2)
+image.label <- list("Flower 1", "Flower 2","Scenery 1", "Scenery 2", "Person 1","Person 2","Building 1","Building 2","Other 1","Other 2")
+```
+
+# Display images
+```{r}
+for (i in seq_along(image.list)) {
+  plot(image.list[[i]], main=image.label[[i]])
+}
+```
+
+# Image Analysis
+## Edge detection
+```{r}
+plot_edge_detection <- function(image, label) {
+  edges_x <- deriche(image, 2, order=2, axis='x')
+  edges_y <- deriche(image, 2, order=2, axis='y')
+  plot(edges_x, main=paste("Edges X -", label))
+  plot(edges_y, main=paste("Edges Y -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_edge_detection(image.list[[i]], image.label[[i]])
+}
+```
+
+## Splitting images
+```{r}
+plot_split <- function(image, label) {
+  split_x <- imsplit(image, "x", 2)
+  split_y <- imsplit(image, "y", 2)
+  
+  plot(split_x[[1]], main=paste("Split X -", label, "Part 1"))
+  plot(split_x[[2]], main=paste("Split X -", label, "Part 2"))
+  plot(split_y[[1]], main=paste("Split Y -", label, "Part 1"))
+  plot(split_y[[2]], main=paste("Split Y -", label, "Part 2"))
+}
+
+for (i in seq_along(image.list)) {
+  plot_split(image.list[[i]], image.label[[i]])
+}
+
+```
+
+## Image transformation
+### Resizing
+```{r}
+plot_resize <- function(image, label, widths, heights) {
+  resized_image <- resize(image, round(width(image)/widths), round(width(image)/heights))
+  plot(resized_image, main=paste("Resized -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_resize(image.list[[i]], image.label[[i]], 20, 20)
+}
+
+```
+
+### Rotation
+```{r}
+plot_rotate <- function(image, label, angle) {
+  rotated_image <- imrotate(image, angle)
+  plot(rotated_image, main=paste("Rotated -", label, "by", angle, "degrees"))
+}
+
+rotation_angles <- c(45, 90, 135, 180, 225, 270, 315)
+for (i in seq_along(image.list)) {
+  plot_rotate(image.list[[i]], image.label[[i]], sample(rotation_angles, 1))
+}
+```
+
+### Shifting
+```{r}
+plot_shift <- function(image, label, shift_x, shift_y) {
+  shifted_image <- imshift(image, shift_x, shift_y)
+  plot(shifted_image, main=paste("Shifted -", label, "by (", shift_x, ",", shift_y, ")"))
+}
+
+for (i in seq_along(image.list)) {
+  plot_shift(image.list[[i]], image.label[[i]], sample(-100:100, 1), sample(-100:100, 1))
+}
+```
+
+### Cropping
+```{r}
+plot_shift_crop <- function(image, label, shift_x, shift_y) {
+  shifted_image <- imshift(image, shift_x, shift_y)
+  
+  shifted_image <- shifted_image %>% autocrop(c(0,0,0,0))
+  plot(shifted_image, main=paste("Shifted -", label, "by (", shift_x, ",", shift_y, ")"))
+}
+
+for (i in seq_along(image.list)) {
+  plot_shift_crop(image.list[[i]], image.label[[i]], sample(-200:200, 1), sample(-200:200, 1))
+}
+```
+
+## Filter image
+```{r}
+# Apply greyscale
+filter <- as.cimg(matrix(1,4,4))
+
+plot_greyscale <- function(image, label) {
+  grayscale(image) %>%
+    correlate(filter) %>%
+    plot(main=paste("Greyscale -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_greyscale(image.list[[i]], image.label[[i]])
+}
+```
+
+## Selection
+### Rectangular
+```{r}
+plot_rectangular_selection <- function(image, label, x1, y1, x2, y2) {
+  selected_image <- imsub(image, x %inr% c(x1,x2), y %inr% c(y1,y2))
+  plot(selected_image, main=paste("Rectangular Selection -", label))
+}
+
+for (i in seq_along(image.list)) {
+  w <- width(image.list[[i]])
+  h <- height(image.list[[i]])
+  
+  x1 <- sample(1:w/2, 1)
+  y1 <- sample(1:h/2, 1)
+  x2 <- sample((w/2 + 1):w, 1)
+  y2 <- sample((h/2 + 1):h, 1)
+  
+  plot_rectangular_selection(image.list[[i]], image.label[[i]], x1, y1, x2, y2)
+}
+```
+
+### Circular
+```{r}
+plot_rectangular_selection <- function(image, label, width, height) {
+  pixel <- (Xc(image) - width)^2 + (Yc(image) - height)^2 < 100^2
+  plot(image, main=paste("Rectangular Selection -", label))
+  highlight(pixel, col="red")
+}
+
+for (i in seq_along(image.list)) {
+  w <- width(image.list[[i]])
+  h <- height(image.list[[i]])
+  
+  x1 <- sample(1:w/2, 1)
+  y1 <- sample(1:h/2, 1)
+  x2 <- sample((w/2 + 1):w, 1)
+  y2 <- sample((h/2 + 1):h, 1)
+  
+  plot_rectangular_selection(image.list[[i]], image.label[[i]], x1, y1)
+}
+
+```
+### Fuzzy
+```{r}
+plot_fuzzy_selection <- function(image, label) {
+  plot(image, main=paste("Fuzzy Selection -", label))
+  
+  # Create fuzzy selection
+  px.flood(image, 100,100, sigma=0.1) %>% highlight
+  
+  px.flood(image, 300,300, sigma=0.15) %>% highlight(col='blue')
+}
+
+for (i in seq_along(image.list)) {
+  plot_fuzzy_selection(image.list[[i]], image.label[[i]])
+}
+```
+
+## Blurry
+```{r}
+plot_blurry <- function(image, label, sigma) {
+  blurred_image <- isoblur(image, sigma)
+  plot(blurred_image, main=paste("Blurred -", label, "with sigma =", sigma))
+}
+
+for (i in seq_along(image.list)) {
+  plot_blurry(image.list[[i]], image.label[[i]], sample(1:5, 1))
+}
+```
+
+## Sharpen
+```{r}
+plot_sharpen <- function(image, label, sigma) {
+  sharpened_image <- imsharpen(image, sigma)
+  plot(sharpened_image, main=paste("Sharpened -", label, "with sigma =", sigma))
+}
+
+for (i in seq_along(image.list)) {
+  plot_sharpen(image.list[[i]], image.label[[i]], sample(1:5, 1))
+}
+```
+
+## Segmentation
+```{r}
+plot_segmentation <- function(image, label) {
+  gray <- grayscale(image)
+  segmented_image <- gray > 0.5
+  plot(segmented_image, main=paste("Segmented with Binary Threshold -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_segmentation(image.list[[i]], image.label[[i]])
+}
+```
+
+## Histogram equalization
+```{r}
+plot_histogram_equalization <- function(image, label) {
+  image.g <- image
+  f <- ecdf(image.g)
+  f(image.g) %>% as.cimg(dim=dim(image.g)) %>% plot(main=paste("Histogram Equalization -", label))
+  #plot(equalized_image, main=paste("Histogram Equalization -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_histogram_equalization(image.list[[i]], image.label[[i]])
+}
+```
+
+## Morphological operations
+```{r}
+plot_morphological <- function(image, label) {
+  # Convert to greyscale
+  image.g <- grayscale(image)
+  
+  # Apply morphological operations
+  image.t <- threshold(image.g, "20%")
+  px <- as.pixset(1-image.t)
+  par(mfrow=c(1,2))
+  plot(px, main=paste("Original -", label))
+  grow(px, 5) %>% plot(main=paste("Grew -", label))
+}
+
+for (i in seq_along(image.list)) {
+  plot_morphological(image.list[[i]], image.label[[i]])
+}
+```
