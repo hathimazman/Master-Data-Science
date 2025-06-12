@@ -164,7 +164,7 @@ for (i in seq_along(image.list)) {
 ```{r}
 plot_rectangular_selection <- function(image, label, width, height) {
   pixel <- (Xc(image) - width)^2 + (Yc(image) - height)^2 < 100^2
-  plot(image, main=paste("Rectangular Selection -", label))
+  plot(image, main=paste("Circular Selection -", label))
   highlight(pixel, col="red")
 }
 
@@ -266,3 +266,47 @@ for (i in seq_along(image.list)) {
   plot_morphological(image.list[[i]], image.label[[i]])
 }
 ```
+
+# Two noisy image
+```{r}
+noise1.g <- load.image("dataset/grey_noise.jpg")
+noise2.g <- load.image("dataset/grey_noise2.jpg")
+noise1 <- load.image("dataset/color_noise.jpg")
+noise2 <- load.image("dataset/color_noise2.jpg")
+
+image.noisy.list <- list(noise1.g, noise2.g, noise1, noise2)
+```
+## Display image
+```{r}
+for (i in seq_along(image.noisy.list)) {
+  plot(image.noisy.list[[i]], main=paste("Noisy Image", i))
+}
+
+```
+
+## Image denoising
+```{r}
+plot_denoise <- function(image, label) {
+  blur_anisotropic(image,ampl=1e3,sharp=.5) %>%
+  plot(denoised_image, main=paste("Denoised -", label))
+}
+
+for (i in seq_along(image.noisy.list)) {
+  plot_denoise(image.noisy.list[[i]], paste("Noisy Image", i))
+}
+```
+
+## Morphological Operations
+```{r}
+plot_morphological_noise <- function(image, label) {
+  image.t <- threshold(image, "20%")
+  px <- as.pixset(1-image.t)
+  par(mfrow=c(1,2))
+  plot(px, main=paste("Original -", label))
+  shrink(px, 3) %>%plot(main=paste("Shrink -", label))
+}
+for (i in seq_along(image.noisy.list)) {
+  plot_morphological_noise(image.noisy.list[[i]], paste("Noisy Image", i))
+}
+```
+
