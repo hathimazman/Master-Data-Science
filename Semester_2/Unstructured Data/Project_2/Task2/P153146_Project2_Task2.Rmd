@@ -1,0 +1,155 @@
+---
+title: "P153146_Project2_Task2"
+output:
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tuneR)
+library(seewave)
+```
+
+
+# Upload Dataset
+```{r}
+normal <- readWave("dataset/normal.wav")
+mr <- readWave("dataset/MR.wav")
+
+# Get sample rate and bit
+normal_f <- normal@samp.rate
+mr_f <- mr@samp.rate
+
+normal_bit <- normal@bit
+mr_bit <- mr@bit
+```
+
+# Select only 1 channel
+```{r}
+if (normal@stereo == TRUE) {
+  normal <- mono(normal, "left")
+}
+
+if (mr@stereo == TRUE) {
+  mr <- mono(mr, "left")
+}
+```
+
+
+# Trim audio
+```{r}
+trimmed_mr <- cutw(mr, f = mr@samp.rate, from = 0, to = 3, output = "Wave")
+trimmed_normal <- cutw(normal, f = normal@samp.rate, from = 0, to = 3, output = "Wave")
+
+normal <- Wave(trimmed_normal@left, samp.rate = normal_f, bit = normal_bit)
+mr <- Wave(trimmed_mr@left, samp.rate = mr_f, bit = mr_bit)
+```
+
+
+```{r}
+par(mfrow = c(2,1))
+plot(normal, main = "Normal Heart Sound", col = "blue")
+plot(mr, main = "Mitral Regurgitation", col = "red")
+```
+# Timer
+## Normal
+```{r}
+timer(normal, f = normal_f, threshold =15, msmooth = c(400,0))
+```
+## Mitral Regurgitation
+```{r}
+timer(mr, f = mr_f, threshold =15, msmooth = c(400,0))
+```
+
+
+# fft
+## Normal
+```{r}
+plot.frequency.spectrum <- function(X.k, xlimits = c(0,length(X.k))) {
+  plot.data <- cbind(0:(length(X.k)-1),Mod(X.k))
+  
+  # Why is scaling necessary?
+  plot.data[2:length(X.k),2] <- 2*plot.data[2:length(X.k),2]
+  
+  plot(plot.data, t='h', lwd=2, main = '',
+     xlab = 'Frequency (Hz)', ylab = "Strength",
+     xlim = xlimits, ylim = c(0,max(Mod(plot.data[,2]))))
+}
+
+```
+
+```{r}
+normal_fft <- fft(normal@left)
+plot.frequency.spectrum(normal_fft, xlimits = c(0, 1500))
+```
+
+## Mitral Regurgitation
+```{r}
+mr_fft <- fft(mr@left)
+plot.frequency.spectrum(mr_fft, xlimits = c(0, 1500))
+```
+
+# Spectogram
+## Normal
+```{r}
+spectro(normal@left,
+        f = normal@samp.rate,
+        flim = c(0, 0.5),       # frequency limit in kHz
+        wl = 256,               # window length; can try 256 or 1024
+        ovlp = 75,              # % overlap
+        palette = spectro.colors,  # default color scale
+        main = "Spectrogram of Normal Heart Sound (0–500 Hz)")
+```
+
+## Mitral Regurgitation
+```{r}
+library(rpanel)
+spectro(mr@left,
+        f = mr@samp.rate,
+        flim = c(0, 0.5),       # frequency limit in kHz
+        wl = 256,               # window length; can try 256 or 1024
+        ovlp = 75,              # % overlap
+        palette = spectro.colors,  # default color scale
+        main = "Spectrogram of MR Heart Sound (0–500 Hz)")
+```
+```{r}
+# Set plotting area to 2 rows, 1 column
+par(mfrow = c(2, 1))
+
+# Spectrogram for MR
+spectro(mr@left,
+        f = mr@samp.rate,
+        flim = c(0, 0.5),
+        tlim = c(0, 3),                # <-- fix time axis range
+        wl = 256,
+        ovlp = 75,
+        palette = spectro.colors,
+        main = "Spectrogram of Mitral Regurgitation (0–500 Hz)")
+
+# Spectrogram for Normal
+spectro(normal@left,
+        f = normal@samp.rate,
+        flim = c(0, 0.5),
+        tlim = c(0, 3),                # <-- same time axis
+        wl = 256,
+        ovlp = 75,
+        palette = spectro.colors,
+        main = "Spectrogram of Normal Heart Sound (0–500 Hz)")
+```
+# Dynspec
+
+## Normal
+```{r}
+dynspec(normal@left, f=normal@samp.rate ,wl=1024, osc=T)
+```
+
+## Mitral Regurgitation
+```{r}
+dynspec(mr@left, f=mr@samp.rate ,wl=1024, osc=T)
+```
+

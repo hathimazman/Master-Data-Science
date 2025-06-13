@@ -34,6 +34,12 @@ df <- df[!duplicated(df$review), ]  # Remove duplicate reviews
 df$full_review <- paste(df$benefitsReview, df$sideEffects, df$commentsReview, sep = " ")
 ```
 
+# Find separate 2 groups of effectiveness
+```{r}
+effective <- df[df$effectiveness == "Highly Effective", ] %>% select(full_review)
+ineffective <- df[df$effectiveness == "Ineffective", ] %>% select(full_review)
+```
+
 # Data Preparation
 ```{r}
 # Create corpus just for highly effective reviews
@@ -67,11 +73,6 @@ corpus_ineff_clean <- corpus_ineff %>%
 ineffective$cleaned_review <- sapply(corpus_ineff_clean, as.character)
 ```
 
-# Find separate 2 groups of effectiveness
-```{r}
-#effective <- df[df$effectiveness == "Highly Effective", ] %>% select(full_review)
-#ineffective <- df[df$effectiveness == "Ineffective", ] %>% select(full_review)
-```
 
 # Clean and tokenize the text
 ```{r}
