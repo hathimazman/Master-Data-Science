@@ -161,6 +161,7 @@ plot.frequency.spectrum(Yk)
 plot.frequency.spectrum(Yk[1:5000])
 plot.frequency.spectrum(Yk[1:1000])
 ```
+
 ```{r}
 data(tico)
 Ticok <- fft(tico@left)

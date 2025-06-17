@@ -29,6 +29,16 @@ normal_bit <- normal@bit
 mr_bit <- mr@bit
 ```
 
+```{r}
+# Print sample rate and bit
+cat("Normal Heart Sound Sample Rate:", normal_f, "Hz\n")
+cat("Normal Heart Sound Bit Depth:", normal_bit, "bits\n")
+
+cat("Mitral Regurgitation Sample Rate:", mr_f, "Hz\n")
+cat("Mitral Regurgitation Bit Depth:", mr_bit, "bits\n")
+```
+
+
 # Select only 1 channel
 ```{r}
 if (normal@stereo == TRUE) {
@@ -59,11 +69,18 @@ plot(mr, main = "Mitral Regurgitation", col = "red")
 # Timer
 ## Normal
 ```{r}
-timer(normal, f = normal_f, threshold =15, msmooth = c(400,0))
+timer(normal, f = normal_f, threshold =15, msmooth = c(500,0))
 ```
 ## Mitral Regurgitation
 ```{r}
-timer(mr, f = mr_f, threshold =15, msmooth = c(400,0))
+timer(mr, f = mr_f, threshold =15, msmooth = c(500,0))
+```
+```{r}
+par(mfrow = c(2,1))
+timer(normal, f = normal_f, threshold =15, msmooth = c(500,0))
+title("Timer for Normal Heart Sound")
+timer(mr, f = mr_f, threshold =15, msmooth = c(500,0))
+title("Timer for Mitral Regurgitation Heart Sound")
 ```
 
 
@@ -73,7 +90,6 @@ timer(mr, f = mr_f, threshold =15, msmooth = c(400,0))
 plot.frequency.spectrum <- function(X.k, xlimits = c(0,length(X.k))) {
   plot.data <- cbind(0:(length(X.k)-1),Mod(X.k))
   
-  # Why is scaling necessary?
   plot.data[2:length(X.k),2] <- 2*plot.data[2:length(X.k),2]
   
   plot(plot.data, t='h', lwd=2, main = '',
@@ -85,13 +101,23 @@ plot.frequency.spectrum <- function(X.k, xlimits = c(0,length(X.k))) {
 
 ```{r}
 normal_fft <- fft(normal@left)
-plot.frequency.spectrum(normal_fft, xlimits = c(0, 1500))
+plot.frequency.spectrum(normal_fft, xlimits = c(0, 1000))
 ```
 
 ## Mitral Regurgitation
 ```{r}
 mr_fft <- fft(mr@left)
-plot.frequency.spectrum(mr_fft, xlimits = c(0, 1500))
+plot.frequency.spectrum(mr_fft, xlimits = c(0, 1000))
+```
+```{r}
+# Set plotting area to 2 rows, 1 column
+par(mfrow = c(2, 1))
+# FFT for Normal
+plot.frequency.spectrum(normal_fft, xlimits = c(0, 1000))
+title("FFT of Normal Heart Sound")
+# FFT for MR
+plot.frequency.spectrum(mr_fft, xlimits = c(0, 1000))
+title("FFT of Mitral Regurgitation Heart Sound")
 ```
 
 # Spectogram
@@ -117,29 +143,18 @@ spectro(mr@left,
         palette = spectro.colors,  # default color scale
         main = "Spectrogram of MR Heart Sound (0–500 Hz)")
 ```
+
 ```{r}
-# Set plotting area to 2 rows, 1 column
-par(mfrow = c(2, 1))
+layout(matrix(1:2, ncol = 1))
 
-# Spectrogram for MR
-spectro(mr@left,
-        f = mr@samp.rate,
-        flim = c(0, 0.5),
-        tlim = c(0, 3),                # <-- fix time axis range
-        wl = 256,
-        ovlp = 75,
-        palette = spectro.colors,
-        main = "Spectrogram of Mitral Regurgitation (0–500 Hz)")
+spectro(mr@left, f = mr@samp.rate, flim = c(0, 0.5), tlim = c(0, 3),
+        wl = 256, ovlp = 75, palette = spectro.colors,
+        main = "Spectrogram of Mitral Regurgitation")
 
-# Spectrogram for Normal
-spectro(normal@left,
-        f = normal@samp.rate,
-        flim = c(0, 0.5),
-        tlim = c(0, 3),                # <-- same time axis
-        wl = 256,
-        ovlp = 75,
-        palette = spectro.colors,
-        main = "Spectrogram of Normal Heart Sound (0–500 Hz)")
+spectro(normal@left, f = normal@samp.rate, flim = c(0, 0.5), tlim = c(0, 3),
+        wl = 256, ovlp = 75, palette = spectro.colors,
+        main = "Spectrogram of Normal Heart Sound")
+
 ```
 # Dynspec
 
@@ -152,4 +167,3 @@ dynspec(normal@left, f=normal@samp.rate ,wl=1024, osc=T)
 ```{r}
 dynspec(mr@left, f=mr@samp.rate ,wl=1024, osc=T)
 ```
-
