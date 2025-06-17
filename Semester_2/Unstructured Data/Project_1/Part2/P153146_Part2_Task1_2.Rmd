@@ -1,5 +1,5 @@
 ---
-title: "P153146_Part2"
+title: "P153146_Part2_Task1_2"
 output:
   pdf_document: default
 knitr:
@@ -40,7 +40,7 @@ toSpace <- content_transformer(function(x,pattern){
 ```{r}
 docs <- tm_map(docs, content_transformer(tolower))            # Lowercase
 docs <- tm_map(docs, removePunctuation)                       # Remove punctuation
-docs <- tm_map(docs, removeNumbers)                           # Remove numbers (optional)
+docs <- tm_map(docs, removeNumbers)                           # Remove numbers
 docs <- tm_map(docs, removeWords, stopwords("english"))       # Remove stopwords
 docs <- tm_map(docs, removeWords, "ispire")       # Remove word "ispire"
 docs <- tm_map(docs, content_transformer(lemmatize_strings))  # Lemmatize
