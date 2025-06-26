@@ -1,0 +1,67 @@
+---
+title: "P153146_Test2"
+output: 
+  html_document: default
+  pdf_document: default
+knitr:
+  opts_chunk: 
+    echo: true
+    include: true
+    message: false  # Optional: Hide messages
+    warning: false  # Optional: Hide warnings
+---
+
+```{r}
+library(tuneR)
+library(seewave)
+```
+
+```{r}
+plot.frequency.spectrum <- function(X.k, xlimits = c(0,length(X.k))) {
+  plot.data <- cbind(0:(length(X.k)-1),Mod(X.k))
+  plot.data[2:length(X.k),2] <- 2*plot.data[2:length(X.k),2]
+  
+  plot(plot.data, t='h', lwd=2, main = '',
+     xlab = 'Frequency (Hz)', ylab = "Strength",
+     xlim = xlimits, ylim = c(0,max(Mod(plot.data[,2]))))
+}
+```
+
+# Load the audio file
+
+```{r}
+audio <- readWave("audio.wav")
+# play(audio)
+```
+
+```{r}
+samp.rate <- audio@samp.rate
+samp.rate
+```
+
+# Plot the audio using a function named timer() of R script. Briefly explain the plot.
+```{r}
+timer(audio,f=samp.rate, threshold=20, msmooth=c(200,0))
+```
+
+From the timer plot above, it can be seen that the audio signal has a duration of approximately 1 second. The x-axis represents time in seconds, while the y-axis shows the amplitude of the audio signal. The plot indicates that there are 3 identifiable peaks in amplitude between 0.4s to 0.7s, suggesting moments of higher intensity in the audio. The threshold parameter helps to filter out lower amplitude noise, allowing us to focus on significant events in the audio. For this audio set a threshold of 20% and msmooth parameter of c(200,0) was used to smooth the plot, which helps in isolating the 3 peaks identified in the audio signal. It can be seen that there are 3 distinct sounds each lasting approximately 0.09 to 0.08 seconds with a gap of approximately 0.01 seconds between them.
+
+# Construct the spectrogram on the audio file, give your comments
+```{r}
+spectro(audio)
+```
+
+The spectrogram above displays the frequency content of the audio signal over time. The x-axis represents time in seconds, while the y-axis shows frequency in Hertz (Hz). The color intensity indicates the amplitude of the frequencies at each point in time, with red color representing higher amplitudes, blue representing lower amplitudes. Similar to the timer plot, it can be seen that the highlight of audio signals is between 0.4s to 0.7s, which corresponds to the 3 peaks identified in the timer plot. The spectrogram provides a more detailed view of how the frequency content changes over time, allowing the characteristics of the audio signal to be observed more clearly. For this audio data, the frequency with high amplitude ranges between 0 to 8 kHz, the characteristic of the 3 audio peaks is similar to one another suggesting that they may come from a single source. Other mix of the frequnecy can be seen in the spectrogram for up to 20kHz, but the amplitude is not that strong.
+
+# Construct the left channel audio signal using fft function
+```{r}
+audio_fft <- fft(audio@left)
+```
+
+# Plot the frequency spectrum on the audio part in above
+```{r}
+plot.frequency.spectrum(audio_fft[1:20000])
+```
+
+# Discuss the visualization output obtained above
+The frequency spectrum plot above illustrates the strength (frequency of frequency) of frequencies present in the left channel of the audio signal. The x-axis represents frequency in Hertz (Hz), while the y-axis shows the strength of these frequencies. The plot indicates that a majority of the frequencies are mainly  low frequencies ranging 0-5000Hz, with not a many in the mid to high frequencies. This frequency plot allows for deeper view of the frequency band as compared to the spectrogram which limits to the 20kHz. This majority distribution on the lower band of low frequency with minimal high frequencies matches that of insect such as cicada. 
